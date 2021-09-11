@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/cliontest.dir/main.cpp.o CMakeFiles/cliontest.dir/MyOpenGLWindow.cpp.o CMakeFiles/cliontest.dir/Color.cpp.o CMakeFiles/cliontest.dir/Test.cpp.o -o cliontest  -lSDL2 

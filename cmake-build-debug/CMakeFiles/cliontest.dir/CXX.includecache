@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kaappo/git/cliontest/Color.cpp
+iostream
+-
+cmath
+-
+Color.h
+/home/kaappo/git/cliontest/Color.h
+
+/home/kaappo/git/cliontest/Color.h
+array
+-
+
+/home/kaappo/git/cliontest/MyOpenGLWindow.cpp
+iostream
+-
+MyOpenGLWindow.h
+/home/kaappo/git/cliontest/MyOpenGLWindow.h
+
+/home/kaappo/git/cliontest/MyOpenGLWindow.h
+SDL2/SDL.h
+-
+Color.h
+/home/kaappo/git/cliontest/Color.h
+
+/home/kaappo/git/cliontest/main.cpp
+iostream
+-
+MyOpenGLWindow.h
+/home/kaappo/git/cliontest/MyOpenGLWindow.h
+Color.h
+/home/kaappo/git/cliontest/Color.h
+
