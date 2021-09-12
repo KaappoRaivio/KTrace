@@ -129,6 +129,30 @@ cliontest/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/build
 .PHONY : cliontest/fast
 
+Camera.o: Camera.cpp.o
+.PHONY : Camera.o
+
+# target to build an object file
+Camera.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Camera.cpp.o
+.PHONY : Camera.cpp.o
+
+Camera.i: Camera.cpp.i
+.PHONY : Camera.i
+
+# target to preprocess a source file
+Camera.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Camera.cpp.i
+.PHONY : Camera.cpp.i
+
+Camera.s: Camera.cpp.s
+.PHONY : Camera.s
+
+# target to generate assembly for a file
+Camera.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Camera.cpp.s
+.PHONY : Camera.cpp.s
+
 Color.o: Color.cpp.o
 .PHONY : Color.o
 
@@ -177,6 +201,102 @@ MyOpenGLWindow.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/MyOpenGLWindow.cpp.s
 .PHONY : MyOpenGLWindow.cpp.s
 
+Plane.o: Plane.cpp.o
+.PHONY : Plane.o
+
+# target to build an object file
+Plane.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Plane.cpp.o
+.PHONY : Plane.cpp.o
+
+Plane.i: Plane.cpp.i
+.PHONY : Plane.i
+
+# target to preprocess a source file
+Plane.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Plane.cpp.i
+.PHONY : Plane.cpp.i
+
+Plane.s: Plane.cpp.s
+.PHONY : Plane.s
+
+# target to generate assembly for a file
+Plane.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Plane.cpp.s
+.PHONY : Plane.cpp.s
+
+Ray.o: Ray.cpp.o
+.PHONY : Ray.o
+
+# target to build an object file
+Ray.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Ray.cpp.o
+.PHONY : Ray.cpp.o
+
+Ray.i: Ray.cpp.i
+.PHONY : Ray.i
+
+# target to preprocess a source file
+Ray.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Ray.cpp.i
+.PHONY : Ray.cpp.i
+
+Ray.s: Ray.cpp.s
+.PHONY : Ray.s
+
+# target to generate assembly for a file
+Ray.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Ray.cpp.s
+.PHONY : Ray.cpp.s
+
+Scene.o: Scene.cpp.o
+.PHONY : Scene.o
+
+# target to build an object file
+Scene.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Scene.cpp.o
+.PHONY : Scene.cpp.o
+
+Scene.i: Scene.cpp.i
+.PHONY : Scene.i
+
+# target to preprocess a source file
+Scene.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Scene.cpp.i
+.PHONY : Scene.cpp.i
+
+Scene.s: Scene.cpp.s
+.PHONY : Scene.s
+
+# target to generate assembly for a file
+Scene.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Scene.cpp.s
+.PHONY : Scene.cpp.s
+
+Surface.o: Surface.cpp.o
+.PHONY : Surface.o
+
+# target to build an object file
+Surface.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Surface.cpp.o
+.PHONY : Surface.cpp.o
+
+Surface.i: Surface.cpp.i
+.PHONY : Surface.i
+
+# target to preprocess a source file
+Surface.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Surface.cpp.i
+.PHONY : Surface.cpp.i
+
+Surface.s: Surface.cpp.s
+.PHONY : Surface.s
+
+# target to generate assembly for a file
+Surface.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Surface.cpp.s
+.PHONY : Surface.cpp.s
+
 Test.o: Test.cpp.o
 .PHONY : Test.o
 
@@ -200,6 +320,54 @@ Test.s: Test.cpp.s
 Test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Test.cpp.s
 .PHONY : Test.cpp.s
+
+Triangle.o: Triangle.cpp.o
+.PHONY : Triangle.o
+
+# target to build an object file
+Triangle.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Triangle.cpp.o
+.PHONY : Triangle.cpp.o
+
+Triangle.i: Triangle.cpp.i
+.PHONY : Triangle.i
+
+# target to preprocess a source file
+Triangle.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Triangle.cpp.i
+.PHONY : Triangle.cpp.i
+
+Triangle.s: Triangle.cpp.s
+.PHONY : Triangle.s
+
+# target to generate assembly for a file
+Triangle.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Triangle.cpp.s
+.PHONY : Triangle.cpp.s
+
+Vector3.o: Vector3.cpp.o
+.PHONY : Vector3.o
+
+# target to build an object file
+Vector3.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Vector3.cpp.o
+.PHONY : Vector3.cpp.o
+
+Vector3.i: Vector3.cpp.i
+.PHONY : Vector3.i
+
+# target to preprocess a source file
+Vector3.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Vector3.cpp.i
+.PHONY : Vector3.cpp.i
+
+Vector3.s: Vector3.cpp.s
+.PHONY : Vector3.s
+
+# target to generate assembly for a file
+Vector3.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Vector3.cpp.s
+.PHONY : Vector3.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
@@ -234,15 +402,36 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... cliontest"
+	@echo "... Camera.o"
+	@echo "... Camera.i"
+	@echo "... Camera.s"
 	@echo "... Color.o"
 	@echo "... Color.i"
 	@echo "... Color.s"
 	@echo "... MyOpenGLWindow.o"
 	@echo "... MyOpenGLWindow.i"
 	@echo "... MyOpenGLWindow.s"
+	@echo "... Plane.o"
+	@echo "... Plane.i"
+	@echo "... Plane.s"
+	@echo "... Ray.o"
+	@echo "... Ray.i"
+	@echo "... Ray.s"
+	@echo "... Scene.o"
+	@echo "... Scene.i"
+	@echo "... Scene.s"
+	@echo "... Surface.o"
+	@echo "... Surface.i"
+	@echo "... Surface.s"
 	@echo "... Test.o"
 	@echo "... Test.i"
 	@echo "... Test.s"
+	@echo "... Triangle.o"
+	@echo "... Triangle.i"
+	@echo "... Triangle.s"
+	@echo "... Vector3.o"
+	@echo "... Vector3.i"
+	@echo "... Vector3.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

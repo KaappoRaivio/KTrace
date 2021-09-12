@@ -5,7 +5,7 @@
 #include <iostream>
 #include "MyOpenGLWindow.h"
 
-MyOpenGLWindow::MyOpenGLWindow(int width, int height, double gamma) : m_width{width}, m_height{height}, m_gamma{gamma} {
+MyOpenGLWindow::MyOpenGLWindow(int width, int height, double gamma, int scale) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale} {
     if (!MyOpenGLWindow::initialized) {
         SDL_Init(SDL_INIT_VIDEO);
         MyOpenGLWindow::initialized = true;
@@ -35,19 +35,29 @@ MyOpenGLWindow::MyOpenGLWindow(int width, int height, double gamma) : m_width{wi
 //    SDL_RenderPresent(renderer);
 }
 
-void MyOpenGLWindow::set_pixel(int x, int y, const Color &color) {
-    auto gamma_corrected = color.changeGamma(m_gamma);
-    auto r = (uint8_t)(gamma_corrected.r() * 256.0);
-    auto g = (uint8_t)(gamma_corrected.g() * 256.0);
-    auto b = (uint8_t)(gamma_corrected.b() * 256.0);
+void MyOpenGLWindow::set_pixel(int x, int y, const Color &color) const {
+    const auto epsilon = 1e-5;
 
-    std::cout << unsigned(r) << std::endl;
+    auto gamma_corrected = color.changeGamma(m_gamma);
+//    std::cout << gamma_corrected << std::endl;
+    auto r = (gamma_corrected.r() * 256.0 - epsilon);
+    auto g = (gamma_corrected.g() * 256.0 - epsilon);
+    auto b = (gamma_corrected.b() * 256.0 - epsilon);
+
+//    if (r > 0) std::cout << unsigned(r) << std::endl;
 
     SDL_SetRenderDrawColor(renderer, r, g, b, 1.0);
-    SDL_RenderDrawPoint(renderer, x, y);
+
+    SDL_Rect rect;
+    rect.x = x * scale;
+    rect.y = y * scale;
+    rect.w = scale;
+    rect.h = scale;
+    SDL_RenderFillRect(renderer, &rect);
+//    SDL_RenderDrawPoint(renderer, x, y);
 }
 
-void MyOpenGLWindow::update() {
+void MyOpenGLWindow::update() const {
     SDL_RenderPresent(renderer);
 }
 
@@ -59,5 +69,15 @@ MyOpenGLWindow::~MyOpenGLWindow() {
     std::cout << "closing!" << std::endl;
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+}
+
+void MyOpenGLWindow::paint(std::vector<std::vector<Color>> pixels) const {
+    for (int y = 0; y < pixels.size(); ++y) {
+        for (int x = 0; x < pixels[y].size(); ++x) {
+            set_pixel(x, y, pixels[y][x]);
+
+        }
+    }
+    update();
 }
 

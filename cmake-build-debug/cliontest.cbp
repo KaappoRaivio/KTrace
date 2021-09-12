@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/kaappo/git/cliontest/Camera.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Camera.h">
+			<Option target="cliontest"/>
+		</Unit>
 		<Unit filename="/home/kaappo/git/cliontest/Color.cpp">
 			<Option target="cliontest"/>
 		</Unit>
@@ -94,10 +100,46 @@
 		<Unit filename="/home/kaappo/git/cliontest/MyOpenGLWindow.h">
 			<Option target="cliontest"/>
 		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Plane.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Plane.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Ray.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Ray.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Scene.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Scene.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Surface.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Surface.h">
+			<Option target="cliontest"/>
+		</Unit>
 		<Unit filename="/home/kaappo/git/cliontest/Test.cpp">
 			<Option target="cliontest"/>
 		</Unit>
 		<Unit filename="/home/kaappo/git/cliontest/Test.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Triangle.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Triangle.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Vector3.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Vector3.h">
 			<Option target="cliontest"/>
 		</Unit>
 		<Unit filename="/home/kaappo/git/cliontest/main.cpp">

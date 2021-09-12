@@ -8,9 +8,16 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/kaappo/git/cliontest/Camera.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Camera.cpp.o"
   "/home/kaappo/git/cliontest/Color.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Color.cpp.o"
   "/home/kaappo/git/cliontest/MyOpenGLWindow.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/MyOpenGLWindow.cpp.o"
+  "/home/kaappo/git/cliontest/Plane.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Plane.cpp.o"
+  "/home/kaappo/git/cliontest/Ray.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Ray.cpp.o"
+  "/home/kaappo/git/cliontest/Scene.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Scene.cpp.o"
+  "/home/kaappo/git/cliontest/Surface.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Surface.cpp.o"
   "/home/kaappo/git/cliontest/Test.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Test.cpp.o"
+  "/home/kaappo/git/cliontest/Triangle.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Triangle.cpp.o"
+  "/home/kaappo/git/cliontest/Vector3.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Vector3.cpp.o"
   "/home/kaappo/git/cliontest/main.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

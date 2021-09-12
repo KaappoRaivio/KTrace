@@ -118,12 +118,110 @@ CMakeFiles/cliontest.dir/Test.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Test.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Test.cpp -o CMakeFiles/cliontest.dir/Test.cpp.s
 
+CMakeFiles/cliontest.dir/Vector3.cpp.o: CMakeFiles/cliontest.dir/flags.make
+CMakeFiles/cliontest.dir/Vector3.cpp.o: ../Vector3.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/cliontest.dir/Vector3.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cliontest.dir/Vector3.cpp.o -c /home/kaappo/git/cliontest/Vector3.cpp
+
+CMakeFiles/cliontest.dir/Vector3.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cliontest.dir/Vector3.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaappo/git/cliontest/Vector3.cpp > CMakeFiles/cliontest.dir/Vector3.cpp.i
+
+CMakeFiles/cliontest.dir/Vector3.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Vector3.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Vector3.cpp -o CMakeFiles/cliontest.dir/Vector3.cpp.s
+
+CMakeFiles/cliontest.dir/Ray.cpp.o: CMakeFiles/cliontest.dir/flags.make
+CMakeFiles/cliontest.dir/Ray.cpp.o: ../Ray.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/cliontest.dir/Ray.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cliontest.dir/Ray.cpp.o -c /home/kaappo/git/cliontest/Ray.cpp
+
+CMakeFiles/cliontest.dir/Ray.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cliontest.dir/Ray.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaappo/git/cliontest/Ray.cpp > CMakeFiles/cliontest.dir/Ray.cpp.i
+
+CMakeFiles/cliontest.dir/Ray.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Ray.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Ray.cpp -o CMakeFiles/cliontest.dir/Ray.cpp.s
+
+CMakeFiles/cliontest.dir/Surface.cpp.o: CMakeFiles/cliontest.dir/flags.make
+CMakeFiles/cliontest.dir/Surface.cpp.o: ../Surface.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/cliontest.dir/Surface.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cliontest.dir/Surface.cpp.o -c /home/kaappo/git/cliontest/Surface.cpp
+
+CMakeFiles/cliontest.dir/Surface.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cliontest.dir/Surface.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaappo/git/cliontest/Surface.cpp > CMakeFiles/cliontest.dir/Surface.cpp.i
+
+CMakeFiles/cliontest.dir/Surface.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Surface.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Surface.cpp -o CMakeFiles/cliontest.dir/Surface.cpp.s
+
+CMakeFiles/cliontest.dir/Triangle.cpp.o: CMakeFiles/cliontest.dir/flags.make
+CMakeFiles/cliontest.dir/Triangle.cpp.o: ../Triangle.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/cliontest.dir/Triangle.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cliontest.dir/Triangle.cpp.o -c /home/kaappo/git/cliontest/Triangle.cpp
+
+CMakeFiles/cliontest.dir/Triangle.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cliontest.dir/Triangle.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaappo/git/cliontest/Triangle.cpp > CMakeFiles/cliontest.dir/Triangle.cpp.i
+
+CMakeFiles/cliontest.dir/Triangle.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Triangle.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Triangle.cpp -o CMakeFiles/cliontest.dir/Triangle.cpp.s
+
+CMakeFiles/cliontest.dir/Plane.cpp.o: CMakeFiles/cliontest.dir/flags.make
+CMakeFiles/cliontest.dir/Plane.cpp.o: ../Plane.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/cliontest.dir/Plane.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cliontest.dir/Plane.cpp.o -c /home/kaappo/git/cliontest/Plane.cpp
+
+CMakeFiles/cliontest.dir/Plane.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cliontest.dir/Plane.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaappo/git/cliontest/Plane.cpp > CMakeFiles/cliontest.dir/Plane.cpp.i
+
+CMakeFiles/cliontest.dir/Plane.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Plane.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Plane.cpp -o CMakeFiles/cliontest.dir/Plane.cpp.s
+
+CMakeFiles/cliontest.dir/Camera.cpp.o: CMakeFiles/cliontest.dir/flags.make
+CMakeFiles/cliontest.dir/Camera.cpp.o: ../Camera.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/cliontest.dir/Camera.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cliontest.dir/Camera.cpp.o -c /home/kaappo/git/cliontest/Camera.cpp
+
+CMakeFiles/cliontest.dir/Camera.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cliontest.dir/Camera.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaappo/git/cliontest/Camera.cpp > CMakeFiles/cliontest.dir/Camera.cpp.i
+
+CMakeFiles/cliontest.dir/Camera.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Camera.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Camera.cpp -o CMakeFiles/cliontest.dir/Camera.cpp.s
+
+CMakeFiles/cliontest.dir/Scene.cpp.o: CMakeFiles/cliontest.dir/flags.make
+CMakeFiles/cliontest.dir/Scene.cpp.o: ../Scene.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/cliontest.dir/Scene.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cliontest.dir/Scene.cpp.o -c /home/kaappo/git/cliontest/Scene.cpp
+
+CMakeFiles/cliontest.dir/Scene.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cliontest.dir/Scene.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaappo/git/cliontest/Scene.cpp > CMakeFiles/cliontest.dir/Scene.cpp.i
+
+CMakeFiles/cliontest.dir/Scene.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cliontest.dir/Scene.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaappo/git/cliontest/Scene.cpp -o CMakeFiles/cliontest.dir/Scene.cpp.s
+
 # Object files for target cliontest
 cliontest_OBJECTS = \
 "CMakeFiles/cliontest.dir/main.cpp.o" \
 "CMakeFiles/cliontest.dir/MyOpenGLWindow.cpp.o" \
 "CMakeFiles/cliontest.dir/Color.cpp.o" \
-"CMakeFiles/cliontest.dir/Test.cpp.o"
+"CMakeFiles/cliontest.dir/Test.cpp.o" \
+"CMakeFiles/cliontest.dir/Vector3.cpp.o" \
+"CMakeFiles/cliontest.dir/Ray.cpp.o" \
+"CMakeFiles/cliontest.dir/Surface.cpp.o" \
+"CMakeFiles/cliontest.dir/Triangle.cpp.o" \
+"CMakeFiles/cliontest.dir/Plane.cpp.o" \
+"CMakeFiles/cliontest.dir/Camera.cpp.o" \
+"CMakeFiles/cliontest.dir/Scene.cpp.o"
 
 # External object files for target cliontest
 cliontest_EXTERNAL_OBJECTS =
@@ -132,9 +230,16 @@ cliontest: CMakeFiles/cliontest.dir/main.cpp.o
 cliontest: CMakeFiles/cliontest.dir/MyOpenGLWindow.cpp.o
 cliontest: CMakeFiles/cliontest.dir/Color.cpp.o
 cliontest: CMakeFiles/cliontest.dir/Test.cpp.o
+cliontest: CMakeFiles/cliontest.dir/Vector3.cpp.o
+cliontest: CMakeFiles/cliontest.dir/Ray.cpp.o
+cliontest: CMakeFiles/cliontest.dir/Surface.cpp.o
+cliontest: CMakeFiles/cliontest.dir/Triangle.cpp.o
+cliontest: CMakeFiles/cliontest.dir/Plane.cpp.o
+cliontest: CMakeFiles/cliontest.dir/Camera.cpp.o
+cliontest: CMakeFiles/cliontest.dir/Scene.cpp.o
 cliontest: CMakeFiles/cliontest.dir/build.make
 cliontest: CMakeFiles/cliontest.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable cliontest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable cliontest"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cliontest.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
