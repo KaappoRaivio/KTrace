@@ -94,6 +94,18 @@
 		<Unit filename="/home/kaappo/git/cliontest/Color.h">
 			<Option target="cliontest"/>
 		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Intensity.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Intensity.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Intersection.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/Material.h">
+			<Option target="cliontest"/>
+		</Unit>
 		<Unit filename="/home/kaappo/git/cliontest/MyOpenGLWindow.cpp">
 			<Option target="cliontest"/>
 		</Unit>
@@ -116,6 +128,12 @@
 			<Option target="cliontest"/>
 		</Unit>
 		<Unit filename="/home/kaappo/git/cliontest/Scene.h">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/SceneObject.cpp">
+			<Option target="cliontest"/>
+		</Unit>
+		<Unit filename="/home/kaappo/git/cliontest/SceneObject.h">
 			<Option target="cliontest"/>
 		</Unit>
 		<Unit filename="/home/kaappo/git/cliontest/Surface.cpp">

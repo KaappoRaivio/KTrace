@@ -10,10 +10,12 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/kaappo/git/cliontest/Camera.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Camera.cpp.o"
   "/home/kaappo/git/cliontest/Color.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Color.cpp.o"
+  "/home/kaappo/git/cliontest/Intensity.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Intensity.cpp.o"
   "/home/kaappo/git/cliontest/MyOpenGLWindow.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/MyOpenGLWindow.cpp.o"
   "/home/kaappo/git/cliontest/Plane.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Plane.cpp.o"
   "/home/kaappo/git/cliontest/Ray.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Ray.cpp.o"
   "/home/kaappo/git/cliontest/Scene.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Scene.cpp.o"
+  "/home/kaappo/git/cliontest/SceneObject.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/SceneObject.cpp.o"
   "/home/kaappo/git/cliontest/Surface.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Surface.cpp.o"
   "/home/kaappo/git/cliontest/Test.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Test.cpp.o"
   "/home/kaappo/git/cliontest/Triangle.cpp" "/home/kaappo/git/cliontest/cmake-build-debug/CMakeFiles/cliontest.dir/Triangle.cpp.o"

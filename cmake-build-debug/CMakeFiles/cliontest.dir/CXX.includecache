@@ -18,13 +18,21 @@ Vector3.h
 array
 -
 
-/home/kaappo/git/cliontest/MyOpenGLWindow.h
-SDL2/SDL.h
--
-vector
--
+/home/kaappo/git/cliontest/Intensity.h
 Color.h
 /home/kaappo/git/cliontest/Color.h
+
+/home/kaappo/git/cliontest/Intersection.h
+Vector3.h
+/home/kaappo/git/cliontest/Vector3.h
+Surface.h
+/home/kaappo/git/cliontest/Surface.h
+
+/home/kaappo/git/cliontest/Material.h
+Vector3.h
+/home/kaappo/git/cliontest/Vector3.h
+Intensity.h
+/home/kaappo/git/cliontest/Intensity.h
 
 /home/kaappo/git/cliontest/Plane.h
 Vector3.h
@@ -35,6 +43,16 @@ Ray.h
 /home/kaappo/git/cliontest/Ray.h
 Vector3.h
 /home/kaappo/git/cliontest/Vector3.h
+
+/home/kaappo/git/cliontest/Scene.cpp
+Scene.h
+/home/kaappo/git/cliontest/Scene.h
+Intensity.h
+/home/kaappo/git/cliontest/Intensity.h
+utility
+-
+cmath
+-
 
 /home/kaappo/git/cliontest/Scene.h
 vector
@@ -47,12 +65,26 @@ Color.h
 /home/kaappo/git/cliontest/Color.h
 Triangle.h
 /home/kaappo/git/cliontest/Triangle.h
+SceneObject.h
+/home/kaappo/git/cliontest/SceneObject.h
+
+/home/kaappo/git/cliontest/SceneObject.h
+Surface.h
+/home/kaappo/git/cliontest/Surface.h
+Material.h
+/home/kaappo/git/cliontest/Material.h
 
 /home/kaappo/git/cliontest/Surface.h
+optional
+-
 Ray.h
 /home/kaappo/git/cliontest/Ray.h
+Intersection.h
+/home/kaappo/git/cliontest/Intersection.h
 
 /home/kaappo/git/cliontest/Triangle.h
+optional
+-
 Vector3.h
 /home/kaappo/git/cliontest/Vector3.h
 Plane.h
@@ -65,24 +97,4 @@ ostream
 -
 iostream
 -
-
-/home/kaappo/git/cliontest/main.cpp
-iostream
--
-memory
--
-MyOpenGLWindow.h
-/home/kaappo/git/cliontest/MyOpenGLWindow.h
-Color.h
-/home/kaappo/git/cliontest/Color.h
-Vector3.h
-/home/kaappo/git/cliontest/Vector3.h
-Plane.h
-/home/kaappo/git/cliontest/Plane.h
-Triangle.h
-/home/kaappo/git/cliontest/Triangle.h
-Camera.h
-/home/kaappo/git/cliontest/Camera.h
-Scene.h
-/home/kaappo/git/cliontest/Scene.h
 

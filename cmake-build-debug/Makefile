@@ -177,6 +177,30 @@ Color.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Color.cpp.s
 .PHONY : Color.cpp.s
 
+Intensity.o: Intensity.cpp.o
+.PHONY : Intensity.o
+
+# target to build an object file
+Intensity.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Intensity.cpp.o
+.PHONY : Intensity.cpp.o
+
+Intensity.i: Intensity.cpp.i
+.PHONY : Intensity.i
+
+# target to preprocess a source file
+Intensity.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Intensity.cpp.i
+.PHONY : Intensity.cpp.i
+
+Intensity.s: Intensity.cpp.s
+.PHONY : Intensity.s
+
+# target to generate assembly for a file
+Intensity.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Intensity.cpp.s
+.PHONY : Intensity.cpp.s
+
 MyOpenGLWindow.o: MyOpenGLWindow.cpp.o
 .PHONY : MyOpenGLWindow.o
 
@@ -272,6 +296,30 @@ Scene.s: Scene.cpp.s
 Scene.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/Scene.cpp.s
 .PHONY : Scene.cpp.s
+
+SceneObject.o: SceneObject.cpp.o
+.PHONY : SceneObject.o
+
+# target to build an object file
+SceneObject.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/SceneObject.cpp.o
+.PHONY : SceneObject.cpp.o
+
+SceneObject.i: SceneObject.cpp.i
+.PHONY : SceneObject.i
+
+# target to preprocess a source file
+SceneObject.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/SceneObject.cpp.i
+.PHONY : SceneObject.cpp.i
+
+SceneObject.s: SceneObject.cpp.s
+.PHONY : SceneObject.s
+
+# target to generate assembly for a file
+SceneObject.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cliontest.dir/build.make CMakeFiles/cliontest.dir/SceneObject.cpp.s
+.PHONY : SceneObject.cpp.s
 
 Surface.o: Surface.cpp.o
 .PHONY : Surface.o
@@ -408,6 +456,9 @@ help:
 	@echo "... Color.o"
 	@echo "... Color.i"
 	@echo "... Color.s"
+	@echo "... Intensity.o"
+	@echo "... Intensity.i"
+	@echo "... Intensity.s"
 	@echo "... MyOpenGLWindow.o"
 	@echo "... MyOpenGLWindow.i"
 	@echo "... MyOpenGLWindow.s"
@@ -420,6 +471,9 @@ help:
 	@echo "... Scene.o"
 	@echo "... Scene.i"
 	@echo "... Scene.s"
+	@echo "... SceneObject.o"
+	@echo "... SceneObject.i"
+	@echo "... SceneObject.s"
 	@echo "... Surface.o"
 	@echo "... Surface.i"
 	@echo "... Surface.s"

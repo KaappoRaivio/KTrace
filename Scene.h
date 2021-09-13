@@ -10,15 +10,16 @@
 #include "Camera.h"
 #include "Color.h"
 #include "Triangle.h"
+#include "SceneObject.h"
 
 class Scene {
 private:
-    std::vector<Surface*> objects;
+    std::vector<SceneObject> objects;
     Camera camera;
 public:
-    Scene(const std::vector<Surface*>& objects, Camera camera);
+    Scene(std::vector<SceneObject>  objects, Camera camera);
     [[nodiscard]] std::vector<std::vector<Color>> trace () const;
-    [[nodiscard]] bool do_raycast (const Ray& ray) const;
+    [[nodiscard]] Color calculate_color (const Ray& ray) const;
 };
 
 

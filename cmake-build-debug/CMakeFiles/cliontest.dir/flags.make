@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = 
 
-CXX_FLAGS = -O0 -std=gnu++2a
+CXX_FLAGS = -O3 -std=gnu++2a
 

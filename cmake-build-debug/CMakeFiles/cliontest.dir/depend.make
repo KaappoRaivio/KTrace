@@ -8,6 +8,10 @@ CMakeFiles/cliontest.dir/Camera.cpp.o: \
 CMakeFiles/cliontest.dir/Color.cpp.o: \
  ../Color.cpp \
  ../Color.h
+CMakeFiles/cliontest.dir/Intensity.cpp.o: \
+ ../Color.h \
+ ../Intensity.cpp \
+ ../Intensity.h
 CMakeFiles/cliontest.dir/MyOpenGLWindow.cpp.o: \
  ../Color.h \
  ../MyOpenGLWindow.cpp \
@@ -24,14 +28,29 @@ CMakeFiles/cliontest.dir/Ray.cpp.o: \
 CMakeFiles/cliontest.dir/Scene.cpp.o: \
  ../Camera.h \
  ../Color.h \
+ ../Intensity.h \
+ ../Intersection.h \
+ ../Material.h \
  ../Plane.h \
  ../Ray.h \
  ../Scene.cpp \
  ../Scene.h \
+ ../SceneObject.h \
  ../Surface.h \
  ../Triangle.h \
  ../Vector3.h
+CMakeFiles/cliontest.dir/SceneObject.cpp.o: \
+ ../Color.h \
+ ../Intensity.h \
+ ../Intersection.h \
+ ../Material.h \
+ ../Ray.h \
+ ../SceneObject.cpp \
+ ../SceneObject.h \
+ ../Surface.h \
+ ../Vector3.h
 CMakeFiles/cliontest.dir/Surface.cpp.o: \
+ ../Intersection.h \
  ../Ray.h \
  ../Surface.cpp \
  ../Surface.h \
@@ -40,6 +59,7 @@ CMakeFiles/cliontest.dir/Test.cpp.o: \
  ../Test.cpp \
  ../Test.h
 CMakeFiles/cliontest.dir/Triangle.cpp.o: \
+ ../Intersection.h \
  ../Plane.h \
  ../Ray.h \
  ../Surface.h \
@@ -52,10 +72,14 @@ CMakeFiles/cliontest.dir/Vector3.cpp.o: \
 CMakeFiles/cliontest.dir/main.cpp.o: \
  ../Camera.h \
  ../Color.h \
+ ../Intensity.h \
+ ../Intersection.h \
+ ../Material.h \
  ../MyOpenGLWindow.h \
  ../Plane.h \
  ../Ray.h \
  ../Scene.h \
+ ../SceneObject.h \
  ../Surface.h \
  ../Triangle.h \
  ../Vector3.h \

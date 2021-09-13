@@ -14,6 +14,10 @@ private:
 
 public:
     Vector3(double i, double j, double k);
+    Vector3(const Vector3& other);
+    Vector3(Vector3&& original) noexcept ;
+    Vector3& operator=(Vector3&& a) noexcept ;
+
     Vector3 operator+ (const Vector3& other) const;
     Vector3 operator- () const;
     Vector3 operator- (const Vector3& other) const;

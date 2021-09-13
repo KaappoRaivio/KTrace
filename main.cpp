@@ -8,29 +8,32 @@
 #include "Triangle.h"
 #include "Camera.h"
 #include "Scene.h"
+#include "SceneObject.h"
 
 #define PRECISION_LIMIT 0.001;
 
 int main () {
 
-    Camera camera = {{0, -5, 7}, {0, 0.2}, 1, {1, 1,}, {4000, 4000}};
+    Camera camera = {{0, -5, 7}, {0, 0.2}, 1, {1, 1,}, {2000, 2000}};
 
 //    auto il = {Vector3{-5, 6, 5}, {0,  0, 3}, {5,  6, 3}};
 //    std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(il);
     Triangle t = {Vector3{-5, 6, 5}, {0,  0, 3}, {5,  6, 3}};
-                               
+    Material m{Intensity{1, 1, 1}};
+    std::cout << m.albedo << std::endl;
+
     
-    std::vector<Surface*> objects = {(Surface*) &t};
+    std::vector<SceneObject> objects = {SceneObject{t, m}};
 
     Scene scene{objects, camera};
     auto pixels = scene.trace();
 
-//    MyOpenGLWindow window = {4000, 4000, 2, 1};
-//    window.paint(pixels);
+    MyOpenGLWindow window = {2000, 2000, 1.8, 1};
+    window.paint(pixels);
     std::cout << "traced" << std::endl;
-//    window.delay(10000);
-//    SDL_Quit();
+    window.delay(5000);
 //    while (true);
+    SDL_Quit();
 
 
 //    auto viewplane = camera.get_viewplane();

@@ -9,18 +9,18 @@ Triangle::Triangle(const Vector3 &t1, const Vector3 &t2, const Vector3 &t3) : t1
 Triangle::Triangle(std::initializer_list<Vector3> list) : Triangle(list.begin()[0], list.begin()[1], list.begin()[2]) {}
 
 
-double Triangle::get_intersection_distance(const Ray &ray) const {
+std::optional<Intersection> Triangle::get_intersection_distance(const Ray &ray) const {
     double intersection_distance = plane.get_intersection_distance(ray);
     if (intersection_distance == 0) {
         std::cout << "Early return" << std::endl;
-        return 0;
+        return std::nullopt;
     }
 
     auto position = ray.apply(intersection_distance);
     if (includes(position)) {
-        return intersection_distance;
+        return Intersection{intersection_distance, ray.apply(intersection_distance), *this};
     } else {
-        return 0;
+        return std::nullopt;
     }
 }
 
@@ -69,6 +69,10 @@ bool Triangle::check_bounds(const Vector3 &vector) const {
 //    if c < 0: return False
 //
 //    return True
+}
+
+Vector3 Triangle::get_normal_at(const Vector3 &position) const {
+    return plane.getNormal();
 }
 
 

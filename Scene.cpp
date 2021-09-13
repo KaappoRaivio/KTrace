@@ -3,10 +3,12 @@
 //
 
 #include "Scene.h"
+#include "Intensity.h"
 
 #include <utility>
+#include <cmath>
 
-Scene::Scene(const std::vector<Surface*>& objects, Camera camera) : objects(std::move(objects)), camera(std::move(camera)) {}
+Scene::Scene(std::vector<SceneObject>  objects, Camera camera) : objects(std::move(objects)), camera(std::move(camera)) {}
 
 std::vector<std::vector<Color>> Scene::trace() const {
     auto viewplane = camera.get_viewplane();
@@ -21,7 +23,7 @@ std::vector<std::vector<Color>> Scene::trace() const {
             const Ray ray = {camera.getOrigin(), viewplane[z][x]};
 
 
-            pixel_row.push_back(do_raycast(ray) ? Color{1, 0, 0, 1} : Color{0, 0, 0, 1});
+            pixel_row.push_back(calculate_color(ray));
         }
         pixels.push_back(pixel_row);
     }
@@ -29,12 +31,18 @@ std::vector<std::vector<Color>> Scene::trace() const {
     return pixels;
 }
 
-bool Scene::do_raycast(const Ray &ray) const {
-    for (auto& object : objects) {
-        if (object->get_intersection_distance(ray) != 0) {
+Color Scene::calculate_color(const Ray &ray) const {
+    for (const auto& object : objects) {
+        const std::optional<Intersection> &possibleIntersection = object.getSurface().get_intersection_distance(ray);
+        if (possibleIntersection) {
 //            std::cout << "Hit!" << std::endl;
-            return true;
+//            return true;
+            double dot = std::abs(ray.getDirection().normalize() *
+                         possibleIntersection->surface.get_normal_at(possibleIntersection->position).normalize());
+//            std::cout << dot << std::endl;
+            double brightness = 1.0 / std::pow(possibleIntersection->distance, 2) * dot;
+            return object.getMaterial().albedo * brightness * 50.0;
         }
     }
-    return false;
+    return Intensity{0, 0, 0};
 }

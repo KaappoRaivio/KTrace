@@ -6,6 +6,15 @@
 #include "Vector3.h"
 
 Vector3::Vector3(double i, double j, double k) : i(i), j(j), k(k) {}
+Vector3::Vector3(const Vector3 &other) = default;
+Vector3 &Vector3::operator=(Vector3 &&a) noexcept {
+    i = a.i;
+    j = a.j;
+    k = a.k;
+    return *this;
+}
+Vector3::Vector3(Vector3 &&original)  noexcept : i{original.i}, j{original.j}, k{original.k} {}
+
 
 Vector3 Vector3::operator+(const Vector3 &other) const {
     return {i + other.i, j + other.j, k + other.k};
@@ -60,4 +69,8 @@ Vector3 Vector3::rotate(double yaw, double pitch) const {
             k * cos(pitch) - j * sin(pitch)
     };
 }
+
+
+
+
 
