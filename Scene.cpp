@@ -16,35 +16,47 @@ Scene::Scene(std::vector<SceneObject> objects, std::vector<LightSource> lightSou
 std::vector<std::vector<Intensity>> Scene::trace() const {
     auto viewplane = camera.get_viewplane();
 
+//    std::vector<std::vector<Intensity>> pixels;
+//    pixels.reserve(viewplane.size());
+
     std::vector<std::vector<Intensity>> pixels;
     pixels.reserve(viewplane.size());
+    for (auto & i : viewplane) {
 
-    int y = 0;
-    for (const auto & row : viewplane) {
-        ++y;
-        std::vector<Intensity> pixel_row;
-        pixel_row.reserve(row.size());
-        int col = 0;
-        for (const auto & x : row) {
-            ++col;
-            const Ray ray = {camera.getOrigin(), x};
-
-
-            pixel_row.push_back(calculate_color(ray, 10 * y + col));
+        std::vector<Intensity> row;
+        row.reserve(i.size());
+        for (int j = 0; j < i.size(); ++j) {
+            row.emplace_back(0, 0, 0);
         }
-        pixels.push_back(pixel_row);
+        pixels.push_back(row);
+    }
+
+//    std::vector<Intensity> pixel_row;
+//    pixel_row.reserve(row.size());
+
+    #pragma omp parallel for collapse(2) default(shared)
+    for (int y = 0; y < viewplane.size(); ++y) {
+//    for (const auto & row : viewplane) {
+//        const auto& row = viewplane[y];
+
+        for (int x = 0; x < viewplane[0].size(); ++x) {
+            const auto& pixel = viewplane[y][x];
+            const Ray ray = {camera.getOrigin(), pixel};
+
+//            std::cout << calculate_color(ray) << std::endl;
+
+            pixels[y][x] = std::move(calculate_color(ray));
+//            pixel_row.push_back(calculate_color(ray, 10 * y + x));
+        }
+//        pixels.push_back(pixel_row);
     }
 
     return pixels;
 }
 
-Intensity Scene::calculate_color(const Ray &ray, int index) const {
+Intensity Scene::calculate_color(const Ray &ray) const {
     const auto& intersection = get_closest_intersection(ray);
 //    std::cout << intersection.value() << std::endl;
-    if (index == 64) {
-//        return Intensity{0, 1, 0};
-        std::cout << "Bingo!" << std::endl;
-    }
 
     if (!intersection) {
         return Intensity{0, 0, 0};
@@ -60,7 +72,7 @@ Intensity Scene::calculate_color(const Ray &ray, int index) const {
             const Vector3& normalized = vector_to_light.normalize();
             const auto& any_hits = get_closest_intersection({closest.position, normalized});
             if (!any_hits) {
-                double dot = std::abs(closest.sceneObject.getSurface()->get_normal_at(closest.position) *
+                double dot = std::abs(closest.sceneObject.getSurface()->get_normal_at(closest.position).normalize() *
                                               vector_to_light.normalize());
                 double brightness = 1.0 / vector_to_light.squared() * dot;
                 diffuse_light += lightSource.intensity * brightness;

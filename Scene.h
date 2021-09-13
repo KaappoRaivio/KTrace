@@ -21,7 +21,7 @@ private:
 public:
     Scene(std::vector<SceneObject> objects, std::vector<LightSource> lightSources, Camera camera);
     [[nodiscard]] std::vector<std::vector<Intensity>> trace () const;
-    [[nodiscard]] Intensity calculate_color(const Ray &ray, int index) const;
+    [[nodiscard]] Intensity calculate_color(const Ray &ray) const;
 
 //    std::vector<Intersection> getIntersections(const Ray &ray);
 

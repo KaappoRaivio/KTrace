@@ -14,7 +14,9 @@ target_link_libraries(cliontest
     PRIVATE SDL2
 )
 
-set(CMAKE_CXX_FLAGS_DEBUG "-O3")
+set(CMAKE_CXX_FLAGS_DEBUG "-O3 -fopenmp")
+#set(CMAKE_CXX_FLAGS_DEBUG "-O3")
+#set(CMAKE_CXX_FLAGS "-O3")
 
 
 

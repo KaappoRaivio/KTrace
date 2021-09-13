@@ -26,6 +26,8 @@ MyOpenGLWindow::MyOpenGLWindow(int width, int height, double gamma, int scale) :
 
 void MyOpenGLWindow::set_pixel(int x, int y, const Intensity &color) const {
     constexpr auto epsilon = 1e-5;
+
+
     auto gamma_corrected = color.applyGamma(m_gamma);
 
     auto r = std::clamp((gamma_corrected.getR() * 256.0 - epsilon), 0.0, 256.0 - epsilon);

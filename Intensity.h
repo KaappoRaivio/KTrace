@@ -29,7 +29,7 @@ public:
     Intensity operator+ (const Intensity& other) const;
     Intensity operator+=(const Intensity& other);
 
-    Color applyGamma(double d) const;
+    [[nodiscard]] Color applyGamma(double d) const;
 };
 
 std::ostream& operator<<(const Intensity & color, std::ostream & ostream);
