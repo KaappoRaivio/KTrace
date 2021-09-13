@@ -29,6 +29,7 @@ public:
 
     [[nodiscard]] Vector3 cross (const Vector3& other) const;
     [[nodiscard]] double length () const;
+    [[nodiscard]] double squared () const;
     [[nodiscard]] Vector3 normalize () const;
 
 

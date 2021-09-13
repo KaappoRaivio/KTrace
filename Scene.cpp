@@ -4,26 +4,33 @@
 
 #include "Scene.h"
 #include "Intensity.h"
+#include "LightSource.h"
+#include "IntensityBlend.h"
 
 #include <utility>
 #include <cmath>
 
-Scene::Scene(std::vector<SceneObject>  objects, Camera camera) : objects(std::move(objects)), camera(std::move(camera)) {}
+Scene::Scene(std::vector<SceneObject> objects, std::vector<LightSource> lightSources, Camera camera)
+        : objects(std::move(objects)), camera(std::move(camera)), lightSources(std::move(lightSources)) {}
 
-std::vector<std::vector<Color>> Scene::trace() const {
+std::vector<std::vector<Intensity>> Scene::trace() const {
     auto viewplane = camera.get_viewplane();
 
-    std::vector<std::vector<Color>> pixels;
+    std::vector<std::vector<Intensity>> pixels;
     pixels.reserve(viewplane.size());
 
-    for (int z = 0; z < viewplane.size(); ++z) {
-        std::vector<Color> pixel_row;
-        pixel_row.reserve(viewplane[z].size());
-        for (int x = 0; x < viewplane[z].size(); ++x) {
-            const Ray ray = {camera.getOrigin(), viewplane[z][x]};
+    int y = 0;
+    for (const auto & row : viewplane) {
+        ++y;
+        std::vector<Intensity> pixel_row;
+        pixel_row.reserve(row.size());
+        int col = 0;
+        for (const auto & x : row) {
+            ++col;
+            const Ray ray = {camera.getOrigin(), x};
 
 
-            pixel_row.push_back(calculate_color(ray));
+            pixel_row.push_back(calculate_color(ray, 10 * y + col));
         }
         pixels.push_back(pixel_row);
     }
@@ -31,18 +38,62 @@ std::vector<std::vector<Color>> Scene::trace() const {
     return pixels;
 }
 
-Color Scene::calculate_color(const Ray &ray) const {
+Intensity Scene::calculate_color(const Ray &ray, int index) const {
+    const auto& intersection = get_closest_intersection(ray);
+//    std::cout << intersection.value() << std::endl;
+    if (index == 64) {
+//        return Intensity{0, 1, 0};
+        std::cout << "Bingo!" << std::endl;
+    }
+
+    if (!intersection) {
+        return Intensity{0, 0, 0};
+    } else {
+        const auto closest = *intersection;
+//        std::cout << closest.position << std::endl;
+
+//        Intensity diffuse_light = {0, 0, 0};
+        IntensityBlend diffuse_light;
+
+        for (const auto& lightSource : lightSources) {
+            const Vector3& vector_to_light = lightSource.position - closest.position;
+            const Vector3& normalized = vector_to_light.normalize();
+            const auto& any_hits = get_closest_intersection({closest.position, normalized});
+            if (!any_hits) {
+                double dot = std::abs(closest.sceneObject.getSurface()->get_normal_at(closest.position) *
+                                              vector_to_light.normalize());
+                double brightness = 1.0 / vector_to_light.squared() * dot;
+                diffuse_light += lightSource.intensity * brightness;
+            }
+        }
+
+        return closest.sceneObject.getMaterial().albedo * diffuse_light.commit_blend();
+    }
+
+}
+
+std::optional<Intersection> Scene::get_closest_intersection(const Ray &ray) const {
+    std::vector<Intersection> intersections;
+
     for (const auto& object : objects) {
-        const std::optional<Intersection> &possibleIntersection = object.getSurface().get_intersection_distance(ray);
+//        std::cout << "Rayintact: " << ray << std::endl;
+
+        const std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
         if (possibleIntersection) {
-//            std::cout << "Hit!" << std::endl;
-//            return true;
-            double dot = std::abs(ray.getDirection().normalize() *
-                         possibleIntersection->surface.get_normal_at(possibleIntersection->position).normalize());
-//            std::cout << dot << std::endl;
-            double brightness = 1.0 / std::pow(possibleIntersection->distance, 2) * dot;
-            return object.getMaterial().albedo * brightness * 50.0;
+//            std::cout << possibleIntersection.value().distance << std::endl;
+//            std::cout << possibleIntersection->position << std::endl;
+            intersections.push_back(possibleIntersection.value());
         }
     }
-    return Intensity{0, 0, 0};
+
+    if (intersections.empty()) { return std::nullopt; }
+    else {
+        Intersection intersection = *std::min_element(intersections.begin(), intersections.end(),
+                                                       [](const Intersection &a, const Intersection &b) {
+                                                           return a.distance < b.distance;
+                                                       });
+
+//        std::cout << intersection.distance << std::endl;
+        return intersection;
+    }
 }

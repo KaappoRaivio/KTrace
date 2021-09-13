@@ -17,3 +17,8 @@ const Vector3 &Ray::getDirection() const {
 Vector3 Ray::apply(double lambda) const {
     return origin + direction * lambda;
 }
+
+std::ostream &operator<<(std::ostream &os, const Ray &ray) {
+    os << "origin: " << ray.origin << " direction: " << ray.direction;
+    return os;
+}

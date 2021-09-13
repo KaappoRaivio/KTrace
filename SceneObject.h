@@ -7,17 +7,22 @@
 
 #include "Surface.h"
 #include "Material.h"
+#include "Intersection.h"
 
 class Surface;
+class Intersection;
 
 class SceneObject {
 private:
-    const Surface& surface;
-    const Material& material;
+    Surface* surface;
+    Material material;
 public:
-    SceneObject(const Surface &surface, const Material &material);
+    SceneObject(Surface* surface, Material material);
 
-    [[nodiscard]] const Surface &getSurface() const;
+
+    [[nodiscard]] std::optional<Intersection> get_intersection (const Ray &ray) const;
+
+    [[nodiscard]] const Surface * getSurface() const;
     [[nodiscard]] const Material &getMaterial() const;
 };
 

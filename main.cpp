@@ -1,8 +1,9 @@
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 #include "MyOpenGLWindow.h"
-#include "Color.h"
+#include "Intensity.h"
 #include "Vector3.h"
 #include "Plane.h"
 #include "Triangle.h"
@@ -14,44 +15,58 @@
 
 int main () {
 
-    Camera camera = {{0, -5, 7}, {0, 0.2}, 1, {1, 1,}, {2000, 2000}};
+    Camera camera = {{0, -5, 7}, {0, 0.25}, 1, {1, 1,}, {2000, 2000}};
 
 //    auto il = {Vector3{-5, 6, 5}, {0,  0, 3}, {5,  6, 3}};
 //    std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(il);
     Triangle t = {Vector3{-5, 6, 5}, {0,  0, 3}, {5,  6, 3}};
-    Material m{Intensity{1, 1, 1}};
-    std::cout << m.albedo << std::endl;
+    Plane p = {{0, 0, 1}, -2};
 
-    
-    std::vector<SceneObject> objects = {SceneObject{t, m}};
+    Material m1{Intensity{1, 0.25, 0.75}};
+    Material m2{Intensity{1, 1, 1}};
+//    std::cout << m.albedo << std::endl;
 
-    Scene scene{objects, camera};
+
+    std::vector<SceneObject> objects = {
+            SceneObject{&t, m1},
+            SceneObject(&p, m2)
+    };
+//    std::vector<SceneObject> objects = {SceneObject{&t, m}};
+    std::vector<LightSource> lights = {
+//            LightSource{{0, 0, 7}, Intensity{1, 0.5, 1} * 25},
+            LightSource{{0, 5, 15}, Intensity{1, 1, 1} * 1},
+            LightSource{{-2, 3, 5}, Intensity{1, 1, 0} * 0.25}
+    };
+
+    Scene scene{objects, lights, camera};
+//    (std::vector<SceneObject>(), nullptr, Camera(Vector3(), std::pair()));
+
+
+
+
+    std::cout << "starting tracing!" << std::endl;
+    auto start = std::chrono::system_clock::now();
+    // Some computation here
+
     auto pixels = scene.trace();
 
-    MyOpenGLWindow window = {2000, 2000, 1.8, 1};
-    window.paint(pixels);
+    auto end = std::chrono::system_clock::now();
     std::cout << "traced" << std::endl;
-    window.delay(5000);
+
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+    std::cout << "finished computation at " << std::ctime(&end_time)
+              << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
+
+
+
+    MyOpenGLWindow window = {2000, 2000, 2, 1};
+    window.paint(pixels);
+    window.delay(50000);
 //    while (true);
     SDL_Quit();
-
-
-//    auto viewplane = camera.get_viewplane();
-//    for (int row = 0; row < viewplane.size(); ++row) {
-//
-//        const auto viewplane_row = viewplane[row];
-//        for (int column = 0; column < viewplane_row.size(); ++column) {
-//            std::cout << viewplane_row[column] << " ";
-//        }
-//        std::cout << std::endl;
-//    }
-//    std::cout << camera.get_viewplane() << std::endl;
-
-
-//    Triangle t = Triangle{{-5, 6, 5}, {0, 0, 3}, {5, 6, 3}};
-//    Ray r = {{0, 0, 6}, Vector3{0, 1, -1}.normalize()};
-
-//    std::cout << t.get_intersection_distance(r) << std::endl;
 
     return 0;
 }

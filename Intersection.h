@@ -3,18 +3,20 @@
 //
 #pragma once
 
+#include <utility>
+
 #include "Vector3.h"
 #include "Surface.h"
+#include "SceneObject.h"
 //#include "Surface.h"
 
-struct Surface;
+class SceneObject;
 
 struct Intersection {
-    Intersection(double distance, const Vector3 &position, const Surface& Surface) : distance(distance),
-                                                                                     position(position),
-                                                                                     surface{Surface} {}
+    Intersection(double distance, const Vector3& position, const SceneObject& surface) : distance(distance), position(position), sceneObject{surface} {}
+    Intersection(const Intersection& other) = default;
 
     double distance;
-    const Vector3& position;
-    const Surface& surface;
+    const Vector3 position;
+    const SceneObject& sceneObject;
 };

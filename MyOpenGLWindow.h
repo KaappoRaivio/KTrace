@@ -5,7 +5,7 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
-#include "Color.h"
+#include "Intensity.h"
 
 class MyOpenGLWindow {
 private:
@@ -22,10 +22,10 @@ public:
     MyOpenGLWindow(int width, int height, double gamma, int scale);
     ~MyOpenGLWindow();
 
-    void set_pixel (int x, int y, const Color& color) const;
+    void set_pixel (int x, int y, const Intensity& color) const;
     void update () const;
     void delay(int millis);
 
-    void paint(std::vector<std::vector<Color>> pixels) const;
+    void paint(std::vector<std::vector<Intensity>> pixels) const;
 };
 

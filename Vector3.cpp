@@ -55,7 +55,11 @@ Vector3 Vector3::cross(const Vector3& other) const {
 }
 
 double Vector3::length() const {
-    return sqrt(pow(i, 2.0) + pow(j, 2.0) + pow(k, 2.0));
+    return sqrt(squared());
+}
+
+double Vector3::squared() const {
+    return *this * *this;
 }
 
 Vector3 Vector3::normalize() const {

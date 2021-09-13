@@ -5,6 +5,7 @@
 #pragma once
 
 
+#include <ostream>
 #include "Vector3.h"
 
 class Ray {
@@ -19,6 +20,8 @@ public:
     [[nodiscard]] const Vector3 &getOrigin() const;
     [[nodiscard]] const Vector3 &getDirection() const;
     [[nodiscard]] Vector3 apply (double lambda) const;
+
+    friend std::ostream &operator<<(std::ostream &os, const Ray &ray);
 };
 
 

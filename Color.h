@@ -1,31 +1,22 @@
 //
-// Created by kaappo on 10.9.2021.
+// Created by kaappo on 13.9.2021.
 //
+
 #pragma once
 
-#include <array>
 
 class Color {
-protected:
-    double m_gamma;
-    double m_r, m_g, m_b;
-
+private:
+    const double r, g, b;
+    const double gamma;
 public:
-    Color (double r, double g, double b, double gamma);
-    Color (const Color& other) = default;
-    Color (Color&& original) noexcept;
-    Color& operator=(Color&& original) noexcept;
+    Color(double r, double g, double b, double gamma);
 
-    [[nodiscard]] Color changeGamma(double new_gamma) const;
-
-    [[nodiscard]] double gamma() const;
-    [[nodiscard]] double r() const;
-    [[nodiscard]] double g() const;
-    [[nodiscard]] double b() const;
-
-    friend std::ostream& operator<<(std::ostream & ostream, const Color & color);
-
-    Color operator* (double color) const;
+    [[nodiscard]] double getR() const;
+    [[nodiscard]] double getG() const;
+    [[nodiscard]] double getB() const;
+    [[nodiscard]] double getGamma() const;
 };
 
-std::ostream& operator<<(const Color & color, std::ostream & ostream);
+
+

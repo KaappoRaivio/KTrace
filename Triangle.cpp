@@ -9,18 +9,19 @@ Triangle::Triangle(const Vector3 &t1, const Vector3 &t2, const Vector3 &t3) : t1
 Triangle::Triangle(std::initializer_list<Vector3> list) : Triangle(list.begin()[0], list.begin()[1], list.begin()[2]) {}
 
 
-std::optional<Intersection> Triangle::get_intersection_distance(const Ray &ray) const {
-    double intersection_distance = plane.get_intersection_distance(ray);
-    if (intersection_distance == 0) {
-        std::cout << "Early return" << std::endl;
-        return std::nullopt;
+double Triangle::get_intersection(const Ray &ray) const {
+//    std::cout << "Raydestroyed: " << ray << std::endl;
+    auto possible_intersection = plane.get_intersection_distance(ray);
+    if (possible_intersection == 0) {
+//        std::cout << "Early return" << std::endl;
+        return 0.0;
     }
 
-    auto position = ray.apply(intersection_distance);
+    auto position = ray.apply(possible_intersection);
     if (includes(position)) {
-        return Intersection{intersection_distance, ray.apply(intersection_distance), *this};
+        return possible_intersection;
     } else {
-        return std::nullopt;
+        return 0.0;
     }
 }
 

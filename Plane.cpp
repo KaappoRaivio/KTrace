@@ -3,6 +3,7 @@
 //
 #include <cmath>
 #include <utility>
+#include <optional>
 
 #include "Plane.h"
 
@@ -10,7 +11,7 @@
 #define PRECISION_LIMIT 0.001
 #endif
 
-Plane::Plane(Vector3 normal, double intersect) : normal{std::move(normal)}, intersect{intersect} {}
+Plane::Plane(const Vector3& normal, double intersect) : normal{normal}, intersect{intersect} {}
 
 double Plane::get_intersection_distance(const Ray &ray) const {
     if (normal * ray.getDirection() == 0) {
@@ -28,7 +29,7 @@ Plane Plane::from_three_points(const Vector3 &t1, const Vector3 &t2, const Vecto
 }
 
 bool Plane::includes(const Vector3 &vector) const {
-    return std::abs(normal * vector + intersect) <= PRECISION_LIMIT;
+    return std::abs(normal * vector + intersect) <= 0.1;
 }
 
 const Vector3 &Plane::getNormal() const {
@@ -37,6 +38,14 @@ const Vector3 &Plane::getNormal() const {
 
 double Plane::getIntersect() const {
     return intersect;
+}
+
+double Plane::get_intersection(const Ray &ray) const {
+    return get_intersection_distance(ray);
+}
+
+Vector3 Plane::get_normal_at(const Vector3 &position) const {
+    return normal;
 }
 
 
