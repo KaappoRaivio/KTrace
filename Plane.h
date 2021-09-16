@@ -16,13 +16,13 @@ private:
     Vector3 normal;
     double intersect;
 public:
-    Plane (const Vector3& normal, double intersect);
+    Plane (Vector3  normal, double intersect);
     static Plane from_three_points (const Vector3& t1, const Vector3& t2, const Vector3& t3);
 
     [[nodiscard]] bool includes (const Vector3& vector) const;
-    [[nodiscard]] double get_intersection_distance (const Ray& ray) const;
+    [[nodiscard]] double get_intersection_distance (const Ray& ray) const override;
 
-    [[nodiscard]] double get_intersection(const Ray &ray) const override;
+
     [[nodiscard]] Vector3 get_normal_at(const Vector3 &position) const override;
 
     [[nodiscard]] const Vector3 &getNormal() const;

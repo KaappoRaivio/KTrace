@@ -10,33 +10,53 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "SceneObject.h"
+#include "Sphere.h"
 
-#define PRECISION_LIMIT 0.001;
+extern const double PRECISION_LIMIT = 0.001;
 
 int main () {
 
-    Camera camera = {{0, -5, 7}, {0, 0.25}, 1, {1, 1,}, {2000, 2000}};
+    constexpr int side_length = 2000;
+    constexpr int viewport_side_length = 2000;
+
+    Camera camera = {{0, -5, 7}, {0, 0.3}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
 //    auto il = {Vector3{-5, 6, 5}, {0,  0, 3}, {5,  6, 3}};
 //    std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(il);
-    Triangle t = {Vector3{-5, 6, 5}, {0,  0, 3}, {5,  6, 3}};
-    Plane p = {{0, 0, 1}, -2};
+    Triangle triangle = {Vector3{-5, 6, 5}, {0, 0, 3}, {5, 6, 3}};
+    Plane p = {{0, 0, 1}, -1};
 
-    Material m1{Intensity{1, 1, 1}};
-    Material m2{Intensity{1, 1, 1}};
+    Material triangleTexture{{0.5, 0.5, 0.5}};
+    Material m3{Intensity{1, 1, 1}};
 //    std::cout << m.albedo << std::endl;
 
 
+    Material m2{Intensity{1, 1, 1}, 0.9};
+    Material m4{Intensity{1, 1, 1}, 1};
+    Sphere sphere1 = {{-2.5, 4, 4.5}, 0.3};
+    Sphere sphere2 = {{-1, 4, 4.3}, 0.6};
+    Sphere sphere3 = {{1, 4, 4}, 1};
+    Sphere sphere4 = {{0.5, 2, 3}, 0.5};
+    Sphere sphere5 = {{-0.75, 2, 3.25}, 0.4};
+    Sphere sphere6 = {{0, 6, 6}, 1.5};
+
+//    std::vector<SceneObject> objects = {SceneObject{&triangle, m}};
     std::vector<SceneObject> objects = {
-            SceneObject{&t, m1},
-            SceneObject{&p, m2},
+            SceneObject{&triangle, triangleTexture},
+            SceneObject{&p, m3},
+            SceneObject(&sphere1, m2),
+            SceneObject(&sphere2, m2),
+            SceneObject(&sphere3, m2),
+            SceneObject(&sphere4, m2),
+            SceneObject(&sphere5, m2),
+            SceneObject(&sphere6, m4),
     };
-//    std::vector<SceneObject> objects = {SceneObject{&t, m}};
     std::vector<LightSource> lights = {
-//            LightSource{{0, 0, 7}, Intensity{1, 0.5, 1} * 25},
-            LightSource{{0, 5, 5}, Intensity{1, 0, 0.25} * 5},
-            LightSource{{-2, 3, 10}, Intensity{1, 1, 0} * 1},
-            LightSource{{-2, 3, 10}, Intensity{1, 1, 0} * 1},
+            LightSource{{4, 4.5, 4}, Intensity{0.1, 0.1, 1} * 70},
+            LightSource{{-4, 4.5, 5.5}, Intensity{1, 0.25, 1} * 30},
+            LightSource{{-0.12, 3.83, 3.9}, Intensity{1, 1, 0.25} * 1},
+            LightSource{{4, -40, 40}, Intensity{1, 1, 1} * 200},
+
     };
 
     Scene scene{objects, lights, camera};
@@ -49,7 +69,7 @@ int main () {
     auto start = std::chrono::system_clock::now();
     // Some computation here
 
-    auto pixels = scene.trace();
+    auto pixels = scene.trace(10);
 
     auto end = std::chrono::system_clock::now();
     std::cout << "traced" << std::endl;
@@ -63,9 +83,9 @@ int main () {
 
 
 
-    MyOpenGLWindow window = {2000, 2000, 2, 1};
+    MyOpenGLWindow window = {side_length, side_length, 2, side_length / viewport_side_length};
     window.paint(pixels);
-    window.delay(50000);
+    window.delay(500);
 //    while (true);
     SDL_Quit();
 

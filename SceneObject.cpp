@@ -17,7 +17,7 @@ const Material &SceneObject::getMaterial() const {
 }
 
 std::optional<Intersection> SceneObject::get_intersection(const Ray &ray) const {
-    auto distance = getSurface()->get_intersection(ray);
+    auto distance = getSurface()->get_intersection_distance(ray);
 
 //    std::cout << "Ray: " << ray << std::endl;
     if (distance == 0 || distance < 0.001) {
@@ -25,6 +25,6 @@ std::optional<Intersection> SceneObject::get_intersection(const Ray &ray) const 
         return std::nullopt;
     } else {
 //        std::cout << distance << ", " << ray.apply(distance) << ", " << ray << std::endl;
-        return Intersection{distance, ray.apply(distance), *this};
+        return Intersection{distance, ray.apply(distance), *this, ray};
     }
 }

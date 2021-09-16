@@ -71,8 +71,10 @@ void MyOpenGLWindow::delay(int millis) {
 //            break;
 //    }
 
-
-    SDL_Delay(millis);
+    while (true) {
+        SDL_PumpEvents();
+        SDL_Delay(millis);
+    }
 }
 
 MyOpenGLWindow::~MyOpenGLWindow() {

@@ -35,4 +35,6 @@ public:
 
 
     friend std::ostream &operator<<(std::ostream &os, const Vector3 &vector3);
+
+    Vector3 reflection(const Vector3 &axis) const;
 };

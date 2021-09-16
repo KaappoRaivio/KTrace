@@ -8,15 +8,13 @@ find_package(SDL2 REQUIRED SDL2)
 #include_directories( ${SDL2_INCLUDE_DIR} )
 
 
-add_executable(cliontest main.cpp MyOpenGLWindow.cpp MyOpenGLWindow.h Intensity.cpp Intensity.h Test.cpp Test.h Vector3.cpp Vector3.h Ray.cpp Ray.h Surface.cpp Surface.h Triangle.cpp Triangle.h Plane.cpp Plane.h Camera.cpp Camera.h Scene.cpp Scene.h Intersection.h Material.h SceneObject.cpp SceneObject.h LightSource.h IntensityBlend.cpp IntensityBlend.h Color.cpp Color.h)
+add_executable(cliontest main.cpp MyOpenGLWindow.cpp MyOpenGLWindow.h Intensity.cpp Intensity.h Test.cpp Test.h Vector3.cpp Vector3.h Ray.cpp Ray.h Surface.cpp Surface.h Triangle.cpp Triangle.h Plane.cpp Plane.h Camera.cpp Camera.h Scene.cpp Scene.h Intersection.h Material.h SceneObject.cpp SceneObject.h LightSource.h IntensityBlend.cpp IntensityBlend.h Color.cpp Color.h Sphere.cpp Sphere.h)
 
 target_link_libraries(cliontest
     PRIVATE SDL2
 )
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -fopenmp")
-#set(CMAKE_CXX_FLAGS_DEBUG "-O3")
-#set(CMAKE_CXX_FLAGS "-O3")
 
 
 

@@ -16,6 +16,7 @@ public:
     IntensityBlend () = default;
 
     void operator += (const Intensity& color);
+    void operator += (const IntensityBlend& blend);
     [[nodiscard]] Intensity commit_blend() const;
 };
 

@@ -74,6 +74,10 @@ Vector3 Vector3::rotate(double yaw, double pitch) const {
     };
 }
 
+Vector3 Vector3::reflection(const Vector3 &axis) const {
+    return *this - axis * (2 * (*this * axis) / squared());
+}
+
 
 
 

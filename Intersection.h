@@ -13,10 +13,12 @@
 class SceneObject;
 
 struct Intersection {
-    Intersection(double distance, const Vector3& position, const SceneObject& surface) : distance(distance), position(position), sceneObject{surface} {}
+    Intersection(double distance, Vector3 position, const SceneObject &surface, Ray ray)
+            : distance(distance), position(std::move(position)), sceneObject{surface}, ray(std::move(ray)) {}
     Intersection(const Intersection& other) = default;
 
     double distance;
     const Vector3 position;
     const SceneObject& sceneObject;
+    const Ray ray;
 };

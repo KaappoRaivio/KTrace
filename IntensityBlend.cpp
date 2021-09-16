@@ -16,3 +16,9 @@ Intensity IntensityBlend::commit_blend() const {
 
     return result;
 }
+
+void IntensityBlend::operator+=(const IntensityBlend &color) {
+    for (const auto& item : color.blend) {
+        *this += item;
+    }
+}
