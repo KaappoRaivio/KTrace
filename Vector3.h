@@ -17,6 +17,8 @@ public:
     Vector3(const Vector3& other);
     Vector3(Vector3&& original) noexcept ;
     Vector3& operator=(Vector3&& a) noexcept ;
+    Vector3& operator=(const Vector3& other) = default;
+
 
     Vector3 operator+ (const Vector3& other) const;
     Vector3 operator- () const;
@@ -36,5 +38,6 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Vector3 &vector3);
 
-    Vector3 reflection(const Vector3 &axis) const;
+    [[nodiscard]] Vector3 reflection(const Vector3 &axis) const;
+    static Vector3 randomInsideUnitSphere();
 };

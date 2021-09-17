@@ -15,8 +15,8 @@ protected:
 public:
     Intensity (double r, double g, double b);
     Intensity (const Intensity& other) = default;
-    Intensity (Intensity&& original) noexcept;
-    Intensity& operator=(Intensity&& original) noexcept;
+//    Intensity (Intensity&& original) noexcept;
+//    Intensity& operator=(Intensity&& original) noexcept;
 
     [[nodiscard]] double r() const;
     [[nodiscard]] double g() const;
@@ -25,6 +25,7 @@ public:
     friend std::ostream& operator<<(std::ostream & ostream, const Intensity & color);
 
     Intensity operator* (double coeff) const;
+    Intensity operator/ (double coeff) const;
     Intensity operator* (const Intensity& other) const;
     Intensity operator+ (const Intensity& other) const;
     Intensity operator+=(const Intensity& other);

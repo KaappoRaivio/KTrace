@@ -1,7 +1,10 @@
 //
 // Created by kaappo on 11.9.2021.
 //
+#include <random>
 #include <cmath>
+#include <chrono>
+#include <cstdlib>
 
 #include "Vector3.h"
 
@@ -78,7 +81,24 @@ Vector3 Vector3::reflection(const Vector3 &axis) const {
     return *this - axis * (2 * (*this * axis) / squared());
 }
 
+Vector3 Vector3::randomInsideUnitSphere () {
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator{seed};
+
+    std::normal_distribution<double> d(0, 1);
+
+    double i = d(generator);
+    double j = d(generator);
+    double k = d(generator);
 
 
+    const Vector3 &normalized = Vector3(i, j, k).normalize();
+
+
+    std::uniform_real_distribution<double> dist(0, 1);
+
+    double radius = std::pow(dist(generator), 1.0 / 3.0);
+    return normalized * radius;
+}
 
 

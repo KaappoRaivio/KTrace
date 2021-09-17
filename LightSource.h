@@ -11,11 +11,14 @@
 
 
 struct LightSource {
-    const Vector3 position;
-    const Intensity intensity;
+    Vector3 position;
+    Intensity intensity;
 
-    LightSource(Vector3 position, Intensity intensity) : position{std::move(position)}, intensity{std::move(intensity)} {}
+    LightSource(const Vector3& position, const Intensity& intensity) : position{position}, intensity{intensity} {}
+    LightSource& operator=(const LightSource& other) = default;
 };
+
+
 
 
 

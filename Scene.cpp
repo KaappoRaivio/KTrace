@@ -41,7 +41,7 @@ std::vector<std::vector<Intensity>> Scene::trace(int bounces) const {
             const auto& pixel = viewplane[y][x];
             const Ray ray = {camera.getOrigin(), pixel};
 
-            pixels[y][x] = std::move(calculate_color(ray, x, y, bounces));
+            pixels[y][x] = calculate_color(ray, x, y, bounces);
         }
     }
 
@@ -52,10 +52,10 @@ std::vector<std::vector<Intensity>> Scene::trace(int bounces) const {
 Intensity Scene::calculate_color(const Ray &ray, int x, int y, int bounces_left) const {
     const auto& intersection = get_closest_intersection(ray, 0);
 //    std::cout << intersection.value() << std::endl;
-    if (x == 6 && y == 10) {
+    if (y % 100 == 0 && x == 0) {
 
 //        return {0, 1, 0};
-        std::cout << "Gotcha!" << std::endl;
+        std::cout << "Row " << y << std::endl;
     }
 
 
@@ -130,9 +130,9 @@ double Scene::calculate_beckmann_distribution(const Vector3 &R, const Vector3 &V
 
     double cosine = R * V;
 
-//    std::cout << std::exp(-(1 - std::pow(cosine, 2)) / (std::pow(cosine * glossiness, 2)))
-//                 / (std::numbers::pi_v<double> * std::pow(glossiness, 2) * std::pow(cosine, 4)) << std::endl;
 
     return std::exp(-(1 - std::pow(cosine, 2)) / (std::pow(cosine * roughness, 2)))
         / (std::numbers::pi_v<double> * std::pow(roughness, 2) * std::pow(cosine, 4));
+
+
 }

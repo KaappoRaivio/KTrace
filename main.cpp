@@ -11,12 +11,13 @@
 #include "Scene.h"
 #include "SceneObject.h"
 #include "Sphere.h"
+#include "SmoothLightSource.h"
 
 extern const double PRECISION_LIMIT = 0.001;
 
 int main () {
 
-    constexpr int side_length = 2000;
+    constexpr int window_side_length = 2000;
     constexpr int viewport_side_length = 2000;
 
     Camera camera = {{0, -5, 7}, {0, 0.3}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
@@ -31,7 +32,7 @@ int main () {
 //    std::cout << m.albedo << std::endl;
 
 
-    Material m2{Intensity{1, 1, 1}, 0.9};
+    Material m2{Intensity{1, 1, 1}, 0.7};
     Material m4{Intensity{1, 1, 1}, 1};
     Sphere sphere1 = {{-2.5, 4, 4.5}, 0.3};
     Sphere sphere2 = {{-1, 4, 4.3}, 0.6};
@@ -52,12 +53,23 @@ int main () {
             SceneObject(&sphere6, m4),
     };
     std::vector<LightSource> lights = {
-            LightSource{{4, 4.5, 4}, Intensity{0.1, 0.1, 1} * 70},
-            LightSource{{-4, 4.5, 5.5}, Intensity{1, 0.25, 1} * 30},
-            LightSource{{-0.12, 3.83, 3.9}, Intensity{1, 1, 0.25} * 1},
+//            LightSource{{-4, 4.5, 5.5}, Intensity{1, 0.25, 1} * 30},
+//            LightSource{{-0.12, 3.83, 3.9}, Intensity{1, 1, 0.25} * 1},
             LightSource{{4, -40, 40}, Intensity{1, 1, 1} * 200},
 
     };
+
+    const auto& a = SmoothLightSource{1, 100,{{4, 4.5, 4}, Intensity{0.1, 0.1, 1} * 70}}.approximate();
+    lights.insert(lights.end(), a.begin(), a.end());
+
+    const auto& b = SmoothLightSource(1, 100, LightSource{{-4, 4.5, 5.5}, Intensity{1, 0.25, 1} * 30}).approximate();
+    lights.insert(lights.end(), b.begin(), b.end());
+
+    const auto& c = SmoothLightSource(0.5, 100, LightSource{{-0.12, 3.83, 3.9}, Intensity{1, 1, 0.25} * 1}).approximate();
+    lights.insert(lights.end(), c.begin(), c.end());
+
+
+//    std::cout << lights << std::endl;
 
     Scene scene{objects, lights, camera};
 //    (std::vector<SceneObject>(), nullptr, Camera(Vector3(), std::pair()));
@@ -83,7 +95,7 @@ int main () {
 
 
 
-    MyOpenGLWindow window = {side_length, side_length, 2, side_length / viewport_side_length};
+    MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
     window.paint(pixels);
     window.delay(500);
 //    while (true);
