@@ -46,3 +46,12 @@ Vector3 Sphere::get_normal_at(const Vector3 &position) const {
 bool Sphere::includes(const Vector3 &point) const {
     return std::abs((center - point).squared() - std::pow(radius, 2)) < PRECISION_LIMIT;
 }
+
+Vector3 Sphere::get_uv_at(const Vector3 &position) const {
+    const auto& d = (center - position).normalize();
+
+    double u = 0.5 - d.atan2() / (2 * M_PI);
+    double v = 0.5 + d.asin() / M_PI;
+
+    return {u, v, 0};
+}

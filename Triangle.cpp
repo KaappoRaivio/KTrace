@@ -76,4 +76,18 @@ Vector3 Triangle::get_normal_at(const Vector3 &position) const {
     return plane.getNormal();
 }
 
+Vector3 Triangle::get_uv_at(const Vector3 &position) const {
+    const Vector3& tangent = t3 - t1;
+    const Vector3& normal = get_normal_at(position);
+
+    const Vector3& width = tangent;
+    const Vector3& height = t2 - t1 - width * ((width * t2 - width * t1) / width.squared());
+
+    const Vector3& local_position = position - t1;
+    const Vector3 &uv = local_position.inTermsOfComponents(width, height, normal.normalize());
+//    std::cout << uv << std::endl;
+    return uv;
+    
+//    return {0.5, 0.8, 0};
+}
 

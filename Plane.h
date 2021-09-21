@@ -25,6 +25,8 @@ public:
 
     [[nodiscard]] Vector3 get_normal_at(const Vector3 &position) const override;
 
+    Vector3 get_uv_at(const Vector3 &position) const override;
+
     [[nodiscard]] const Vector3 &getNormal() const;
     [[nodiscard]] double getIntersect() const;
 };

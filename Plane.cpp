@@ -43,4 +43,13 @@ Vector3 Plane::get_normal_at(const Vector3 &position) const {
     return normal;
 }
 
+Vector3 Plane::get_uv_at(const Vector3 &position) const {
+    const Vector3& tangent = normal.cross(Vector3::UP) || normal.cross(Vector3::OUT) || normal.cross(Vector3::SIDE);
+    const Vector3& bitangent = normal.cross(tangent);
+
+    const Vector3& components = position.inTermsOfComponents(tangent, bitangent, normal);
+
+    return components;
+}
+
 

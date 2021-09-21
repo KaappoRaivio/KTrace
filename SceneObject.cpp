@@ -6,7 +6,7 @@
 
 #include <utility>
 
-SceneObject::SceneObject(Surface* surface, Material material) : surface(surface), material(std::move(material)) {}
+SceneObject::SceneObject(Surface* surface, Material material) : surface(surface), material(material) {}
 
 const Surface* SceneObject::getSurface() const {
     return surface;

@@ -18,9 +18,11 @@ private:
     std::vector<SceneObject> objects;
     std::vector<LightSource> lightSources;
     Camera camera;
+    int raysPerPixel;
 public:
-    Scene(std::vector<SceneObject> objects, std::vector<LightSource> lightSources, Camera camera);
+    Scene(std::vector<SceneObject> objects, std::vector<LightSource> lightSources, Camera camera, int raysPerPixel=1);
     [[nodiscard]] std::vector<std::vector<Intensity>> trace(int bounces) const;
+
     [[nodiscard]] Intensity calculate_color(const Ray &ray, int x, int y, int bounces_left) const;
 
 //    std::vector<Intersection> getIntersections(const Ray &ray);
@@ -28,6 +30,11 @@ public:
     [[nodiscard]] std::optional<Intersection> get_closest_intersection(const Ray &ray, double max_distance = 0) const;
 
     static double calculate_beckmann_distribution(const Vector3 &R, const Vector3 &V, double glossiness) ;
+
+    static double lambertianDiffuseReflection(const Vector3 &face_normal, const Vector3 &vector_to_light) ;
+
+    static double orenNayarDiffuseReflection(const Vector3 &face_normal, const Vector3 &vector_to_light,
+                                      const Vector3 &vector_from_camera, double roughness);
 };
 
 

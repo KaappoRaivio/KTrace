@@ -20,6 +20,7 @@ private:
 public:
     [[nodiscard]] double get_intersection_distance(const Ray &ray) const override;
     [[nodiscard]] Vector3 get_normal_at(const Vector3 &position) const override;
+    [[nodiscard]] Vector3 get_uv_at(const Vector3 &position) const override;
 };
 
 
