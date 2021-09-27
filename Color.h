@@ -10,12 +10,15 @@ private:
     const double r, g, b;
     const double gamma;
 public:
-    Color(double r, double g, double b, double gamma);
+    Color (double r, double g, double b, double gamma);
 
-    [[nodiscard]] double getR() const;
-    [[nodiscard]] double getG() const;
-    [[nodiscard]] double getB() const;
-    [[nodiscard]] double getGamma() const;
+    [[nodiscard]] double getR () const;
+
+    [[nodiscard]] double getG () const;
+
+    [[nodiscard]] double getB () const;
+
+    [[nodiscard]] double getGamma () const;
 };
 
 

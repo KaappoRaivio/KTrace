@@ -7,7 +7,6 @@
 #include <string>
 
 
-
 #include "Intensity.h"
 
 
@@ -16,15 +15,15 @@ private:
     int width, height, bytes_per_pixel;
     uint8_t* data;
 public:
-    explicit Image(const std::string& path);
+    explicit Image (const std::string& path);
 
     [[nodiscard]] Intensity get_pixel_at (int x, int y) const;
 
-    virtual ~Image();
+    virtual ~Image ();
 
-    int getWidth() const;
+    int getWidth () const;
 
-    int getHeight() const;
+    int getHeight () const;
 };
 
 

@@ -4,16 +4,18 @@
 
 #pragma once
 
+#include <memory>
 #include "Vector3.h"
 #include "Intensity.h"
 #include "Texture.h"
 
 struct Material {
-    Texture* albedo;
+    std::shared_ptr<Texture> albedo;
     double glossiness;
 
-    Material (Texture* albedo, double glossiness) : albedo{albedo}, glossiness{glossiness} {}
-    explicit Material (Texture* albedo) : albedo{albedo}, glossiness{0} {}
+    Material (std::shared_ptr<Texture> albedo, double glossiness) : albedo{albedo}, glossiness{glossiness} {}
+
+    explicit Material (std::shared_ptr<Texture> albedo) : albedo{albedo}, glossiness{0} {}
 
 public:
     [[nodiscard]] Intensity get_albedo_at (const Vector3& uv) const;

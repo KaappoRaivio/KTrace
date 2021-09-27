@@ -4,8 +4,8 @@
 
 #include "SolidTexture.h"
 
-SolidTexture::SolidTexture(const Intensity &intensity) : intensity(intensity) {}
+SolidTexture::SolidTexture (const Intensity& intensity) : intensity(intensity) {}
 
-Intensity SolidTexture::get_pixel_at(const Vector3 &uv) const {
+Intensity SolidTexture::get_pixel_at (const Vector3& uv) const {
     return intensity;
 }

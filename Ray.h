@@ -10,18 +10,20 @@
 
 class Ray {
 public:
-    Ray(const Vector3 &origin, const Vector3 &direction);
+    Ray (const Vector3& origin, const Vector3& direction);
 
 private:
     Vector3 origin;
     Vector3 direction;
 
 public:
-    [[nodiscard]] const Vector3 &getOrigin() const;
-    [[nodiscard]] const Vector3 &getDirection() const;
+    [[nodiscard]] const Vector3& getOrigin () const;
+
+    [[nodiscard]] const Vector3& getDirection () const;
+
     [[nodiscard]] Vector3 apply (double lambda) const;
 
-    friend std::ostream &operator<<(std::ostream &os, const Ray &ray);
+    friend std::ostream& operator<< (std::ostream& os, const Ray& ray);
 };
 
 

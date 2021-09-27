@@ -5,7 +5,7 @@
 #include <iostream>
 #include "MyOpenGLWindow.h"
 
-MyOpenGLWindow::MyOpenGLWindow(int width, int height, double gamma, int scale) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale} { // NOLINT(cppcoreguidelines-pro-type-member-init)
+MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale} { // NOLINT(cppcoreguidelines-pro-type-member-init)
     std::cout << "creating window" << std::endl;
     if (!MyOpenGLWindow::initialized) {
         SDL_Init(SDL_INIT_VIDEO);
@@ -15,7 +15,7 @@ MyOpenGLWindow::MyOpenGLWindow(int width, int height, double gamma, int scale) :
     SDL_CreateWindowAndRenderer(m_width, m_height, 0, &window, &renderer);
     SDL_SetWindowTitle(window, "Raytracer");
 
-    if (window == nullptr || renderer == nullptr){
+    if (window == nullptr || renderer == nullptr) {
         std::cerr << "Could not create window: " << SDL_GetError() << std::endl;
         throw std::runtime_error("SDL initialization error!");
     }
@@ -24,7 +24,7 @@ MyOpenGLWindow::MyOpenGLWindow(int width, int height, double gamma, int scale) :
     SDL_RenderClear(renderer);
 }
 
-void MyOpenGLWindow::set_pixel(int x, int y, const Intensity &color) const {
+void MyOpenGLWindow::set_pixel (int x, int y, const Intensity& color) const {
     constexpr auto epsilon = 1e-5;
 
 
@@ -45,11 +45,11 @@ void MyOpenGLWindow::set_pixel(int x, int y, const Intensity &color) const {
 //    SDL_RenderDrawPoint(renderer, x, y);
 }
 
-void MyOpenGLWindow::update() const {
+void MyOpenGLWindow::update () const {
     SDL_RenderPresent(renderer);
 }
 
-void MyOpenGLWindow::delay(int millis) {
+void MyOpenGLWindow::delay (int millis) {
 //    struct Container
 //    {
 //        static Uint32 TimerCallback( Uint32 interval, void* param )
@@ -77,13 +77,13 @@ void MyOpenGLWindow::delay(int millis) {
     }
 }
 
-MyOpenGLWindow::~MyOpenGLWindow() {
+MyOpenGLWindow::~MyOpenGLWindow () {
     std::cout << "closing!" << std::endl;
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }
 
-void MyOpenGLWindow::paint(std::vector<std::vector<Intensity>> pixels) const {
+void MyOpenGLWindow::paint (std::vector<std::vector<Intensity>> pixels) const {
     for (int y = 0; y < pixels.size(); ++y) {
         for (int x = 0; x < pixels[y].size(); ++x) {
             set_pixel(x, y, pixels[y][x]);

@@ -16,16 +16,19 @@ private:
     double m_gamma;
     int scale;
 
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
 public:
-    MyOpenGLWindow(int width, int height, double gamma, int scale);
-    ~MyOpenGLWindow();
+    MyOpenGLWindow (int width, int height, double gamma, int scale);
+
+    ~MyOpenGLWindow ();
 
     void set_pixel (int x, int y, const Intensity& color) const;
-    void update () const;
-    void delay(int millis);
 
-    void paint(std::vector<std::vector<Intensity>> pixels) const;
+    void update () const;
+
+    void delay (int millis);
+
+    void paint (std::vector<std::vector<Intensity>> pixels) const;
 };
 

@@ -4,21 +4,21 @@
 
 #include "Ray.h"
 
-Ray::Ray(const Vector3 &origin, const Vector3& direction) : origin(origin), direction(direction) {}
+Ray::Ray (const Vector3& origin, const Vector3& direction) : origin(origin), direction(direction) {}
 
-const Vector3 &Ray::getOrigin() const {
+const Vector3& Ray::getOrigin () const {
     return origin;
 }
 
-const Vector3 &Ray::getDirection() const {
+const Vector3& Ray::getDirection () const {
     return direction;
 }
 
-Vector3 Ray::apply(double lambda) const {
+Vector3 Ray::apply (double lambda) const {
     return origin + direction * lambda;
 }
 
-std::ostream &operator<<(std::ostream &os, const Ray &ray) {
+std::ostream& operator<< (std::ostream& os, const Ray& ray) {
     os << "origin: " << ray.origin << " direction: " << ray.direction;
     return os;
 }

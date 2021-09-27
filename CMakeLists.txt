@@ -14,8 +14,8 @@ add_executable(uvmaptest Vector3.cpp Vector3.h Ray.cpp Ray.h Surface.cpp Surface
 #add_executable(imagetest Image.h Image.cpp Intensity.h Intensity.cpp Color.h Color.cpp)
 
 target_link_libraries(Main
-    PRIVATE SDL2
-)
+        PRIVATE SDL2
+        )
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 --std=c++2a -fopenmp")
 

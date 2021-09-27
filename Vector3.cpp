@@ -8,76 +8,71 @@
 
 #include "Vector3.h"
 
-Vector3::Vector3(double i, double j, double k) : i(i), j(j), k(k) {}
-Vector3::Vector3(const Vector3 &other) = default;
-Vector3 &Vector3::operator=(Vector3 &&a) noexcept {
+Vector3::Vector3 (double i, double j, double k) : i(i), j(j), k(k) {}
+
+Vector3::Vector3 (const Vector3& other) = default;
+
+Vector3& Vector3::operator= (Vector3&& a) noexcept {
     i = a.i;
     j = a.j;
     k = a.k;
     return *this;
 }
-Vector3::Vector3(Vector3 &&original)  noexcept : i{original.i}, j{original.j}, k{original.k} {}
+
+Vector3::Vector3 (Vector3&& original) noexcept: i{original.i}, j{original.j}, k{original.k} {}
 
 
-Vector3 Vector3::operator+(const Vector3 &other) const {
+Vector3 Vector3::operator+ (const Vector3& other) const {
     return {i + other.i, j + other.j, k + other.k};
 }
 
-std::ostream &operator<<(std::ostream &os, const Vector3 &vector3) {
+std::ostream& operator<< (std::ostream& os, const Vector3& vector3) {
     os << "Vector3(" << vector3.i << ", " << vector3.j << ", " << vector3.k << ")";
     return os;
 }
 
-Vector3 Vector3::operator-() const {
+Vector3 Vector3::operator- () const {
     return {-i, -j, -k};
 }
 
-Vector3 Vector3::operator-(const Vector3 &other) const {
+Vector3 Vector3::operator- (const Vector3& other) const {
     return *this + -other;
 }
 
-Vector3 Vector3::operator*(const double other) const {
+Vector3 Vector3::operator* (const double other) const {
     return {other * i, other * j, other * k};
 }
 
-Vector3 Vector3::operator/(double other) const {
+Vector3 Vector3::operator/ (double other) const {
     return {i / other, j / other, k / other};
 }
 
 
-double Vector3::operator*(const Vector3 &other) const {
+double Vector3::operator* (const Vector3& other) const {
     return i * other.i + j * other.j + k * other.k;
 }
 
-Vector3 Vector3::cross(const Vector3& other) const {
-    return {
-        j * other.k - k * other.j,
-        k * other.i - i * other.k,
-        i * other.j - j * other.i
-    };
+Vector3 Vector3::cross (const Vector3& other) const {
+    return {j * other.k - k * other.j, k * other.i - i * other.k, i * other.j - j * other.i};
 }
 
-double Vector3::length() const {
+double Vector3::length () const {
     return sqrt(squared());
 }
 
-double Vector3::squared() const {
+double Vector3::squared () const {
     return *this * *this;
 }
 
-Vector3 Vector3::normalize() const {
+Vector3 Vector3::normalize () const {
     return *this / length();
 }
 
-Vector3 Vector3::rotate(double yaw, double pitch) const {
-    return {
-            i * cos(yaw) + (k * sin(pitch) + j * cos(pitch)) * sin(yaw),
-            -i * sin(yaw) + (k * sin(pitch) + j * cos(pitch)) * cos(yaw),
-            k * cos(pitch) - j * sin(pitch)
-    };
+Vector3 Vector3::rotate (double yaw, double pitch) const {
+    return {i * cos(yaw) + (k * sin(pitch) + j * cos(pitch)) * sin(yaw), -i * sin(yaw) + (k * sin(pitch) + j * cos(pitch)) * cos(yaw), k * cos(pitch) - j * sin(pitch)};
 }
 
-Vector3 Vector3::reflection(const Vector3 &axis) const {
+Vector3 Vector3::reflection (const Vector3& axis) const {
     return *this - axis * (2 * (*this * axis) / squared());
 }
 
@@ -92,7 +87,7 @@ Vector3 Vector3::randomInsideUnitSphere () {
     double k = d(generator);
 
 
-    const Vector3 &normalized = Vector3(i, j, k).normalize();
+    const Vector3& normalized = Vector3(i, j, k).normalize();
 
 
     std::uniform_real_distribution<double> dist(0, 1);
@@ -101,9 +96,9 @@ Vector3 Vector3::randomInsideUnitSphere () {
     return normalized * radius;
 }
 
-Vector3 Vector3::inTermsOfComponents(const Vector3 &i, const Vector3 &j, const Vector3 &k) const {
+Vector3 Vector3::inTermsOfComponents (const Vector3& i, const Vector3& j, const Vector3& k) const {
     Eigen::Matrix3d A;
-    A << i.i, i.j, i.k,  j.i, j.j, j.k,  k.i, k.j, k.k;
+    A << i.i, i.j, i.k, j.i, j.j, j.k, k.i, k.j, k.k;
     A.transposeInPlace();
 
     Eigen::Vector3d b;
@@ -136,37 +131,37 @@ Vector3 Vector3::rotateInsideCone (double radius) const {
 
 }
 
-Vector3::operator bool() const {
+Vector3::operator bool () const {
     return squared() != 0;
 }
 
-Vector3 Vector3::operator||(const Vector3& other) const {
+Vector3 Vector3::operator|| (const Vector3& other) const {
     return bool(*this) ? *this : other;
 }
 
-double Vector3::atan2() const {
+double Vector3::atan2 () const {
     return std::atan2(i, j);
 }
 
-double Vector3::asin() const {
+double Vector3::asin () const {
     return std::asin(k);
 }
 
-const Vector3& Vector3::UP   = {0, 0, 1};
+const Vector3& Vector3::UP = {0, 0, 1};
 
-const Vector3& Vector3::OUT  = {0, 1, 0};
+const Vector3& Vector3::OUT = {0, 1, 0};
 
 const Vector3& Vector3::SIDE = {1, 0, 0};
 
-double Vector3::getI() const {
+double Vector3::getI () const {
     return i;
 }
 
-double Vector3::getJ() const {
+double Vector3::getJ () const {
     return j;
 }
 
-double Vector3::getK() const {
+double Vector3::getK () const {
     return k;
 }
 

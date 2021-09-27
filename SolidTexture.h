@@ -11,10 +11,10 @@ class SolidTexture : public Texture {
 private:
     Intensity intensity;
 public:
-    explicit SolidTexture(const Intensity &intensity);
+    explicit SolidTexture (const Intensity& intensity);
 
 public:
-    [[nodiscard]] Intensity get_pixel_at(const Vector3 &uv) const override;
+    [[nodiscard]] Intensity get_pixel_at (const Vector3& uv) const override;
 };
 
 

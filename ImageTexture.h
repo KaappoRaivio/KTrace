@@ -12,9 +12,9 @@ class ImageTexture : public Texture {
 private:
     Image image;
 public:
-    explicit ImageTexture(const std::string &path);
+    explicit ImageTexture (const std::string& path);
 
-    [[nodiscard]] Intensity get_pixel_at(const Vector3 &uv) const override;
+    [[nodiscard]] Intensity get_pixel_at (const Vector3& uv) const override;
 };
 
 

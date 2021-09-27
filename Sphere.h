@@ -7,20 +7,23 @@
 
 #include "Surface.h"
 
-class Sphere : public Surface{
+class Sphere : public Surface {
 private:
     Vector3 center;
     double radius;
 public:
-    Sphere(Vector3 center, double radius);
+    Sphere (Vector3 center, double radius);
 
 private:
 
     [[nodiscard]] bool includes (const Vector3& point) const;
+
 public:
-    [[nodiscard]] double get_intersection_distance(const Ray &ray) const override;
-    [[nodiscard]] Vector3 get_normal_at(const Vector3 &position) const override;
-    [[nodiscard]] Vector3 get_uv_at(const Vector3 &position) const override;
+    [[nodiscard]] double get_intersection_distance (const Ray& ray) const override;
+
+    [[nodiscard]] Vector3 get_normal_at (const Vector3& position) const override;
+
+    [[nodiscard]] Vector3 get_uv_at (const Vector3& position) const override;
 };
 
 

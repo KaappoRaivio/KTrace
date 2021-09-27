@@ -6,17 +6,17 @@
 
 #include <utility>
 
-SceneObject::SceneObject(Surface* surface, Material material) : surface(surface), material(material) {}
+SceneObject::SceneObject (std::shared_ptr<Surface> surface, Material material) : surface{surface}, material(material) {}
 
-const Surface* SceneObject::getSurface() const {
-    return surface;
+Surface* SceneObject::getSurface () const {
+    return surface.get();
 }
 
-const Material &SceneObject::getMaterial() const {
+const Material& SceneObject::getMaterial () const {
     return material;
 }
 
-std::optional<Intersection> SceneObject::get_intersection(const Ray &ray) const {
+std::optional<Intersection> SceneObject::get_intersection (const Ray& ray) const {
     auto distance = getSurface()->get_intersection_distance(ray);
 
 //    std::cout << "Ray: " << ray << std::endl;

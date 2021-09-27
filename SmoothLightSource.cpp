@@ -4,12 +4,9 @@
 
 #include "SmoothLightSource.h"
 
-SmoothLightSource::SmoothLightSource(const double radius, const int amountOfLightSources,
-                                     const LightSource &masterLightSource) : radius(radius),
-                                                                             amountOfLightSources(amountOfLightSources),
-                                                                             masterLightSource(masterLightSource) {}
+SmoothLightSource::SmoothLightSource (const double radius, const int amountOfLightSources, const LightSource& masterLightSource) : radius(radius), amountOfLightSources(amountOfLightSources), masterLightSource(masterLightSource) {}
 
-std::vector<LightSource> SmoothLightSource::approximate() const {
+std::vector<LightSource> SmoothLightSource::approximate () const {
     std::vector<LightSource> lights;
 
     for (int i = 0; i < amountOfLightSources; ++i) {
