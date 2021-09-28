@@ -8,13 +8,22 @@ void IntensityBlend::operator+= (const Intensity& color) {
     blend.push_back(color);
 }
 
-Intensity IntensityBlend::commit_blend () const {
+Intensity IntensityBlend::commitSum () const {
     Intensity result{0, 0, 0};
     for (const auto& item: blend) {
         result += item;
     }
 
     return result;
+}
+
+Intensity IntensityBlend::commitBlend () const {
+    Intensity result{0, 0, 0};
+    for (const auto& item: blend) {
+        result += item;
+    }
+
+    return result / blend.size();
 }
 
 void IntensityBlend::operator+= (const IntensityBlend& color) {

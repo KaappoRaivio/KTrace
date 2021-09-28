@@ -19,7 +19,9 @@ public:
 
     void operator+= (const IntensityBlend& blend);
 
-    [[nodiscard]] Intensity commit_blend () const;
+    [[nodiscard]] Intensity commitSum () const;
+
+    Intensity commitBlend () const;
 };
 
 

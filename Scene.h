@@ -19,8 +19,9 @@ private:
     std::vector<LightSource> lightSources;
     Camera camera;
     int raysPerPixel;
+    int antialiasingScaler;
 public:
-    Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, Camera camera, int raysPerPixel = 1);
+    Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, Camera camera, int raysPerPixel, int antialiasingScaler);
 
     [[nodiscard]] std::vector<std::vector<Intensity>> trace (int bounces) const;
 
@@ -35,6 +36,7 @@ public:
     static double lambertianDiffuseReflection (const Vector3& face_normal, const Vector3& vector_to_light, const Vector3& ray_direction);
 
     static double orenNayarDiffuseReflection (const Vector3& face_normal, const Vector3& vector_to_light, const Vector3& vector_from_camera, double roughness);
+
 };
 
 

@@ -13,37 +13,45 @@
 //#include <numbers>
 constexpr double PI = 3.1415926;
 
-Scene::Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, Camera camera, int raysPerPixel) : objects(std::move(objects)), camera(std::move(camera)), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel} {}
+Scene::Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, Camera camera, int raysPerPixel, int antialiasingScaler) : objects(std::move(objects)), camera(std::move(camera)), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler} {}
 
 #pragma clang diagnostic push
-#pragma ide diagnostic ignored "openmp-use-default-none"
 
 std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
-    auto viewplane = camera.get_viewplane();
+    auto viewplane = camera.get_viewplane(antialiasingScaler);
 
-//    std::vector<std::vector<Intensity>> pixels;
-//    pixels.reserve(viewplane.size());
+    unsigned viewport_height = viewplane.size() / antialiasingScaler;
+    unsigned viewport_width = viewplane[0].size() / antialiasingScaler;
 
     std::vector<std::vector<Intensity>> pixels;
-    pixels.reserve(viewplane.size());
-    for (auto& i: viewplane) {
-
+    pixels.reserve(viewport_height);
+    for (int y = 0; y < viewport_height; ++y) {
         std::vector<Intensity> row;
-        row.reserve(i.size());
-        for (int j = 0; j < i.size(); ++j) {
+        row.reserve(viewport_width);
+        for (int x = 0; x < viewport_width; ++x) {
             row.emplace_back(0, 0, 0);
         }
         pixels.push_back(row);
     }
 
 
-#pragma omp parallel for collapse(2) default(shared)
-    for (int y = 0; y < viewplane.size(); ++y) {
-        for (int x = 0; x < viewplane[0].size(); ++x) {
-            const auto& pixel = viewplane[y][x];
-            const Ray ray = {camera.getOrigin(), pixel};
+#pragma omp parallel for collapse(2)
+    for (int y = 0; y < viewport_height; ++y) {
+        for (int x = 0; x < viewport_width; ++x) {
 
-            pixels[y][x] = calculate_color(ray, x, y, bounces);
+            IntensityBlend pixelValue;
+
+            for (int dy = 0; dy < antialiasingScaler; ++dy) {
+                for (int dx = 0; dx < antialiasingScaler; ++dx) {
+                    const auto& pixel = viewplane[y * antialiasingScaler + dy][x * antialiasingScaler + dx];
+                    const Ray ray = {camera.getOrigin(), pixel};
+
+                    pixelValue += calculate_color(ray, x + dx, y + dy, bounces);
+
+                }
+            }
+
+            pixels[y][x] = pixelValue.commitBlend();
         }
     }
 
@@ -109,8 +117,8 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
         if (material.glossiness > 0 && bounces_left > 0) {
             specular_light += calculate_color({closest.position, R}, x, y, bounces_left - 1);
         }
-        const Intensity& specular_intensity = specular_light.commit_blend();
-        const Intensity& diffuse_intensity = diffuse_light.commit_blend();
+        const Intensity& specular_intensity = specular_light.commitSum();
+        const Intensity& diffuse_intensity = diffuse_light.commitSum();
 
         return albedo * (specular_intensity * material.glossiness + diffuse_intensity * (1 - material.glossiness));
     }

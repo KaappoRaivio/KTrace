@@ -19,8 +19,8 @@
 extern const double PRECISION_LIMIT = 0.001;
 
 int main () {
-    constexpr int window_side_length = 800;
-    constexpr int viewport_side_length = 800;
+    constexpr int window_side_length = 1000;
+    constexpr int viewport_side_length = 200;
 
     Camera camera = {
             {0, -5, 7},
@@ -51,13 +51,13 @@ int main () {
 
 
 
-    auto triangleTexture = std::make_shared<ImageTexture>("../res/texture4.png");
-//    auto triangleTexture = std::make_shared<ImageTexture>("../res/wood.jpg");
+//    auto triangleTexture = std::make_shared<ImageTexture>("../res/texture4.png");
+    auto triangleTexture = std::make_shared<ImageTexture>("../res/wood.jpg");
     auto planeTexture = std::make_shared<SolidTexture>(Intensity{1, 1, 1});
 
 
-    Material triangleMaterial{triangleTexture};
-    Material sphereMaterial{triangleTexture, 0.9};
+    Material triangleMaterial{triangleTexture, 0.5};
+    Material sphereMaterial{triangleTexture, 0};
     Material planeMaterial{planeTexture};
     Material mirror{std::make_shared<SolidTexture>(SolidTexture{{1, 1, 1}}), 0};
 
@@ -75,16 +75,16 @@ int main () {
             SceneObject(sphere5, sphereMaterial),
 //            SceneObject(sphere6, mirror),
     };
-    double radius = 0;
+    double radius = 0.2;
     std::vector<LightSource> lights = {
             {{4,     4.5,  4},   Intensity{0.1, 0.1, 1} * 70, radius},
             {{-4,    4.5,  5.5}, Intensity{1, 0.25, 1} * 30,  radius},
             {{-0.12, 3.83, 3.9}, Intensity{1, 1, 0.25} * 1,   radius},
-            {{4,     -40,  40},  Intensity{1, 1, 1} * 200,    radius},
+            {{4,     -40,  40},  Intensity{1, 1, 1} * 800,    radius},
     };
 
 
-    Scene scene{objects, lights, camera, 1};
+    Scene scene{objects, lights, camera, 16, 8};
 
     std::cout << "starting tracing!" << std::endl;
     auto start = std::chrono::system_clock::now();
