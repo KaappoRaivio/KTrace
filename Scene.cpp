@@ -157,23 +157,49 @@ double Scene::lambertianDiffuseReflection (const Vector3& face_normal, const Vec
 }
 
 std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, double max_distance) const {
-    std::vector<Intersection> intersections;
+//    std::vector<Intersection> intersections;
+//
+//    for (const auto& object: objects) {
+//        const std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
+//        if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
+//            intersections.push_back(possibleIntersection.value());
+//        }
+//    }
+//
+//    if (intersections.empty()) { return std::nullopt; }
+//    else {
+//        Intersection intersection = *std::min_element(intersections.begin(), intersections.end(), [] (const Intersection& a, const Intersection& b) {
+//            return a.distance < b.distance;
+//        });
+//
+//        return intersection;
+//    }
+//    std::vector<Intersection> intersections;
+    double closest_distance = 1e308;
+    const Intersection* closest = nullptr;
 
     for (const auto& object: objects) {
         const std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
-        if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
-            intersections.push_back(possibleIntersection.value());
+        if (possibleIntersection && possibleIntersection->distance < closest_distance && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
+            closest = &possibleIntersection.value();
+            closest_distance = possibleIntersection->distance;
         }
     }
 
-    if (intersections.empty()) { return std::nullopt; }
-    else {
-        Intersection intersection = *std::min_element(intersections.begin(), intersections.end(), [] (const Intersection& a, const Intersection& b) {
-            return a.distance < b.distance;
-        });
-
-        return intersection;
+    if (closest == nullptr) {
+        return std::nullopt;
+    } else {
+        return *closest;
     }
+
+//    if (intersections.empty()) { return std::nullopt; }
+//    else {
+//        Intersection intersection = *std::min_element(intersections.begin(), intersections.end(), [] (const Intersection& a, const Intersection& b) {
+//            return a.distance < b.distance;
+//        });
+//
+//        return intersection;
+//    }
 }
 
 double Scene::calculate_beckmann_distribution (const Vector3& R, const Vector3& V, double glossiness) {
