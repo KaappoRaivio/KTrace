@@ -84,7 +84,7 @@ int main () {
     };
 
 
-    Scene scene{objects, lights, camera, 16, 8};
+    Scene scene{objects, lights, camera, 4, 8};
 
     std::cout << "starting tracing!" << std::endl;
     auto start = std::chrono::system_clock::now();

@@ -19,11 +19,11 @@ public:
 //    Intensity (Intensity&& original) noexcept;
 //    Intensity& operator=(Intensity&& original) noexcept;
 
-    [[nodiscard]] double r () const;
+    double r () const;
 
-    [[nodiscard]] double g () const;
+    double g () const;
 
-    [[nodiscard]] double b () const;
+    double b () const;
 
     friend std::ostream& operator<< (std::ostream& ostream, const Intensity& color);
 
@@ -37,7 +37,7 @@ public:
 
     Intensity operator+= (const Intensity& other);
 
-    [[nodiscard]] Color applyGamma (double d) const;
+    Color applyGamma (double d) const;
 };
 
 std::ostream& operator<< (const Intensity& color, std::ostream& ostream);

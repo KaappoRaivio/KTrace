@@ -18,5 +18,5 @@ struct Material {
     explicit Material (std::shared_ptr<Texture> albedo) : albedo{albedo}, glossiness{0} {}
 
 public:
-    [[nodiscard]] Intensity get_albedo_at (const Vector3& uv) const;
+    Intensity get_albedo_at (const Vector3& uv) const;
 };

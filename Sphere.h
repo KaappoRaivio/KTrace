@@ -16,14 +16,14 @@ public:
 
 private:
 
-    [[nodiscard]] bool includes (const Vector3& point) const;
+    bool includes (const Vector3& point) const;
 
 public:
-    [[nodiscard]] double get_intersection_distance (const Ray& ray) const override;
+    double get_intersection_distance (const Ray& ray) const override;
 
-    [[nodiscard]] Vector3 get_normal_at (const Vector3& position) const override;
+    Vector3 get_normal_at (const Vector3& position) const override;
 
-    [[nodiscard]] Vector3 get_uv_at (const Vector3& position) const override;
+    Vector3 get_uv_at (const Vector3& position) const override;
 };
 
 

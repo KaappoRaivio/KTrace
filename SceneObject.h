@@ -24,11 +24,11 @@ public:
     SceneObject (std::shared_ptr<Surface> surface, Material material);
 
 
-    [[nodiscard]] std::optional<Intersection> get_intersection (const Ray& ray) const;
+    std::optional<Intersection> get_intersection (const Ray& ray) const;
 
-    [[nodiscard]] Surface* getSurface () const;
+    Surface* getSurface () const;
 
-    [[nodiscard]] const Material& getMaterial () const;
+    const Material& getMaterial () const;
 };
 
 

@@ -12,13 +12,13 @@ private:
 public:
     Color (double r, double g, double b, double gamma);
 
-    [[nodiscard]] double getR () const;
+    double getR () const;
 
-    [[nodiscard]] double getG () const;
+    double getG () const;
 
-    [[nodiscard]] double getB () const;
+    double getB () const;
 
-    [[nodiscard]] double getGamma () const;
+    double getGamma () const;
 };
 
 

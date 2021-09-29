@@ -16,7 +16,7 @@ private:
 public:
     SmoothLightSource (double radius, int amountOfLightSources, const LightSource& masterLightSource);
 
-    [[nodiscard]] std::vector<LightSource> approximate () const;
+    std::vector<LightSource> approximate () const;
 };
 
 

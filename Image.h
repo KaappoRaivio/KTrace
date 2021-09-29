@@ -17,7 +17,7 @@ private:
 public:
     explicit Image (const std::string& path);
 
-    [[nodiscard]] Intensity get_pixel_at (int x, int y) const;
+    Intensity get_pixel_at (int x, int y) const;
 
     virtual ~Image ();
 

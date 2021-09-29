@@ -14,7 +14,7 @@ private:
 public:
     explicit ImageTexture (const std::string& path);
 
-    [[nodiscard]] Intensity get_pixel_at (const Vector3& uv) const override;
+    Intensity get_pixel_at (const Vector3& uv) const override;
 };
 
 
