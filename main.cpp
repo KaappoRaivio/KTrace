@@ -102,7 +102,7 @@ int main () {
 
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
     window.paint(pixels);
-    window.delay(500);
+//    window.delay(500);
 //    while (true);
     SDL_Quit();
 
