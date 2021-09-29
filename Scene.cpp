@@ -157,48 +157,41 @@ double Scene::lambertianDiffuseReflection (const Vector3& face_normal, const Vec
 }
 
 std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, double max_distance) const {
-//    std::vector<Intersection> intersections;
-//
-//    for (const auto& object: objects) {
-//        const std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
-//        if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
-//            intersections.push_back(possibleIntersection.value());
-//        }
-//    }
-//
-//    if (intersections.empty()) { return std::nullopt; }
-//    else {
-//        Intersection intersection = *std::min_element(intersections.begin(), intersections.end(), [] (const Intersection& a, const Intersection& b) {
-//            return a.distance < b.distance;
-//        });
-//
-//        return intersection;
-//    }
-//    std::vector<Intersection> intersections;
-    double closest_distance = 1e308;
-    const Intersection* closest = nullptr;
+    std::vector<Intersection> intersections;
 
     for (const auto& object: objects) {
         const std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
-        if (possibleIntersection && possibleIntersection->distance < closest_distance && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
-            closest = &possibleIntersection.value();
-            closest_distance = possibleIntersection->distance;
+        if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
+            intersections.push_back(possibleIntersection.value());
         }
     }
 
-    if (closest == nullptr) {
-        return std::nullopt;
-    } else {
-        return *closest;
-    }
+    if (intersections.empty()) { return std::nullopt; }
+    else {
+        Intersection intersection = *std::min_element(intersections.begin(), intersections.end(), [] (const Intersection& a, const Intersection& b) {
+            return a.distance < b.distance;
+        });
 
-//    if (intersections.empty()) { return std::nullopt; }
-//    else {
-//        Intersection intersection = *std::min_element(intersections.begin(), intersections.end(), [] (const Intersection& a, const Intersection& b) {
-//            return a.distance < b.distance;
-//        });
+        return intersection;
+    }
 //
-//        return intersection;
+//
+//    double closest_distance = 1e308;
+//    Intersection* closest = nullptr;
+//
+//    for (const auto& object: objects) {
+//        std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
+//        if (possibleIntersection && possibleIntersection->distance < closest_distance && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
+////            std::cout << (*possibleIntersection).sceneObject.getSurface() << std::endl;
+//            closest_distance = possibleIntersection->distance;
+//            closest = &(*possibleIntersection);
+//        }
+//    }
+//
+//    if (closest == nullptr) {
+//        return std::nullopt;
+//    } else {
+//        return {*closest};
 //    }
 }
 
