@@ -17,10 +17,8 @@ target_link_libraries(Main
         PRIVATE SDL2
         )
 
-
-#set(CMAKE_CXX_FLAGS_DEBUG "-Os --std=c++2a")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 --std=c++2a -fopenmp")
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++2a -fopenmp")
+
 
 
 
