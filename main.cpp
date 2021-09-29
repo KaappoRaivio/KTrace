@@ -20,7 +20,7 @@ extern const double PRECISION_LIMIT = 0.001;
 
 int main () {
     constexpr int window_side_length = 1000;
-    constexpr int viewport_side_length = 200;
+    constexpr int viewport_side_length = 1000;
 
     Camera camera = {
             {0, -5, 7},
@@ -102,7 +102,7 @@ int main () {
 
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
     window.paint(pixels);
-//    window.delay(500);
+    window.delay(500);
 //    while (true);
     SDL_Quit();
 

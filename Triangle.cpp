@@ -30,46 +30,53 @@ bool Triangle::includes (const Vector3& vector) const {
 }
 
 bool Triangle::check_bounds (const Vector3& vector) const {
-    const Vector3& v1 = t2 - t3;
-    const Vector3& v2 = t1 - t3;
-    const Vector3& v3 = t2 - t1;
-
-    const Vector3& b1 = v1.cross(v2);
-    const Vector3& b2 = v2.cross(v1);
-    const Vector3& b3 = v2.cross(v3);
-
-
-    auto a = v1.cross(vector - t3);
-    auto c = a * b1;
-    if (c < 0) return false;
-
-    a = v2.cross(vector - t3);
-    c = a * b2;
-    if (c < 0) return false;
-
-    a = v3.cross(vector - t1);
-    c = a * b3;
-    if (c < 0) return false;
-
-    return true;
-
-
-//    a = (self.t2 - self.t3) @ (vector - self.t3)
-//    c = a * ((self.t2 - self.t3) @ (self.t1 - self.t3))
+//        const Vector3& v1 = t2 - t3;
+//    const Vector3& v2 = t1 - t3;
+//    const Vector3& v3 = t2 - t1;
 //
-//    if c < 0: return False
+//    const Vector3& b1 = v1.cross(v2);
+//    const Vector3& b2 = v2.cross(v1);
+//    const Vector3& b3 = v2.cross(v3);
 //
-//    a = (self.t1 - self.t3) @ (vector - self.t3)
-//    c = a * ((self.t1 - self.t3) @ (self.t2 - self.t3))
 //
-//    if c < 0: return False
+//    auto a = v1.cross(vector - t3);
+//    auto c = a.dot(b1);
+//    if (c < 0) return false;
 //
-//    a = (self.t2 - self.t1) @ (vector - self.t1)
-//    c = a * ((self.t2 - self.t1) @ (-self.t1 - self.t3))
+//    a = v2.cross(vector - t3);
+//    c = a.dot(b2);
+//    if (c < 0) return false;
 //
-//    if c < 0: return False
+//    a = v3.cross(vector - t1);
+//    c = a.dot(b3);
+//    if (c < 0) return false;
 //
-//    return True
+//    return true;
+
+
+    const Vector3& P = vector;
+
+// Compute vectors
+    const Vector3& v0 = t3 - t1;
+    const Vector3& v1 = t2 - t1;
+    const Vector3& v2 = P - t1;
+
+// Compute dot products
+    double dot00 = v0.squared();
+    double dot01 = v0.dot(v1);
+    double dot02 = v0.dot(v2);
+    double dot11 = v1.squared();
+    double dot12 = v1.dot(v2);
+
+// Compute barycentric coordinates
+    double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
+    double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+// Check if point is in triangle
+    return (u >= 0) && (v >= 0) && (u + v < 1);
+
+
 }
 
 Vector3 Triangle::get_normal_at (const Vector3& position) const {

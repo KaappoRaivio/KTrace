@@ -51,4 +51,6 @@ public:
     static const Vector3& UP;
     static const Vector3& OUT;
     static const Vector3& SIDE;
+
+    double dot (const Vector3& vector3) const;
 };

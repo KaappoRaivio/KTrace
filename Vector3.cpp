@@ -154,6 +154,11 @@ double Vector3::getK () const {
     return k;
 }
 
+double Vector3::dot (const Vector3& other) const {
+//    return 0;
+    return i * other.i + j * other.j + k * other.k;
+}
+
 //int main () {
 //    std::cout << "Hello, world" << std::endl;
 //
