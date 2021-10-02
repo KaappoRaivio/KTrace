@@ -7,27 +7,27 @@
 
 #include <array>
 #include <vector>
-#include "Vector3.h"
+#include "MyVector3.h"
 
 class Camera {
 private:
-    inline static const Vector3 DIRECTION_REFERENCE = {0, 1, 0};
+    inline static const MyVector3 DIRECTION_REFERENCE = {0, 1, 0};
 
-    Vector3 origin;
+    MyVector3 origin;
 
     double viewplane_distance;
     std::pair<double, double> viewplane_size;
     std::pair<int, int> viewport_size;
 
-    Vector3 direction;
+    MyVector3 direction;
     std::pair<double, double> rotation;
 
 public:
-    Camera (Vector3 origin, std::pair<double, double> rotation, double viewplane_distance = 2, std::pair<double, double> viewplane_size = {1, 1}, std::pair<int, int> viewport_size = {80, 80});
+    Camera (MyVector3 origin, std::pair<double, double> rotation, double viewplane_distance = 2, std::pair<double, double> viewplane_size = {1, 1}, std::pair<int, int> viewport_size = {80, 80});
 
-    std::vector<std::vector<Vector3>> get_viewplane (const int i) const;
+    std::vector<std::vector<MyVector3>> get_viewplane (const int i) const;
 
-    const Vector3& getOrigin () const;
+    const MyVector3& getOrigin () const;
 };
 
 

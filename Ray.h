@@ -6,22 +6,22 @@
 
 
 #include <ostream>
-#include "Vector3.h"
+#include "MyVector3.h"
 
 class Ray {
 public:
-    Ray (const Vector3& origin, const Vector3& direction);
+    Ray (const MyVector3& origin, const MyVector3& direction);
 
 private:
-    Vector3 origin;
-    Vector3 direction;
+    MyVector3 origin;
+    MyVector3 direction;
 
 public:
-    const Vector3& getOrigin () const;
+    const MyVector3& getOrigin () const;
 
-    const Vector3& getDirection () const;
+    const MyVector3& getDirection () const;
 
-    Vector3 apply (double lambda) const;
+    MyVector3 apply (double lambda) const;
 
     friend std::ostream& operator<< (std::ostream& os, const Ray& ray);
 };

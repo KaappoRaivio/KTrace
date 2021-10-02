@@ -4,9 +4,9 @@
 
 #include "Triangle.h"
 
-Triangle::Triangle (const Vector3& t1, const Vector3& t2, const Vector3& t3) : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3)} {}
+Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3) : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3)} {}
 
-Triangle::Triangle (std::initializer_list<Vector3> list) : Triangle(list.begin()[0], list.begin()[1], list.begin()[2]) {}
+Triangle::Triangle (std::initializer_list<MyVector3> list) : Triangle(list.begin()[0], list.begin()[1], list.begin()[2]) {}
 
 
 double Triangle::get_intersection_distance (const Ray& ray) const {
@@ -25,18 +25,18 @@ double Triangle::get_intersection_distance (const Ray& ray) const {
     }
 }
 
-bool Triangle::includes (const Vector3& vector) const {
+bool Triangle::includes (const MyVector3& vector) const {
     return plane.includes(vector) && check_bounds(vector);
 }
 
-bool Triangle::check_bounds (const Vector3& vector) const {
-//        const Vector3& v1 = t2 - t3;
-//    const Vector3& v2 = t1 - t3;
-//    const Vector3& v3 = t2 - t1;
+bool Triangle::check_bounds (const MyVector3& vector) const {
+//        const MyVector3& v1 = t2 - t3;
+//    const MyVector3& v2 = t1 - t3;
+//    const MyVector3& v3 = t2 - t1;
 //
-//    const Vector3& b1 = v1.cross(v2);
-//    const Vector3& b2 = v2.cross(v1);
-//    const Vector3& b3 = v2.cross(v3);
+//    const MyVector3& b1 = v1.cross(v2);
+//    const MyVector3& b2 = v2.cross(v1);
+//    const MyVector3& b3 = v2.cross(v3);
 //
 //
 //    auto a = v1.cross(vector - t3);
@@ -54,12 +54,12 @@ bool Triangle::check_bounds (const Vector3& vector) const {
 //    return true;
 
 
-    const Vector3& P = vector;
+    const MyVector3& P = vector;
 
 // Compute vectors
-    const Vector3& v0 = t3 - t1;
-    const Vector3& v1 = t2 - t1;
-    const Vector3& v2 = P - t1;
+    const MyVector3& v0 = t3 - t1;
+    const MyVector3& v1 = t2 - t1;
+    const MyVector3& v2 = P - t1;
 
 // Compute dot products
     double dot00 = v0.squared();
@@ -79,22 +79,42 @@ bool Triangle::check_bounds (const Vector3& vector) const {
 
 }
 
-Vector3 Triangle::get_normal_at (const Vector3& position) const {
+MyVector3 Triangle::get_normal_at (const MyVector3& position) const {
     return plane.getNormal();
 }
 
-Vector3 Triangle::get_uv_at (const Vector3& position) const {
-    const Vector3& tangent = t3 - t1;
-    const Vector3& normal = get_normal_at(position);
+MyVector3 Triangle::get_uv_at (const MyVector3& position) const {
+    const MyVector3& tangent = t3 - t1;
+    const MyVector3& normal = get_normal_at(position);
 
-    const Vector3& width = tangent;
-    const Vector3& height = t2 - t1 - width * ((width * t2 - width * t1) / width.squared());
+    const MyVector3& width = tangent;
+    const MyVector3& height = t2 - t1 - width * ((width * t2 - width * t1) / width.squared());
 
-    const Vector3& local_position = position - t1;
-    const Vector3& uv = local_position.inTermsOfComponents(width, height, normal.normalize());
-//    std::cout << uv << std::endl;
+    const MyVector3& local_position = position - t1;
+    const MyVector3& uv = local_position.inTermsOfComponents(width, height, normal.normalize());
     return uv;
 
-//    return {0.5, 0.8, 0};
+
+    const MyVector3& P = position;
+
+// Compute vectors
+    const MyVector3& v0 = t3 - t1;
+    const MyVector3& v1 = t2 - t1;
+    const MyVector3& v2 = P - t1;
+
+// Compute dot products
+    double dot00 = v0.squared();
+    double dot01 = v0.dot(v1);
+    double dot02 = v0.dot(v2);
+    double dot11 = v1.squared();
+    double dot12 = v1.dot(v2);
+
+// Compute barycentric coordinates
+    double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
+    double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+    return {u, v, 0};
+
 }
 

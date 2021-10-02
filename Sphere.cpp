@@ -8,7 +8,7 @@ extern const double PRECISION_LIMIT;
 
 //
 // Created by kaappo on 14.9.2021.
-Sphere::Sphere (Vector3 center, double radius) : center{std::move(center)}, radius{radius} {}
+Sphere::Sphere (MyVector3 center, double radius) : center{std::move(center)}, radius{radius} {}
 
 double Sphere::get_intersection_distance (const Ray& ray) const {
 //    if (includes(ray.getOrigin())) {
@@ -39,15 +39,15 @@ double Sphere::get_intersection_distance (const Ray& ray) const {
     }
 }
 
-Vector3 Sphere::get_normal_at (const Vector3& position) const {
+MyVector3 Sphere::get_normal_at (const MyVector3& position) const {
     return (position - center).normalize();
 }
 
-bool Sphere::includes (const Vector3& point) const {
+bool Sphere::includes (const MyVector3& point) const {
     return std::abs((center - point).squared() - std::pow(radius, 2)) < PRECISION_LIMIT;
 }
 
-Vector3 Sphere::get_uv_at (const Vector3& position) const {
+MyVector3 Sphere::get_uv_at (const MyVector3& position) const {
     const auto& d = (center - position).normalize();
 
     double u = 0.5 - d.atan2() / (2 * M_PI);

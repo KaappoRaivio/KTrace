@@ -83,15 +83,15 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 //        Intensity diffuse_light = {0, 0, 0};
         IntensityBlend diffuse_light;
         IntensityBlend specular_light;
-        const Vector3& face_normal = surface->get_normal_at(closest.position).normalize();
-        const Vector3& N = face_normal;
+        const MyVector3& face_normal = surface->get_normal_at(closest.position).normalize();
+        const MyVector3& N = face_normal;
 
-        const Vector3& d = closest.ray.getDirection();
-        const Vector3& R = d.reflection(face_normal).normalize();
+        const MyVector3& d = closest.ray.getDirection();
+        const MyVector3& R = d.reflection(face_normal).normalize();
         for (int i = 0; i < raysPerPixel; ++i) {
             for (const auto& lightSource: lightSources) {
-                const Vector3& vector_to_light = (lightSource.position - closest.position).rotateInsideCone(lightSource.radius);
-                const Vector3& V = vector_to_light.normalize();
+                const MyVector3& vector_to_light = (lightSource.position - closest.position).rotateInsideCone(lightSource.radius);
+                const MyVector3& V = vector_to_light.normalize();
 
                 const auto& any_hits = get_closest_intersection({closest.position, V}, vector_to_light.length());
 
@@ -125,7 +125,7 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 
 }
 
-double Scene::orenNayarDiffuseReflection (const Vector3& face_normal, const Vector3& vector_to_light, const Vector3& vector_from_camera, double roughness) {
+double Scene::orenNayarDiffuseReflection (const MyVector3& face_normal, const MyVector3& vector_to_light, const MyVector3& vector_from_camera, double roughness) {
     const auto& n = face_normal.normalize();
     const auto& v = vector_to_light.normalize();
     const auto& d = vector_from_camera.normalize();
@@ -144,7 +144,7 @@ double Scene::orenNayarDiffuseReflection (const Vector3& face_normal, const Vect
 }
 
 
-double Scene::lambertianDiffuseReflection (const Vector3& face_normal, const Vector3& vector_to_light, const Vector3& ray_direction) {
+double Scene::lambertianDiffuseReflection (const MyVector3& face_normal, const MyVector3& vector_to_light, const MyVector3& ray_direction) {
     double dot1 = -ray_direction * face_normal;
     double dot2 = vector_to_light * face_normal;
 
@@ -195,7 +195,7 @@ std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, dou
 //    }
 }
 
-double Scene::calculate_beckmann_distribution (const Vector3& R, const Vector3& V, double glossiness) {
+double Scene::calculate_beckmann_distribution (const MyVector3& R, const MyVector3& V, double glossiness) {
     double roughness = 1 - glossiness;
     if (roughness == 0) {
         return 0;

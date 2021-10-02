@@ -10,7 +10,7 @@ std::vector<LightSource> SmoothLightSource::approximate () const {
     std::vector<LightSource> lights;
 
     for (int i = 0; i < amountOfLightSources; ++i) {
-        Vector3 v = masterLightSource.position + Vector3::randomInsideUnitSphere() * radius;
+        MyVector3 v = masterLightSource.position + MyVector3::randomInsideUnitSphere() * radius;
         lights.emplace_back(v, masterLightSource.intensity / amountOfLightSources, 0);
     }
 

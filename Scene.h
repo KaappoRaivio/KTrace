@@ -31,11 +31,11 @@ public:
 
     std::optional<Intersection> get_closest_intersection (const Ray& ray, double max_distance = 0) const;
 
-    static double calculate_beckmann_distribution (const Vector3& R, const Vector3& V, double glossiness);
+    static double calculate_beckmann_distribution (const MyVector3& R, const MyVector3& V, double glossiness);
 
-    static double lambertianDiffuseReflection (const Vector3& face_normal, const Vector3& vector_to_light, const Vector3& ray_direction);
+    static double lambertianDiffuseReflection (const MyVector3& face_normal, const MyVector3& vector_to_light, const MyVector3& ray_direction);
 
-    static double orenNayarDiffuseReflection (const Vector3& face_normal, const Vector3& vector_to_light, const Vector3& vector_from_camera, double roughness);
+    static double orenNayarDiffuseReflection (const MyVector3& face_normal, const MyVector3& vector_to_light, const MyVector3& vector_from_camera, double roughness);
 
 };
 

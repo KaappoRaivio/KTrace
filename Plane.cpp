@@ -9,7 +9,7 @@
 
 extern const double PRECISION_LIMIT;
 
-Plane::Plane (Vector3 normal, double intersect) : normal{std::move(normal)}, intersect{intersect} {}
+Plane::Plane (MyVector3 normal, double intersect) : normal{std::move(normal)}, intersect{intersect} {}
 
 double Plane::get_intersection_distance (const Ray& ray) const {
     if (normal * ray.getDirection() == 0) {
@@ -19,18 +19,18 @@ double Plane::get_intersection_distance (const Ray& ray) const {
     }
 }
 
-Plane Plane::from_three_points (const Vector3& t1, const Vector3& t2, const Vector3& t3) {
+Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3) {
     auto normal = (t1 - t2).cross(t1 - t3);
     auto intersect = -normal * t1;
 
     return {normal, intersect};
 }
 
-bool Plane::includes (const Vector3& vector) const {
+bool Plane::includes (const MyVector3& vector) const {
     return std::abs(normal * vector + intersect) <= PRECISION_LIMIT;
 }
 
-const Vector3& Plane::getNormal () const {
+const MyVector3& Plane::getNormal () const {
     return normal;
 }
 
@@ -39,15 +39,15 @@ double Plane::getIntersect () const {
 }
 
 
-Vector3 Plane::get_normal_at (const Vector3& position) const {
+MyVector3 Plane::get_normal_at (const MyVector3& position) const {
     return normal;
 }
 
-Vector3 Plane::get_uv_at (const Vector3& position) const {
-    const Vector3& tangent = normal.cross(Vector3::UP) || normal.cross(Vector3::OUT) || normal.cross(Vector3::SIDE);
-    const Vector3& bitangent = normal.cross(tangent);
+MyVector3 Plane::get_uv_at (const MyVector3& position) const {
+    const MyVector3& tangent = normal.cross(MyVector3::UP) || normal.cross(MyVector3::OUT) || normal.cross(MyVector3::SIDE);
+    const MyVector3& bitangent = normal.cross(tangent);
 
-    const Vector3& components = position.inTermsOfComponents(tangent, bitangent, normal);
+    const MyVector3& components = position.inTermsOfComponents(tangent, bitangent, normal);
 
     return components;
 }

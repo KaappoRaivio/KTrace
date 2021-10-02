@@ -14,9 +14,9 @@ public:
     // if doesn't intersect, return 0.
     virtual double get_intersection_distance (const Ray& ray) const = 0;
 
-    virtual Vector3 get_normal_at (const Vector3& position) const = 0;
+    virtual MyVector3 get_normal_at (const MyVector3& position) const = 0;
 
-    virtual Vector3 get_uv_at (const Vector3& position) const = 0;
+    virtual MyVector3 get_uv_at (const MyVector3& position) const = 0;
 };
 
 

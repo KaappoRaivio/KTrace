@@ -4,7 +4,7 @@
 
 #include "MyOpenGLWindow.h"
 #include "Intensity.h"
-#include "Vector3.h"
+#include "MyVector3.h"
 #include "Plane.h"
 #include "Triangle.h"
 #include "Camera.h"
@@ -32,17 +32,17 @@ int main () {
 
 
     auto triangle = std::make_shared<Triangle>(
-            Vector3{-5, 6, 5},
-            Vector3{0, 0, 3},
-            Vector3{5, 6, 3}
+            MyVector3{-5, 6, 5},
+            MyVector3{0, 0, 3},
+            MyVector3{5, 6, 3}
     );
-    auto plane = std::make_shared<Plane>(Vector3{0, 0, 1}, -1);
-    auto sphere1 = std::make_shared<Sphere>(Vector3{-2.5, 4, 4.5}, 0.3);
-    auto sphere2 = std::make_shared<Sphere>(Vector3{-1, 4, 4.3}, 0.6);
-    auto sphere3 = std::make_shared<Sphere>(Vector3{1, 4, 4}, 1.0);
-    auto sphere4 = std::make_shared<Sphere>(Vector3{0.5, 2, 3}, 0.5);
-    auto sphere5 = std::make_shared<Sphere>(Vector3{-0.75, 2, 3.25}, 0.4);
-    auto sphere6 = std::make_shared<Sphere>(Vector3{-0, 6, 6}, 15);
+    auto plane = std::make_shared<Plane>(MyVector3{0, 0, 1}, -1);
+    auto sphere1 = std::make_shared<Sphere>(MyVector3{-2.5, 4, 4.5}, 0.3);
+    auto sphere2 = std::make_shared<Sphere>(MyVector3{-1, 4, 4.3}, 0.6);
+    auto sphere3 = std::make_shared<Sphere>(MyVector3{1, 4, 4}, 1.0);
+    auto sphere4 = std::make_shared<Sphere>(MyVector3{0.5, 2, 3}, 0.5);
+    auto sphere5 = std::make_shared<Sphere>(MyVector3{-0.75, 2, 3.25}, 0.4);
+    auto sphere6 = std::make_shared<Sphere>(MyVector3{-0, 6, 6}, 15);
 //    Sphere sphere2 = {{-1, 4, 4.3}, 0.6};
 //    Sphere sphere3 = {{1, 4, 4}, 1};
 //    Sphere sphere4 = {{0.5, 2, 3}, 0.5};
@@ -84,7 +84,7 @@ int main () {
     };
 
 
-    Scene scene{objects, lights, camera, 4, 8};
+    Scene scene{objects, lights, camera, 1, 2};
 
     std::cout << "starting tracing!" << std::endl;
     auto start = std::chrono::system_clock::now();
