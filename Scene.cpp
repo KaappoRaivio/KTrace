@@ -209,3 +209,21 @@ double Scene::calculate_beckmann_distribution (const MyVector3& R, const MyVecto
 
 
 }
+
+std::ostream& operator<< (std::ostream& os, const Scene& scene) {
+    os << "objects: {";
+    for (const auto& i : scene.objects ) {
+        os << i << ", ";
+    }
+    os << "}";
+
+    os << "lightSources: {";
+    for (const auto& i : scene.lightSources ) {
+        os << i << ", ";
+    }
+    os << "}";
+
+    os << " camera: " << scene.camera << " raysPerPixel: " << scene.raysPerPixel << " antialiasingScaler: " << scene.antialiasingScaler;
+    return os;
+}
+

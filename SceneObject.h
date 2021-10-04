@@ -5,6 +5,7 @@
 #pragma once
 
 #include <memory>
+#include <ostream>
 
 #include "Surface.h"
 #include "Material.h"
@@ -16,6 +17,10 @@ class Surface;
 class Intersection;
 
 class SceneObject {
+private:
+public:
+    friend std::ostream& operator<< (std::ostream& os, const SceneObject& object);
+
 private:
 //    std::shared_ptr<Surface> surface;
     std::shared_ptr<Surface> surface;

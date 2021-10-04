@@ -5,6 +5,7 @@
 #pragma once
 
 #include <optional>
+#include <ostream>
 
 #include "Ray.h"
 #include "Intersection.h"
@@ -17,6 +18,8 @@ public:
     virtual MyVector3 get_normal_at (const MyVector3& position) const = 0;
 
     virtual MyVector3 get_uv_at (const MyVector3& position) const = 0;
+
+
 };
 
 

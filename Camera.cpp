@@ -40,3 +40,7 @@ std::vector<std::vector<MyVector3>> Camera::get_viewplane (const int antialiasin
 const MyVector3& Camera::getOrigin () const {
     return origin;
 }
+
+std::ostream& operator<< (std::ostream& os, const Camera& camera) {
+    return os << "Camera";
+}

@@ -5,6 +5,7 @@
 #pragma once
 
 #include <memory>
+#include <ostream>
 #include "MyVector3.h"
 #include "Intensity.h"
 #include "Texture.h"
@@ -19,4 +20,6 @@ struct Material {
 
 public:
     Intensity get_albedo_at (const MyVector3& uv) const;
+
+    friend std::ostream& operator<< (std::ostream& os, const Material& material);
 };

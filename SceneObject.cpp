@@ -28,3 +28,8 @@ std::optional<Intersection> SceneObject::get_intersection (const Ray& ray) const
         return Intersection{distance, ray.apply(distance), *this, ray};
     }
 }
+
+std::ostream& operator<< (std::ostream& os, const SceneObject& object) {
+    os << "Surface lol";
+    return os;
+}

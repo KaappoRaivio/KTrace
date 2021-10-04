@@ -5,6 +5,7 @@
 #pragma once
 
 #include <optional>
+#include <ostream>
 
 #include "MyVector3.h"
 #include "Plane.h"
@@ -27,6 +28,8 @@ public:
     MyVector3 get_uv_at (const MyVector3& position) const override;
 
     Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3);
+
+    friend std::ostream& operator<< (std::ostream& os, const Triangle& triangle);
 
     Triangle (std::initializer_list<MyVector3> list);
 };

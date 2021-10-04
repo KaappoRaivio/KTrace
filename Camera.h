@@ -7,6 +7,7 @@
 
 #include <array>
 #include <vector>
+#include <ostream>
 #include "MyVector3.h"
 
 class Camera {
@@ -28,6 +29,8 @@ public:
     std::vector<std::vector<MyVector3>> get_viewplane (const int i) const;
 
     const MyVector3& getOrigin () const;
+
+    friend std::ostream& operator<< (std::ostream& os, const Camera& camera);
 };
 
 

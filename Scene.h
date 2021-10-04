@@ -6,6 +6,7 @@
 
 
 #include <vector>
+#include <ostream>
 #include "Surface.h"
 #include "Camera.h"
 #include "Intensity.h"
@@ -14,13 +15,13 @@
 #include "LightSource.h"
 
 class Scene {
-private:
+//private:
+public:
     std::vector<SceneObject> objects;
     std::vector<LightSource> lightSources;
     Camera camera;
     int raysPerPixel;
     int antialiasingScaler;
-public:
     Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, Camera camera, int raysPerPixel, int antialiasingScaler);
 
     std::vector<std::vector<Intensity>> trace (int bounces) const;
@@ -37,7 +38,11 @@ public:
 
     static double orenNayarDiffuseReflection (const MyVector3& face_normal, const MyVector3& vector_to_light, const MyVector3& vector_from_camera, double roughness);
 
+    friend std::ostream& operator<< (std::ostream& os, const Scene& scene);
+
 };
 
-
+//std::ostream& operator<< (std::ostream& os, const Scene& scene) {
+//
+//
 

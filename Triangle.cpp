@@ -118,3 +118,8 @@ MyVector3 Triangle::get_uv_at (const MyVector3& position) const {
 
 }
 
+std::ostream& operator<< (std::ostream& os, const Triangle& triangle) {
+    os << "Triangle{" << triangle.t1 << ", " << triangle.t2 << ", " << triangle.t3 << "}";
+    return os;
+}
+
