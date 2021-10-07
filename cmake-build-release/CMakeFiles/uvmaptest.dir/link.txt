@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 --std=c++2a -fopenmp CMakeFiles/uvmaptest.dir/Vector3.cpp.o CMakeFiles/uvmaptest.dir/Ray.cpp.o CMakeFiles/uvmaptest.dir/Surface.cpp.o CMakeFiles/uvmaptest.dir/Triangle.cpp.o CMakeFiles/uvmaptest.dir/Plane.cpp.o CMakeFiles/uvmaptest.dir/SceneObject.cpp.o -o uvmaptest 

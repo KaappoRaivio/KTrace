@@ -98,6 +98,9 @@ MyVector3 MyVector3::inTermsOfComponents (const MyVector3& i, const MyVector3& j
 }
 
 MyVector3 MyVector3::rotateInsideCone (double radius) const {
+    if (radius == 0) {
+        return *this;
+    }
 
     const MyVector3& tangent = cross(MyVector3::UP).normalize();
     const MyVector3& bitangent = cross(tangent).normalize();

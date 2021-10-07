@@ -4,9 +4,14 @@
 
 #include "Triangle.h"
 
-Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3) : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3)} {}
+Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const MyVector3& texture1, const MyVector3& texture2, const MyVector3& texture3) : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3)}, tu{texture1}, tv{texture2}, tw{texture3} {}
 
-Triangle::Triangle (std::initializer_list<MyVector3> list) : Triangle(list.begin()[0], list.begin()[1], list.begin()[2]) {}
+
+Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3) : Triangle{t1, t2, t3, {0, 0, 0}, {1, 0, 0}, {0, 1, 0}} {
+
+}
+
+//Triangle::Triangle (std::initializer_list<MyVector3> list) : Triangle(list.begin()[0], list.begin()[1], list.begin()[2]) {}
 
 
 double Triangle::get_intersection_distance (const Ray& ray) const {
@@ -84,15 +89,15 @@ MyVector3 Triangle::get_normal_at (const MyVector3& position) const {
 }
 
 MyVector3 Triangle::get_uv_at (const MyVector3& position) const {
-    const MyVector3& tangent = t3 - t1;
-    const MyVector3& normal = get_normal_at(position);
-
-    const MyVector3& width = tangent;
-    const MyVector3& height = t2 - t1 - width * ((width * t2 - width * t1) / width.squared());
-
-    const MyVector3& local_position = position - t1;
-    const MyVector3& uv = local_position.inTermsOfComponents(width, height, normal.normalize());
-    return uv;
+//    const MyVector3& tangent = t3 - t1;
+//    const MyVector3& normal = get_normal_at(position);
+//
+//    const MyVector3& width = tangent;
+//    const MyVector3& height = t2 - t1 - width * ((width * t2 - width * t1) / width.squared());
+//
+//    const MyVector3& local_position = position - t1;
+//    const MyVector3& uv = local_position.inTermsOfComponents(width, height, normal.normalize());
+//    return uv;
 
 
     const MyVector3& P = position;
@@ -114,7 +119,14 @@ MyVector3 Triangle::get_uv_at (const MyVector3& position) const {
     double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
     double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-    return {u, v, 0};
+    u = u - std::floor(u);
+    v = v - std::floor(v);
+    double w = 1 - u - v;
+
+//    std::cout << tu << tv  << tw << std::endl;
+
+
+    return tu * u + tv * v + tw * w;
 
 }
 
@@ -122,4 +134,5 @@ std::ostream& operator<< (std::ostream& os, const Triangle& triangle) {
     os << "Triangle{" << triangle.t1 << ", " << triangle.t2 << ", " << triangle.t3 << "}";
     return os;
 }
+
 
