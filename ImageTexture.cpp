@@ -7,5 +7,5 @@
 ImageTexture::ImageTexture (const std::string& path) : image{path} {}
 
 Intensity ImageTexture::get_pixel_at (const MyVector3& uv) const {
-    return image.get_pixel_at(std::floor(uv.getI() * image.getWidth()), std::floor(uv.getJ() * image.getHeight()));
+    return image.get_pixel_at(std::floor(uv.getI() * image.getWidth() - 1e-9), std::floor(uv.getJ() * image.getHeight() - 1e-9));
 }

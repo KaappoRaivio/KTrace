@@ -13,7 +13,7 @@
 //#include <numbers>
 constexpr double PI = 3.1415926;
 
-Scene::Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, Camera camera, int raysPerPixel, int antialiasingScaler) : objects(std::move(objects)), camera(std::move(camera)), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler} {}
+Scene::Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler) : objects(std::move(objects)), camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler} {}
 
 #pragma clang diagnostic push
 
@@ -73,6 +73,9 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
     if (!intersection) {
         return Intensity{0, 0, 0};
     } else {
+#ifdef DEBUG
+        std::cout << "hit!" << std::endl;
+#endif
         const auto closest = *intersection;
 //        std::cout << closest.position << std::endl;
         const Material& material = closest.sceneObject.getMaterial();

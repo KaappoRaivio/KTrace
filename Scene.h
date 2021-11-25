@@ -19,10 +19,10 @@ class Scene {
 public:
     std::vector<SceneObject> objects;
     std::vector<LightSource> lightSources;
-    Camera camera;
+    const Camera& camera;
     int raysPerPixel;
     int antialiasingScaler;
-    Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, Camera camera, int raysPerPixel, int antialiasingScaler);
+    Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler);
 
     std::vector<std::vector<Intensity>> trace (int bounces) const;
 

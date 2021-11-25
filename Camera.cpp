@@ -44,3 +44,15 @@ const MyVector3& Camera::getOrigin () const {
 std::ostream& operator<< (std::ostream& os, const Camera& camera) {
     return os << "Camera";
 }
+
+void Camera::setViewplaneDistance (double viewplaneDistance) {
+    this->viewplane_distance = viewplaneDistance;
+}
+
+double Camera::getViewplaneDistance () const {
+    return viewplane_distance;
+}
+
+void Camera::move (const MyVector3& direction) {
+    origin = origin + direction;
+}

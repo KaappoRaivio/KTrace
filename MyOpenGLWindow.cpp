@@ -85,6 +85,8 @@ MyOpenGLWindow::~MyOpenGLWindow () {
 }
 
 void MyOpenGLWindow::paint (std::vector<std::vector<Intensity>> pixels) const {
+    SDL_RenderClear(renderer);
+    SDL_PumpEvents();
     for (int y = 0; y < pixels.size(); ++y) {
         for (int x = 0; x < pixels[y].size(); ++x) {
             set_pixel(x, y, pixels[y][x]);
