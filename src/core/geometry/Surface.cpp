@@ -9,7 +9,7 @@
 std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
 //    const Material& material = getMaterial();
     Surface* hitSurface = nullptr;
-    Material hitMaterial = Materials::WHITE;
+    const Material* hitMaterial = nullptr;
     auto distance = getIntersectionDistance(ray, hitSurface, hitMaterial);
 //    std::cout <<" moi" << (hitSurface == nullptr) << std::endl;
 
@@ -21,9 +21,11 @@ std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
     } else {
 //        std::cout << distance << ", " << ray.apply(distance) << ", " << ray << std::endl;
 //        return Intersection{distance, ray.apply(distance), *this, ray};
-//        if (DEBUG) {
-//            std::cout <<" moi" << (hitSurface == nullptr) << std::endl;
-//        }
+        if (DEBUG) {
+//            std::cout <<" moi" << *hitMaterial << std::endl;
+//            std::cout <<" moi" << hitMaterial->get_albedo_at({0.5, 0.5, 0}) << std::endl;
+        }
+
         return Intersection{distance, ray.apply(distance), hitSurface, hitMaterial, ray};
     }
 }

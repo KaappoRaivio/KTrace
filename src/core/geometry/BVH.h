@@ -13,7 +13,7 @@ public:
     BVHNode (std::vector<std::shared_ptr<Surface>> surfaces);
     BVHNode (std::vector<std::shared_ptr<Surface>>& src_surfaces, int axis, size_t start, size_t end);
 
-    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) override;
+    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
 
     AABB getBoundingBox () const override;
 

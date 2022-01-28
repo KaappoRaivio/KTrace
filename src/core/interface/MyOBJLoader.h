@@ -17,7 +17,7 @@ namespace MyOBJLoader {
         return {shittyvector.X, shittyvector.Y, 0};
     }
 
-    std::shared_ptr<Surface> readOBJ (const std::string& path) {
+    std::shared_ptr<Surface> readOBJ (const std::string& path, MyVector3 positionOffset) {
         objl::Loader loader;
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
@@ -64,7 +64,7 @@ namespace MyOBJLoader {
 //                std::cout << Triangle{toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position)} << std::endl;
 
                 std::shared_ptr<Surface> t;
-                t = std::make_shared<Triangle>(toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position), color.get(),
+                t = std::make_shared<Triangle>(toMyVector3(vertex1.Position) + positionOffset, toMyVector3(vertex2.Position) + positionOffset, toMyVector3(vertex3.Position) + positionOffset, color.get(),
                                                toMyVector3(vertex1.TextureCoordinate), toMyVector3(vertex2.TextureCoordinate), toMyVector3(vertex3.TextureCoordinate));
                 objects.push_back(t);
 

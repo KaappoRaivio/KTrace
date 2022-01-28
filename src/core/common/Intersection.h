@@ -17,10 +17,11 @@ struct Intersection {
 
 //    Intersection (const Intersection& other) = default;
 
+
     const double distance;
     const MyVector3 position;
 //    const SingleSceneObject sceneObject;
     const Surface* hitSurface;
-    Material material;
+    const Material* material;
     const Ray ray;
 };

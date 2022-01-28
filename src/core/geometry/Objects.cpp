@@ -21,9 +21,9 @@ Objects::Objects (const std::vector<Surface*> surfaces) : surfaces{surfaces} {
 
 }
 
-double Objects::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) {
+double Objects::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
     Surface* tempHitSurface = nullptr;
-    Material tempHitMaterial = Materials::WHITE;
+    const Material* tempHitMaterial = nullptr;
 
     double closest_hit = 1e9;
 

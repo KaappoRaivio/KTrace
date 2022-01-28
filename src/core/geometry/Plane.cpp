@@ -10,14 +10,14 @@
 
 Plane::Plane (MyVector3 normal, double intersect, const Material* material) : normal{std::move(normal)}, intersect{intersect}, material(material) {}
 
-double Plane::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) {
-    hitMaterial = *getMaterial();
+double Plane::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
+    hitMaterial = getMaterial();
 
     if (normal * ray.getDirection() == 0) {
         return 0.0;
     } else {
         hitSurface = this;
-        hitMaterial = *getMaterial();
+        hitMaterial = getMaterial();
 //        std::cout << "mossi" << std::endl;
         return -(normal * ray.getOrigin() + intersect) / (normal * ray.getDirection());
     }

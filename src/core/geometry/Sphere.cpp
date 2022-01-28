@@ -9,12 +9,12 @@
 // Created by kaappo on 14.9.2021.
 Sphere::Sphere (MyVector3 center, double radius, const Material* material) : center{std::move(center)}, radius{radius}, material(material) {}
 
-double Sphere::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) {
+double Sphere::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
 //    if (includes(ray.getOrigin())) {
 //        return 0.0;
 //    }
 
-    const auto& d = ray.getDirection().normalize();
+    const auto& d = ray.getDirection();
     const auto& C = ray.getOrigin();
     const auto& r = radius;
     const auto& P = center;
@@ -26,7 +26,7 @@ double Sphere::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Ma
 
     const auto base = (-d * (C - P));
     hitSurface = this;
-    hitMaterial = *getMaterial();
+    hitMaterial = getMaterial();
     if (discriminant == 0) {
         if (base < PRECISION_LIMIT) return 0.0;
         else return base;

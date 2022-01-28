@@ -18,7 +18,7 @@ private:
 public:
     Sphere (MyVector3 center, double radius, const Material* material);
 
-    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) override;
+    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
 
     MyVector3 getNormalAt (const MyVector3& position) const override;
     MyVector3 getUVAt (const MyVector3& position) const override;

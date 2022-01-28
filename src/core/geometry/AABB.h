@@ -14,8 +14,6 @@ class AABB {
 private:
     MyVector3 minimum, maximum;
 
-    bool intersects (const Ray& ray) const;
-
 public:
     AABB (const MyVector3& minimum, const MyVector3& maximum);
     constexpr AABB (bool invalid) : maximum{0, 0, 0}, minimum{0, 0, 0} {
@@ -34,6 +32,8 @@ public:
 
     MyVector3 getMinimum () const;
     MyVector3 getMaximum () const;
+
+    bool intersects (const Ray& ray) const;
 };
 namespace AABBs {
     constexpr AABB INVALID{true};

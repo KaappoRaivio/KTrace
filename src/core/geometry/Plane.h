@@ -24,7 +24,7 @@ public:
 
     bool includes (const MyVector3& vector) const;
 
-    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) override;
+    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
 
 
     MyVector3 getNormalAt (const MyVector3& position) const override;

@@ -37,6 +37,7 @@ std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
 
 
 #pragma omp parallel for collapse(2)
+//#pragma omp target teams distribute parallel for  collapse(2)
     for (int y = 0; y < viewport_height; ++y) {
         for (int x = 0; x < viewport_width; ++x) {
 
@@ -79,10 +80,10 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 #endif
         const auto closest = *intersection;
 //        std::cout << closest.position << std::endl;
-        const Material& material = closest.material;
+        const Material* material = closest.material;
         const auto* const surface = closest.hitSurface;
 
-        const Intensity& albedo = material.get_albedo_at(surface->getUVAt(closest.position));
+        const Intensity& albedo = material->get_albedo_at(surface->getUVAt(closest.position));
 
 //        Intensity diffuse_light = {0, 0, 0};
         IntensityBlend diffuse_light;
@@ -111,20 +112,20 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
                     //                double specular_direction_coefficient = std::pow(std::abs(closest.ray.getDirection().reflection(face_normal) * V), 16);
 
 //                double specular_direction_coefficient = std::pow(std::abs(R * V), 16);
-                    double specular_direction_coefficient = calculate_beckmann_distribution(R, V, material.glossiness);
+                    double specular_direction_coefficient = calculate_beckmann_distribution(R, V, material->glossiness);
                     diffuse_light += lightSource.intensity / raysPerPixel * distance_coefficient * diffuse_direction_coefficient;
                     specular_light += lightSource.intensity / raysPerPixel * distance_coefficient * specular_direction_coefficient;
                 }
             }
         }
 
-        if (material.glossiness > 0 && bounces_left > 0) {
+        if (material->glossiness > 0 && bounces_left > 0) {
             specular_light += calculate_color({closest.position, R}, x, y, bounces_left - 1);
         }
         const Intensity& specular_intensity = specular_light.commitSum();
         const Intensity& diffuse_intensity = diffuse_light.commitSum();
 
-        return albedo * (specular_intensity * material.glossiness + diffuse_intensity * (1 - material.glossiness));
+        return albedo * (specular_intensity * material->glossiness + diffuse_intensity * (1 - material->glossiness));
     }
 
 }

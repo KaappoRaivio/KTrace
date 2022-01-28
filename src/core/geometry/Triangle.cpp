@@ -15,7 +15,7 @@ Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t
 //Triangle::Triangle (std::initializer_list<MyVector3> list) : Triangle(list.begin()[0], list.begin()[1], list.begin()[2]) {}
 
 
-double Triangle::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) {
+double Triangle::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
 //    std::cout << "Raydestroyed: " << ray << std::endl;
     auto possible_intersection = plane.getIntersectionDistance(ray, hitSurface, hitMaterial);
     if (possible_intersection == 0) {
@@ -26,7 +26,7 @@ double Triangle::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, 
     auto position = ray.apply(possible_intersection);
     if (includes(position)) {
         hitSurface = this;
-        hitMaterial = *getMaterial();
+        hitMaterial = getMaterial();
         return possible_intersection;
     } else {
         return 0.0;

@@ -23,7 +23,7 @@ public:
 
     const Material* getMaterial () const override;
 
-    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) override;
+    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
 //    std::optional<Intersection> get_intersection (const Ray& ray) const override;
     AABB getBoundingBox () const override;
 

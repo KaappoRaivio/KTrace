@@ -4,7 +4,7 @@
 
 #include "Ray.h"
 
-Ray::Ray (const MyVector3& origin, const MyVector3& direction) : origin(origin), direction(direction) {}
+Ray::Ray (const MyVector3& origin, const MyVector3& direction) : origin(origin), direction(direction.normalize()) {}
 
 const MyVector3& Ray::getOrigin () const {
     return origin;

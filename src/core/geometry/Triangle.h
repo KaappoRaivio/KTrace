@@ -23,7 +23,7 @@ private:
 public:
     Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material, const MyVector3& texture1, const MyVector3& texture2, const MyVector3& texture3);
     Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material);
-    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) override;
+    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
 
     MyVector3 getNormalAt (const MyVector3& position) const override;
     MyVector3 getUVAt (const MyVector3& position) const override;

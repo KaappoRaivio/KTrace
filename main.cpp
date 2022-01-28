@@ -55,19 +55,89 @@ int main () {
 
 //    auto surfaces = std::make_shared<Objects>(sur);
 
-//    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/teapot2.obj");
     BVHNode tree{{sphere1, sphere2, sphere3, sphere4, sphere5, triangle}};
 //    BVHNode tree{{triangle, }};
 
 //    std::exit(0);
-    Surface* surface = nullptr;
-    Material material = Materials::WHITE;
+//    Surface* surface = nullptr;
+//    Material material = Materials::WHITE;
 //
-    std::cout << tree.getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
-    std::cout << triangle->getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
+//    std::cout << tree.getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
+//    std::cout << triangle->getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
 //    std::exit(0);
     Objects sur = {{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get(), plane.get()}};
     auto surfaces = std::make_shared<Objects>(sur);
+
+    auto bloat1 = std::make_shared<Sphere>(MyVector3{-2.5, 4, 5.0}, 0.3, &sphereMaterial);
+    auto bloat2 = std::make_shared<Sphere>(MyVector3{-100, 4, 4.3}, 0.6, &sphereMaterial);
+    auto bloat3 = std::make_shared<Sphere>(MyVector3{100, 4, 4}, 1.0, &sphereMaterial);
+    auto bloat4 = std::make_shared<Sphere>(MyVector3{100, 2, 3}, 0.5, &sphereMaterial);
+    auto bloat5 = std::make_shared<Sphere>(MyVector3{-75, 2, 3.25}, 0.4, &sphereMaterial);
+    auto bloat6 = std::make_shared<Sphere>(MyVector3{-100, 6, 6}, 15, &sphereMaterial);
+
+    BVHNode testTree {
+            {
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+            }
+    };
+
+    Objects testTreeSlo = {
+            {
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
+            }
+    };
+
+    auto testTreeSlow = std::make_shared<Objects>(testTreeSlo);
 
 ////    Sphere sphere2 = {{-1, 4, 4.3}, 0.6};
 ////    Sphere sphere3 = {{1, 4, 4}, 1};
@@ -76,8 +146,8 @@ int main () {
 //    Sphere sphere6 = {{0, 6, 6}, 1.5};
 //
 //
-//
-    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/texture.obj");
+//    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/teapot.obj", {0, 4, 3});
+//    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/texture.obj", MyVector3{0, 0, 3});
 
 //
 //
@@ -87,9 +157,12 @@ int main () {
 //            sphere1.get(),
 //            sphere2.get(),
 //            surfaces.get(),
-//            plane.get(),
+            plane.get(),
 //            triangle.get(),
             &tree,
+//            &testTree,
+            testTreeSlow.get(),
+//            surfaces.get(),
 //            model.get(),
 //            SingleSceneObject{triangle.get(), triangleMaterial},
 //            SingleSceneObject{plane.get(), planeMaterial},
@@ -139,7 +212,8 @@ int main () {
 //        camera.setViewplaneDistance(camera.getViewplaneDistance() * 1.01);
 //        camera.move({0, 0.1, 0.1});
         camera.move({0, 0, 0});
-        window.delay(50000);
+        window.delay(50);
+        break;
     }
 #pragma clang diagnostic pop
 //    while (true);

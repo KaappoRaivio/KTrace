@@ -7,20 +7,20 @@
 
 int prunes = 0;
 
-double BVHNode::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) {
-    if (std::abs(box.getIntersectionDistance(ray)) < PRECISION_LIMIT) {
+double BVHNode::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
+    if (!box.intersects(ray)) {
         prunes++;
-        std::cout << "Pruned!" << prunes << std::endl;
-        return false;
+//        std::cout << "Pruned!" << prunes << std::endl;
+        return 0;
     }
 
 
     Surface* leftTempHitSurface = nullptr;
-    Material leftTempHitMaterial = Materials::WHITE;
+    const Material* leftTempHitMaterial = nullptr;
     double leftDistance = left->getIntersectionDistance(ray, leftTempHitSurface, leftTempHitMaterial);
 
     Surface* rightTempHitSurface = nullptr;
-    Material rightTempHitMaterial = Materials::WHITE;
+    const Material* rightTempHitMaterial = nullptr;
     double rightDistance = right->getIntersectionDistance(ray, rightTempHitSurface, rightTempHitMaterial);
 //    std::cout << leftDistance << std::endl;
 
@@ -72,7 +72,7 @@ double BVHNode::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, M
 //    else return 0;
 }
 
-bool boxCompare (const std::shared_ptr<Surface> a, const std::shared_ptr<Surface> b, int axis) {
+bool boxCompare (const std::shared_ptr<Surface>& a, const std::shared_ptr<Surface>& b, int axis) {
 
 
     return a->getBoundingBox().getMinimum()[axis] < b->getBoundingBox().getMinimum()[axis];
@@ -83,15 +83,15 @@ bool boxCompare (const std::shared_ptr<Surface> a, const std::shared_ptr<Surface
 }
 
 
-bool boxCompareX (const std::shared_ptr<Surface> a, const std::shared_ptr<Surface> b) {
+bool boxCompareX (const std::shared_ptr<Surface>& a, const std::shared_ptr<Surface>& b) {
     return boxCompare(a, b, 0);
 }
 
-bool boxCompareY (const std::shared_ptr<Surface> a, const std::shared_ptr<Surface> b) {
+bool boxCompareY (const std::shared_ptr<Surface>& a, const std::shared_ptr<Surface>& b) {
     return boxCompare(a, b, 1);
 }
 
-bool boxCompareZ (const std::shared_ptr<Surface> a, const std::shared_ptr<Surface> b) {
+bool boxCompareZ (const std::shared_ptr<Surface>& a, const std::shared_ptr<Surface>& b) {
     return boxCompare(a, b, 2);
 }
 
@@ -145,7 +145,6 @@ MyVector3 BVHNode::getNormalAt (const MyVector3& position) const {
 }
 
 MyVector3 BVHNode::getUVAt (const MyVector3& position) const {
-    throw std::runtime_error("getUVAt not implemented for BVHNode!");
     throw std::runtime_error("getUVAt not implemented for BVHNode!");
 }
 

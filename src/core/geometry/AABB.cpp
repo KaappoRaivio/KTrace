@@ -11,10 +11,30 @@ double AABB::getIntersectionDistance (const Ray& ray) const {
 }
 
 bool AABB::intersects (const Ray& ray) const {
-    for (int a = 0 ; a < 3 ; a++) {
-        auto invD = 1.0f / ray.getDirection()[a];
-        auto t0 = (minimum[a] - ray.getOrigin()[a]) * invD;
-        auto t1 = (maximum[a] - ray.getOrigin()[a]) * invD;
+    {
+        auto invD = 1.0f / ray.getDirection().getI();
+        auto t0 = (minimum.getI() - ray.getOrigin().getI()) * invD;
+        auto t1 = (maximum.getI() - ray.getOrigin().getI()) * invD;
+        if (invD < 0.0f)
+            std::swap(t0, t1);
+
+        if (t1 <= t0)
+            return false;
+    }
+    {
+        auto invD = 1.0f / ray.getDirection().getJ();
+        auto t0 = (minimum.getJ() - ray.getOrigin().getJ()) * invD;
+        auto t1 = (maximum.getJ() - ray.getOrigin().getJ()) * invD;
+        if (invD < 0.0f)
+            std::swap(t0, t1);
+
+        if (t1 <= t0)
+            return false;
+    }
+     {
+        auto invD = 1.0f / ray.getDirection().getK();
+        auto t0 = (minimum.getK() - ray.getOrigin().getK()) * invD;
+        auto t1 = (maximum.getK() - ray.getOrigin().getK()) * invD;
         if (invD < 0.0f)
             std::swap(t0, t1);
 
