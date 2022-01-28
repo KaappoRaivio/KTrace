@@ -10,7 +10,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_FAILURE_STRINGS
 
-#include "lib/stb/std_image.h"
+#include "../../../lib/stb/std_image.h"
 
 Image::Image (const std::string& path) : width{0}, height{0}, bytes_per_pixel{0} {
     int amountOfChannels = path.ends_with("jpg") ? 3 : 4;

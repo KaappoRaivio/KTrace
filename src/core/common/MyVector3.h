@@ -7,7 +7,7 @@
 
 #include <ostream>
 #include <iostream>
-#include "lib/Eigen/Dense"
+#include "../../../lib/Eigen/Dense"
 
 class MyVector3 {
 private:

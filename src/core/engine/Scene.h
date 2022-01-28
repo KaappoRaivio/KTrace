@@ -7,12 +7,12 @@
 
 #include <vector>
 #include <ostream>
-#include "Surface.h"
+#include "../geometry/Surface.h"
 #include "Camera.h"
-#include "Intensity.h"
-#include "Triangle.h"
+#include "../light/Intensity.h"
+#include "../geometry/Triangle.h"
 #include "SceneObject.h"
-#include "LightSource.h"
+#include "../common/LightSource.h"
 
 class Scene {
 //private:

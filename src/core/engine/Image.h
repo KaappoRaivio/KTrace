@@ -7,7 +7,7 @@
 #include <string>
 
 
-#include "Intensity.h"
+#include "../light/Intensity.h"
 
 
 class Image {

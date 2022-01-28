@@ -7,7 +7,7 @@
 #include <optional>
 #include <ostream>
 
-#include "MyVector3.h"
+#include "../common/MyVector3.h"
 #include "Plane.h"
 #include "Surface.h"
 

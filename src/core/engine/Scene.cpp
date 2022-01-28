@@ -3,9 +3,9 @@
 //
 
 #include "Scene.h"
-#include "Intensity.h"
-#include "LightSource.h"
-#include "IntensityBlend.h"
+#include "../light/Intensity.h"
+#include "../common/LightSource.h"
+#include "../light/IntensityBlend.h"
 
 #include <utility>
 #include <cmath>

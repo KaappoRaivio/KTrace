@@ -2,10 +2,14 @@
 <project version="4">
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
+    <sourceRoots>
+      <file path="$PROJECT_DIR$/src" />
+    </sourceRoots>
     <libraryRoots>
       <file path="$PROJECT_DIR$/lib" />
     </libraryRoots>
     <excludeRoots>
+      <file path="$PROJECT_DIR$/cmake-build-release" />
       <file path="$PROJECT_DIR$/res" />
     </excludeRoots>
   </component>

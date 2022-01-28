@@ -6,8 +6,7 @@
 #include <optional>
 
 #include "Plane.h"
-
-extern const double PRECISION_LIMIT;
+#include "../common/mytypes.h"
 
 Plane::Plane (MyVector3 normal, double intersect) : normal{std::move(normal)}, intersect{intersect} {}
 

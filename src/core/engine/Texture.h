@@ -5,8 +5,8 @@
 #pragma once
 
 
-#include "Intensity.h"
-#include "MyVector3.h"
+#include "../light/Intensity.h"
+#include "../common/MyVector3.h"
 
 class Texture {
 public:

@@ -2,31 +2,30 @@
 #include <memory>
 #include <chrono>
 
-#include "MyOpenGLWindow.h"
-#include "Intensity.h"
-#include "MyVector3.h"
-#include "Plane.h"
-#include "Triangle.h"
-#include "Camera.h"
-#include "Scene.h"
-#include "SceneObject.h"
-#include "Sphere.h"
-#include "SmoothLightSource.h"
-#include "SolidTexture.h"
-#include "ImageTexture.h"
-#include "MyOBJLoader.h"
+#include "src/core/interface/MyOpenGLWindow.h"
+#include "src/core/light/Intensity.h"
+#include "src/core/common/MyVector3.h"
+#include "src/core/geometry/Plane.h"
+#include "src/core/geometry/Triangle.h"
+#include "src/core/engine/Camera.h"
+#include "src/core/engine/Scene.h"
+#include "src/core/engine/SceneObject.h"
+#include "src/core/geometry/Sphere.h"
+#include "src/core/light/SmoothLightSource.h"
+#include "src/core/engine/SolidTexture.h"
+#include "src/core/engine/ImageTexture.h"
+#include "src/core/interface/MyOBJLoader.h"
 
 #define DEBUG
 
 
-extern const double PRECISION_LIMIT = 0.001;
 
 int main () {
     constexpr int window_side_length = 1000;
     constexpr int viewport_side_length = 500;
 
 //    Camera camera = {{0, -5, 4}, {0, 0}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
-    Camera camera = {{0, -5, 0}, {0, 0}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 8}, {0, 0.5}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
 
     auto triangle = std::make_shared<Triangle>(
@@ -64,13 +63,13 @@ int main () {
 //
 //
     std::vector<SceneObject> objects = {
-//            SceneObject{triangle, triangleMaterial},
-//            SceneObject{plane, planeMaterial},
-//            SceneObject(sphere1, sphereMaterial),
-//            SceneObject(sphere2, sphereMaterial),
-//            SceneObject(sphere3, sphereMaterial),
-//            SceneObject(sphere4, sphereMaterial),
-//            SceneObject(sphere5, sphereMaterial),
+            SceneObject{triangle, triangleMaterial},
+            SceneObject{plane, planeMaterial},
+            SceneObject(sphere1, sphereMaterial),
+            SceneObject(sphere2, sphereMaterial),
+            SceneObject(sphere3, sphereMaterial),
+            SceneObject(sphere4, sphereMaterial),
+            SceneObject(sphere5, sphereMaterial),
 ////            SceneObject(sphere6, mirror),
     };
 
@@ -89,8 +88,6 @@ int main () {
     objects.insert(std::end(objects), std::begin(model), std::end(model));
     std::cout << objects.size() << std::endl;
 
-    std::cout << "starting tracing!" << std::endl;
-    auto start = std::chrono::system_clock::now();
 
 
     Scene scene = {objects, lights, camera, 1, 1};
@@ -98,6 +95,8 @@ int main () {
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
 
     while (true) {
+        std::cout << "starting tracing!" << std::endl;
+        auto start = std::chrono::system_clock::now();
         auto pixels = scene.trace(5);
 
         auto end = std::chrono::system_clock::now();
@@ -111,7 +110,8 @@ int main () {
 
         window.paint(pixels);
 //        camera.setViewplaneDistance(camera.getViewplaneDistance() * 1.01);
-        camera.move({0, 0.1, 0});
+//        camera.move({0, 0.1, 0.1});
+        camera.move({0, 0, 0});
 //        window.delay(500);
     }
 //    while (true);

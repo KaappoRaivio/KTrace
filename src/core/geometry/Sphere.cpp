@@ -3,8 +3,7 @@
 #include "Sphere.h"
 #include <cmath>
 #include <utility>
-
-extern const double PRECISION_LIMIT;
+#include "../common/mytypes.h"
 
 //
 // Created by kaappo on 14.9.2021.

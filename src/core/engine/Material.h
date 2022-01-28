@@ -6,8 +6,8 @@
 
 #include <memory>
 #include <ostream>
-#include "MyVector3.h"
-#include "Intensity.h"
+#include "../common/MyVector3.h"
+#include "../light/Intensity.h"
 #include "Texture.h"
 
 struct Material {

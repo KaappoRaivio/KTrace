@@ -1,7 +1,7 @@
 //#include <iostream>
 //#include "lib/obj-loader/OBJ_Loader.h"
 //#include "Triangle.h"
-#include "MyOBJLoader.h"
+#include "core/interface/MyOBJLoader.h"
 
 extern const double PRECISION_LIMIT = 0.001;
 

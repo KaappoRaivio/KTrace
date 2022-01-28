@@ -7,9 +7,9 @@
 #include <memory>
 #include <ostream>
 
-#include "Surface.h"
+#include "../geometry/Surface.h"
 #include "Material.h"
-#include "Intersection.h"
+#include "../common/Intersection.h"
 
 
 class Surface;

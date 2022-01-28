@@ -5,7 +5,7 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
-#include "Intensity.h"
+#include "../light/Intensity.h"
 
 class MyOpenGLWindow {
 private:

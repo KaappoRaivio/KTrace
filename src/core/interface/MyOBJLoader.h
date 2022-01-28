@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "lib/obj-loader/OBJ_Loader.h"
-#include "Scene.h"
-#include "MyVector3.h"
-#include "SolidTexture.h"
+#include "../../../lib/obj-loader/OBJ_Loader.h"
+#include "../engine/Scene.h"
+#include "../common/MyVector3.h"
+#include "../engine/SolidTexture.h"
 
 namespace MyOBJLoader {
     MyVector3 toMyVector3(const objl::Vector3& shittyvector) {

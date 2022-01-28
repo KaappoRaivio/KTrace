@@ -6,8 +6,8 @@
 #include <utility>
 
 #include "MyVector3.h"
-#include "Surface.h"
-#include "SceneObject.h"
+#include "../geometry/Surface.h"
+#include "../engine/SceneObject.h"
 //#include "Surface.h"
 
 class SceneObject;

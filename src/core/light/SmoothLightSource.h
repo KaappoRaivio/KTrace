@@ -6,7 +6,7 @@
 
 
 #include <vector>
-#include "LightSource.h"
+#include "../common/LightSource.h"
 
 class SmoothLightSource {
 private:

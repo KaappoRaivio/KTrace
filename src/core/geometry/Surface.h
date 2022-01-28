@@ -8,7 +8,7 @@
 #include <ostream>
 
 #include "Ray.h"
-#include "Intersection.h"
+#include "../common/Intersection.h"
 
 class Surface {
 public:
