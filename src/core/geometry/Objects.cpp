@@ -48,6 +48,18 @@ double Objects::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, M
 }
 
 AABB Objects::getBoundingBox () const {
-    return AABBs::INVALID;
+    if (surfaces.empty()) return AABBs::INVALID;
+
+    AABB result = AABBs::INVALID;
+    bool firstBox = true;
+//
+    for (const auto* surface : surfaces) {
+        const AABB& temp = surface->getBoundingBox();
+        if (temp == AABBs::INVALID) return AABBs::INVALID;
+        if (firstBox) result = temp;
+        firstBox = false;
+
+        result = result.expand(temp);
+    }
 }
 

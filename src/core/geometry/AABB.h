@@ -5,6 +5,7 @@
 #pragma once
 
 
+#include <ostream>
 #include "../common/MyVector3.h"
 #include "Hittable.h"
 #include "Ray.h"
@@ -12,18 +13,27 @@
 class AABB {
 private:
     MyVector3 minimum, maximum;
+
+    bool intersects (const Ray& ray) const;
+
 public:
     AABB (const MyVector3& minimum, const MyVector3& maximum);
     constexpr AABB (bool invalid) : maximum{0, 0, 0}, minimum{0, 0, 0} {
 
     }
 
-private:
+    bool operator== (const AABB& rhs) const;
 
-    bool intersects (const Ray& ray) const;
+    bool operator!= (const AABB& rhs) const;
 
-public:
+    friend std::ostream& operator<< (std::ostream& os, const AABB& aabb);
+
     double getIntersectionDistance (const Ray& ray) const;
+
+    AABB expand (const AABB& aabb);
+
+    MyVector3 getMinimum () const;
+    MyVector3 getMaximum () const;
 };
 namespace AABBs {
     constexpr AABB INVALID{true};

@@ -176,6 +176,16 @@ double MyVector3::operator[] (int index) const {
     }
 }
 
+bool MyVector3::operator== (const MyVector3& rhs) const {
+    return i == rhs.i &&
+           j == rhs.j &&
+           k == rhs.k;
+}
+
+bool MyVector3::operator!= (const MyVector3& rhs) const {
+    return !(rhs == *this);
+}
+
 //int main () {
 //    std::cout << "Hello, world" << std::endl;
 //

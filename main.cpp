@@ -16,13 +16,14 @@
 #include "src/core/engine/ImageTexture.h"
 #include "src/core/interface/MyOBJLoader.h"
 #include "src/core/geometry/Objects.h"
+#include "src/core/geometry/BVH.h"
 
 #define DEBUG
 
 
 int main () {
     constexpr int window_side_length = 1000;
-    constexpr int viewport_side_length = 500;
+    constexpr int viewport_side_length = 1000;
 
 //    Camera camera = {{0, -5, 4}, {0, 0}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
     Camera camera = {{0, -5, 8}, {0, 0.5}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
@@ -40,9 +41,10 @@ int main () {
     auto triangle = std::make_shared<Triangle>(
             MyVector3{-5, 6, 3},
             MyVector3{0, 0, 3},
-            MyVector3{5, 6, 3},
+            MyVector3{5, 4, 4},
             &triangleMaterial
     );
+
     auto plane = std::make_shared<Plane>(MyVector3{0, 0, 1}, 20, &planeMaterial);
     auto sphere1 = std::make_shared<Sphere>(MyVector3{-2.5, 4, 4.5}, 0.3, &sphereMaterial);
     auto sphere2 = std::make_shared<Sphere>(MyVector3{-1, 4, 4.3}, 0.6, &sphereMaterial);
@@ -51,7 +53,20 @@ int main () {
     auto sphere5 = std::make_shared<Sphere>(MyVector3{-0.75, 2, 3.25}, 0.4, &sphereMaterial);
     auto sphere6 = std::make_shared<Sphere>(MyVector3{-0, 6, 6}, 15, &sphereMaterial);
 
-    Objects sur = {{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get(), plane.get(),}};
+//    auto surfaces = std::make_shared<Objects>(sur);
+
+//    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/teapot2.obj");
+    BVHNode tree{{sphere1, sphere2, sphere3, sphere4, sphere5, triangle}};
+//    BVHNode tree{{triangle, }};
+
+//    std::exit(0);
+    Surface* surface = nullptr;
+    Material material = Materials::WHITE;
+//
+    std::cout << tree.getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
+    std::cout << triangle->getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
+//    std::exit(0);
+    Objects sur = {{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get(), plane.get()}};
     auto surfaces = std::make_shared<Objects>(sur);
 
 ////    Sphere sphere2 = {{-1, 4, 4.3}, 0.6};
@@ -62,8 +77,8 @@ int main () {
 //
 //
 //
+    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/texture.obj");
 
-//
 //
 //
 //
@@ -71,7 +86,11 @@ int main () {
 
 //            sphere1.get(),
 //            sphere2.get(),
-            surfaces.get(),
+//            surfaces.get(),
+//            plane.get(),
+//            triangle.get(),
+            &tree,
+//            model.get(),
 //            SingleSceneObject{triangle.get(), triangleMaterial},
 //            SingleSceneObject{plane.get(), planeMaterial},
 //            SingleSceneObject(sphere1.get(), sphereMaterial),
@@ -91,8 +110,6 @@ int main () {
     };
 
 
-    auto model = MyOBJLoader::readOBJ("../res/teapot2.obj");
-//    auto model = MyOBJLoader::readOBJ("../res/texture.obj");
 //    objects.insert(std::end(objects), std::begin(model), std::end(model));
 //    std::cout << objects.size() << std::endl;
 

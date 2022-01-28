@@ -6,6 +6,7 @@
 #include "../engine/Scene.h"
 #include "../common/MyVector3.h"
 #include "../engine/SolidTexture.h"
+#include "../geometry/BVH.h"
 
 namespace MyOBJLoader {
     MyVector3 toMyVector3(const objl::Vector3& shittyvector) {
@@ -16,7 +17,7 @@ namespace MyOBJLoader {
         return {shittyvector.X, shittyvector.Y, 0};
     }
 
-    const std::vector<Surface*> readOBJ (const std::string& path) {
+    std::shared_ptr<Surface> readOBJ (const std::string& path) {
         objl::Loader loader;
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
@@ -47,7 +48,7 @@ namespace MyOBJLoader {
 
             auto color = std::make_shared<Material>(std::make_shared<SolidTexture>(Intensity{1, 1, 1}));
 //            auto color = Material{std::make_shared<ImageTexture>("../res/texture3.png")};
-            std::vector<Surface*> objects;
+            std::vector<std::shared_ptr<Surface>> objects;
 
             for (int j = 0; j < curMesh.Indices.size(); j += 3) {
 //                auto minimum = toMyVector3()
@@ -65,7 +66,7 @@ namespace MyOBJLoader {
                 std::shared_ptr<Surface> t;
                 t = std::make_shared<Triangle>(toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position), color.get(),
                                                toMyVector3(vertex1.TextureCoordinate), toMyVector3(vertex2.TextureCoordinate), toMyVector3(vertex3.TextureCoordinate));
-                objects.push_back(t.get());
+                objects.push_back(t);
 
 //            std::cout <<
 //            std::cout << "T" << j / 3 << ": " << curMesh.Indices[j] << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
@@ -85,7 +86,7 @@ namespace MyOBJLoader {
 
             std::cout << objects.size() << std::endl;
 
-            return objects;
+            return std::make_shared<BVHNode>(objects);
         }
         throw std::runtime_error("Lol nope");
     }

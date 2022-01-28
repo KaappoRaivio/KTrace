@@ -28,6 +28,10 @@ public:
     explicit operator bool () const;
     double operator [] (int index) const;
 
+    bool operator== (const MyVector3& rhs) const;
+
+    bool operator!= (const MyVector3& rhs) const;
+
     MyVector3 rotateInsideCone (double radius) const;
     MyVector3 reflection (const MyVector3& axis) const;
     MyVector3 inTermsOfComponents (const MyVector3& i, const MyVector3& j, const MyVector3& k) const;
