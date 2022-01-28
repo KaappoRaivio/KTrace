@@ -6,6 +6,7 @@
 #include "../light/Intensity.h"
 #include "../common/LightSource.h"
 #include "../light/IntensityBlend.h"
+#include "../common/mytypes.h"
 
 #include <utility>
 #include <cmath>
@@ -13,7 +14,7 @@
 //#include <numbers>
 constexpr double PI = 3.1415926;
 
-Scene::Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler) : objects(std::move(objects)), camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler} {}
+Scene::Scene (const std::vector<Surface*>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler) : objects(std::move(objects)), camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler} {}
 
 #pragma clang diagnostic push
 
@@ -63,10 +64,10 @@ std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
 Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left) const {
     const auto& intersection = get_closest_intersection(ray, 0);
 //    std::cout << intersection.value() << std::endl;
-    if (y % 100 == 0 && x == 0) {
-
-//        return {0, 1, 0};
-        std::cout << "Row " << y << std::endl;
+    if (DEBUG) {
+        if (y % 100 == 0 && x == 0) {
+            std::cout << "Row " << y << std::endl;
+        }
     }
 
 
@@ -78,15 +79,15 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 #endif
         const auto closest = *intersection;
 //        std::cout << closest.position << std::endl;
-        const Material& material = closest.sceneObject.getMaterial();
-        const auto* const surface = closest.sceneObject.getSurface();
+        const Material& material = closest.material;
+        const auto* const surface = closest.hitSurface;
 
-        const Intensity& albedo = material.get_albedo_at(surface->get_uv_at(closest.position));
+        const Intensity& albedo = material.get_albedo_at(surface->getUVAt(closest.position));
 
 //        Intensity diffuse_light = {0, 0, 0};
         IntensityBlend diffuse_light;
         IntensityBlend specular_light;
-        const MyVector3& face_normal = surface->get_normal_at(closest.position).normalize();
+        const MyVector3& face_normal = surface->getNormalAt(closest.position).normalize();
         const MyVector3& N = face_normal;
 
         const MyVector3& d = closest.ray.getDirection();
@@ -163,7 +164,7 @@ std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, dou
     std::vector<Intersection> intersections;
 
     for (const auto& object: objects) {
-        const std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
+        const std::optional<Intersection> possibleIntersection = object->getIntersection(ray);
         if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
             intersections.push_back(possibleIntersection.value());
         }
@@ -183,7 +184,7 @@ std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, dou
 //    Intersection* closest = nullptr;
 //
 //    for (const auto& object: objects) {
-//        std::optional<Intersection> possibleIntersection = object.get_intersection(ray);
+//        std::optional<Intersection> possibleIntersection = object.getIntersection(ray);
 //        if (possibleIntersection && possibleIntersection->distance < closest_distance && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
 ////            std::cout << (*possibleIntersection).sceneObject.getSurface() << std::endl;
 //            closest_distance = possibleIntersection->distance;

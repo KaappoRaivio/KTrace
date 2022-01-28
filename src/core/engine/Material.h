@@ -9,6 +9,7 @@
 #include "../common/MyVector3.h"
 #include "../light/Intensity.h"
 #include "Texture.h"
+#include "SolidTexture.h"
 
 struct Material {
     std::shared_ptr<Texture> albedo;
@@ -23,3 +24,8 @@ public:
 
     friend std::ostream& operator<< (std::ostream& os, const Material& material);
 };
+
+
+namespace Materials {
+    extern const Material WHITE;
+}

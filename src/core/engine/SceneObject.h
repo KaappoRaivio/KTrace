@@ -1,40 +1,10 @@
 //
-// Created by kaappo on 12.9.2021.
+// Created by kaappo on 28.1.2022.
 //
 
 #pragma once
 
-#include <memory>
-#include <ostream>
-
-#include "../geometry/Surface.h"
-#include "Material.h"
-#include "../common/Intersection.h"
-
-
-class Surface;
-
-class Intersection;
-
-class SceneObject {
-private:
-public:
-    friend std::ostream& operator<< (std::ostream& os, const SceneObject& object);
-
-private:
-//    std::shared_ptr<Surface> surface;
-    std::shared_ptr<Surface> surface;
-    Material material;
-public:
-    SceneObject (std::shared_ptr<Surface> surface, Material material);
-
-
-    std::optional<Intersection> get_intersection (const Ray& ray) const;
-
-    Surface* getSurface () const;
-
-    const Material& getMaterial () const;
-};
-
-
-
+//class SceneObject {
+//public:
+//    virtual std::optional<Intersection> getIntersection (const Ray&) const = 0;
+//};

@@ -8,21 +8,26 @@
 #include "Plane.h"
 #include "../common/mytypes.h"
 
-Plane::Plane (MyVector3 normal, double intersect) : normal{std::move(normal)}, intersect{intersect} {}
+Plane::Plane (MyVector3 normal, double intersect, const Material* material) : normal{std::move(normal)}, intersect{intersect}, material(material) {}
 
-double Plane::get_intersection_distance (const Ray& ray) const {
+double Plane::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) {
+    hitMaterial = *getMaterial();
+
     if (normal * ray.getDirection() == 0) {
         return 0.0;
     } else {
+        hitSurface = this;
+        hitMaterial = *getMaterial();
+//        std::cout << "mossi" << std::endl;
         return -(normal * ray.getOrigin() + intersect) / (normal * ray.getDirection());
     }
 }
 
-Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3) {
+Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material) {
     auto normal = (t1 - t2).cross(t1 - t3);
     auto intersect = -normal * t1;
 
-    return {normal, intersect};
+    return {normal, intersect, material};
 }
 
 bool Plane::includes (const MyVector3& vector) const {
@@ -38,17 +43,25 @@ double Plane::getIntersect () const {
 }
 
 
-MyVector3 Plane::get_normal_at (const MyVector3& position) const {
+MyVector3 Plane::getNormalAt (const MyVector3& position) const {
     return normal;
 }
 
-MyVector3 Plane::get_uv_at (const MyVector3& position) const {
+MyVector3 Plane::getUVAt (const MyVector3& position) const {
     const MyVector3& tangent = normal.cross(MyVector3::UP) || normal.cross(MyVector3::OUT) || normal.cross(MyVector3::SIDE);
     const MyVector3& bitangent = normal.cross(tangent);
 
     const MyVector3& components = position.inTermsOfComponents(tangent, bitangent, normal);
 
     return components;
+}
+
+AABB Plane::getBoundingBox () const {
+    return AABBs::INVALID;
+}
+
+const Material* Plane::getMaterial () const {
+    return material;
 }
 
 

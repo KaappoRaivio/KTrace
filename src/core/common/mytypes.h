@@ -4,5 +4,6 @@
 
 #pragma once
 
+constexpr bool DEBUG = true;
 
 constexpr double PRECISION_LIMIT = 0.001;

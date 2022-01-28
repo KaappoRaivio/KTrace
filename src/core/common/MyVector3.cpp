@@ -8,7 +8,6 @@
 
 #include "MyVector3.h"
 
-MyVector3::MyVector3 (double i, double j, double k) : i(i), j(j), k(k) {}
 
 
 MyVector3 MyVector3::operator+ (const MyVector3& other) const {
@@ -160,6 +159,21 @@ double MyVector3::getK () const {
 double MyVector3::dot (const MyVector3& other) const {
 //    return 0;
     return i * other.i + j * other.j + k * other.k;
+}
+
+double MyVector3::operator[] (int index) const {
+    switch (index) {
+        case 0:
+            return i;
+        case 1:
+            return j;
+        case 2:
+            return k;
+        default:
+            std::stringstream ss;
+            ss << "Invalid dimension " << index << "!";
+            throw std::runtime_error(ss.str());
+    }
 }
 
 //int main () {

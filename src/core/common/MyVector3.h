@@ -14,7 +14,9 @@ private:
     double i, j, k;
 
 public:
-    MyVector3 (double i, double j, double k);
+    constexpr MyVector3 (double i, double j, double k) : i{i}, j{j}, k{k} {
+
+    };
 
     MyVector3 operator+ (const MyVector3& other) const;
     MyVector3 operator|| (const MyVector3& other) const;
@@ -24,6 +26,7 @@ public:
     double operator* (const MyVector3& other) const;
     MyVector3 operator/ (double other) const;
     explicit operator bool () const;
+    double operator [] (int index) const;
 
     MyVector3 rotateInsideCone (double radius) const;
     MyVector3 reflection (const MyVector3& axis) const;

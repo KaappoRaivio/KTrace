@@ -11,18 +11,18 @@
 #include "Camera.h"
 #include "../light/Intensity.h"
 #include "../geometry/Triangle.h"
-#include "SceneObject.h"
+#include "SingleSceneObject.h"
 #include "../common/LightSource.h"
 
 class Scene {
 //private:
 public:
-    std::vector<SceneObject> objects;
+    std::vector<Surface*> objects;
     std::vector<LightSource> lightSources;
     const Camera& camera;
     int raysPerPixel;
     int antialiasingScaler;
-    Scene (const std::vector<SceneObject>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler);
+    Scene (const std::vector<Surface*>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler);
 
     std::vector<std::vector<Intensity>> trace (int bounces) const;
 

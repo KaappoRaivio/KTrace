@@ -7,9 +7,9 @@
 
 //
 // Created by kaappo on 14.9.2021.
-Sphere::Sphere (MyVector3 center, double radius) : center{std::move(center)}, radius{radius} {}
+Sphere::Sphere (MyVector3 center, double radius, const Material* material) : center{std::move(center)}, radius{radius}, material(material) {}
 
-double Sphere::get_intersection_distance (const Ray& ray) const {
+double Sphere::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, Material& hitMaterial) {
 //    if (includes(ray.getOrigin())) {
 //        return 0.0;
 //    }
@@ -25,6 +25,8 @@ double Sphere::get_intersection_distance (const Ray& ray) const {
     }
 
     const auto base = (-d * (C - P));
+    hitSurface = this;
+    hitMaterial = *getMaterial();
     if (discriminant == 0) {
         if (base < PRECISION_LIMIT) return 0.0;
         else return base;
@@ -38,7 +40,7 @@ double Sphere::get_intersection_distance (const Ray& ray) const {
     }
 }
 
-MyVector3 Sphere::get_normal_at (const MyVector3& position) const {
+MyVector3 Sphere::getNormalAt (const MyVector3& position) const {
     return (position - center).normalize();
 }
 
@@ -46,11 +48,20 @@ bool Sphere::includes (const MyVector3& point) const {
     return std::abs((center - point).squared() - std::pow(radius, 2)) < PRECISION_LIMIT;
 }
 
-MyVector3 Sphere::get_uv_at (const MyVector3& position) const {
+MyVector3 Sphere::getUVAt (const MyVector3& position) const {
     const auto& d = (center - position).normalize();
 
     double u = 0.5 - d.atan2() / (2 * M_PI);
     double v = 0.5 + d.asin() / M_PI;
 
     return {u, v, 0};
+}
+
+AABB Sphere::getBoundingBox () const {
+    auto corner = MyVector3{radius, radius, radius};
+    return AABB{center - corner, center + corner};
+}
+
+const Material* Sphere::getMaterial () const {
+    return material;
 }

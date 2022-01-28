@@ -16,7 +16,7 @@ namespace MyOBJLoader {
         return {shittyvector.X, shittyvector.Y, 0};
     }
 
-    const std::vector<SceneObject> readOBJ (const std::string& path) {
+    const std::vector<Surface*> readOBJ (const std::string& path) {
         objl::Loader loader;
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
@@ -45,12 +45,12 @@ namespace MyOBJLoader {
             // Go through every 3rd index and print the
             //	triangle that these indices represent
 
-            auto color = Material{std::make_shared<SolidTexture>(Intensity{1, 1, 1})};
+            auto color = std::make_shared<Material>(std::make_shared<SolidTexture>(Intensity{1, 1, 1}));
 //            auto color = Material{std::make_shared<ImageTexture>("../res/texture3.png")};
-            std::vector<SceneObject> objects;
+            std::vector<Surface*> objects;
 
             for (int j = 0; j < curMesh.Indices.size(); j += 3) {
-//                auto t1 = toMyVector3()
+//                auto minimum = toMyVector3()
 
                 double index1 = curMesh.Indices[j + 0];
                 double index2 = curMesh.Indices[j + 1];
@@ -63,9 +63,9 @@ namespace MyOBJLoader {
 //                std::cout << Triangle{toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position)} << std::endl;
 
                 std::shared_ptr<Surface> t;
-                t = std::make_shared<Triangle>(toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position),
+                t = std::make_shared<Triangle>(toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position), color.get(),
                                                toMyVector3(vertex1.TextureCoordinate), toMyVector3(vertex2.TextureCoordinate), toMyVector3(vertex3.TextureCoordinate));
-                objects.emplace_back(t, color);
+                objects.push_back(t.get());
 
 //            std::cout <<
 //            std::cout << "T" << j / 3 << ": " << curMesh.Indices[j] << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
