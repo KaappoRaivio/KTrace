@@ -162,8 +162,8 @@ int main () {
     for (const auto& object : polygons) {
         rawPointers.push_back(object.get());
     }
-    std::unique_ptr<Surface> model = std::make_unique<Objects>(rawPointers);
-//    std::unique_ptr<Surface> model = std::make_unique<BVH>(polygons);
+//    std::unique_ptr<Surface> model = std::make_unique<Objects>(rawPointers);
+    std::unique_ptr<Surface> model = std::make_unique<BVH>(polygons);
     std::cout << model->getBoundingBox() << std::endl;
 
     std::vector<Surface*> surfaces{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get()};
@@ -181,9 +181,9 @@ int main () {
 //            sphere1.get(),
 //            sphere2.get(),
 //            surfaces.get(),
-//            plane.get(),
+            plane.get(),
 //            triangle.get(),
-//            tree.get(),
+            tree.get(),
 //            &sur,
 //            &obje
             model.get(),
