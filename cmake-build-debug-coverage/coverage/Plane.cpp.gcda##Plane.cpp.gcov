@@ -1,0 +1,109 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/geometry/Plane.cpp
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Plane.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Plane.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 11.9.2021.
+        -:    3://
+        -:    4:#include <cmath>
+        -:    5:#include <utility>
+        -:    6:#include <optional>
+        -:    7:
+        -:    8:#include "Plane.h"
+        -:    9:#include "../common/mytypes.h"
+        -:   10:
+function _ZN5PlaneC2E9MyVector3dPK8Material called 1 returned 100% blocks executed 100%
+     2258:   11:Plane::Plane (MyVector3 normal, double intersect, const Material* material) : normal{std::move(normal)}, intersect{intersect}, material(material) {}
+        -:   12:
+function _ZN5Plane23getIntersectionDistanceERK3RayRP7SurfaceRPK8Material called 98560000 returned 100% blocks executed 100%
+ 98560000:   13:double Plane::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
+ 98560000:   14:    hitMaterial = getMaterial();
+ 98560000:   14-block  0
+call    0 returned 98560000
+        -:   15:
+ 98560000:   16:    if (normal * ray.getDirection() == 0) {
+call    0 returned 98560000
+call    1 returned 98560000
+branch  2 taken 98560000 (fallthrough)
+branch  3 taken 0
+        -:   17:        return 0.0;
+        -:   18:    } else {
+ 98560000:   19:        hitSurface = this;
+ 98560000:   20:        hitMaterial = getMaterial();
+ 98560000:   20-block  0
+call    0 returned 98560000
+        -:   21://        std::cout << "mossi" << std::endl;
+ 98560000:   22:        return -(normal * ray.getOrigin() + intersect) / (normal * ray.getDirection());
+call    0 returned 98560000
+call    1 returned 98560000
+call    2 returned 98560000
+call    3 returned 98560000
+        -:   23:    }
+        -:   24:}
+        -:   25:
+function _ZN5Plane17from_three_pointsERK9MyVector3S2_S2_PK8Material called 2257 returned 100% blocks executed 100%
+     2257:   26:Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material) {
+     2257:   27:    auto normal = (t1 - t2).cross(t1 - t3);
+     2257:   27-block  0
+call    0 returned 2257
+call    1 returned 2257
+call    2 returned 2257
+     2257:   28:    auto intersect = -normal * t1;
+call    0 returned 2257
+call    1 returned 2257
+        -:   29:
+     2257:   30:    return {normal, intersect, material};
+        -:   31:}
+        -:   32:
+function _ZNK5Plane8includesERK9MyVector3 called 98560000 returned 100% blocks executed 100%
+ 98560000:   33:bool Plane::includes (const MyVector3& vector) const {
+ 98560000:   34:    return std::abs(normal * vector + intersect) <= PRECISION_LIMIT;
+ 98560000:   34-block  0
+call    0 returned 98560000
+        -:   35:}
+        -:   36:
+function _ZNK5Plane9getNormalEv called 0 returned 0% blocks executed 0%
+    #####:   37:const MyVector3& Plane::getNormal () const {
+    #####:   38:    return normal;
+        -:   39:}
+        -:   40:
+function _ZNK5Plane12getIntersectEv called 0 returned 0% blocks executed 0%
+    #####:   41:double Plane::getIntersect () const {
+    #####:   42:    return intersect;
+        -:   43:}
+        -:   44:
+        -:   45:
+function _ZNK5Plane11getNormalAtERK9MyVector3 called 0 returned 0% blocks executed 0%
+    #####:   46:MyVector3 Plane::getNormalAt (const MyVector3& position) const {
+    #####:   47:    return normal;
+        -:   48:}
+        -:   49:
+function _ZNK5Plane7getUVAtERK9MyVector3 called 0 returned 0% blocks executed 0%
+    #####:   50:MyVector3 Plane::getUVAt (const MyVector3& position) const {
+    #####:   51:    const MyVector3& tangent = normal.cross(MyVector3::UP) || normal.cross(MyVector3::OUT) || normal.cross(MyVector3::SIDE);
+    %%%%%:   51-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+call    4 never executed
+    #####:   52:    const MyVector3& bitangent = normal.cross(tangent);
+call    0 never executed
+        -:   53:
+    #####:   54:    const MyVector3& components = position.inTermsOfComponents(tangent, bitangent, normal);
+call    0 never executed
+        -:   55:
+    #####:   56:    return components;
+        -:   57:}
+        -:   58:
+function _ZNK5Plane14getBoundingBoxEv called 0 returned 0% blocks executed 0%
+    #####:   59:AABB Plane::getBoundingBox () const {
+    #####:   60:    return AABBs::INVALID;
+        -:   61:}
+        -:   62:
+function _ZNK5Plane11getMaterialEv called 197122257 returned 100% blocks executed 100%
+197122257:   63:const Material* Plane::getMaterial () const {
+197122257:   64:    return material;
+        -:   65:}
+        -:   66:
+        -:   67:

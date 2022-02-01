@@ -8,7 +8,7 @@
 
 std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
 //    const Material& material = getMaterial();
-    Surface* hitSurface = nullptr;
+    const Surface* hitSurface = nullptr;
     const Material* hitMaterial = nullptr;
     auto distance = getIntersectionDistance(ray, hitSurface, hitMaterial);
 //    std::cout <<" moi" << (hitSurface == nullptr) << std::endl;

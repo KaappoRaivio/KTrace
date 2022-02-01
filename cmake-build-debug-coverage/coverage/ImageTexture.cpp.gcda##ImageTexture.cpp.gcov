@@ -1,0 +1,25 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/engine/ImageTexture.cpp
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/engine/ImageTexture.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/engine/ImageTexture.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 21.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#include "ImageTexture.h"
+        -:    6:
+function _ZN12ImageTextureC2ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 1 returned 100% blocks executed 100%
+        1:    7:ImageTexture::ImageTexture (const std::string& path) : image{path} {}
+        1:    7-block  0
+call    0 returned 1
+        -:    8:
+function _ZNK12ImageTexture12get_pixel_atERK9MyVector3 called 0 returned 0% blocks executed 0%
+    #####:    9:Intensity ImageTexture::get_pixel_at (const MyVector3& uv) const {
+    #####:   10:    return image.get_pixel_at(std::floor(uv.getI() * image.getWidth() - 1e-9), std::floor(uv.getJ() * image.getHeight() - 1e-9));
+    %%%%%:   10-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+call    4 never executed
+        -:   11:}

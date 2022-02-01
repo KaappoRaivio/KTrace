@@ -33,7 +33,7 @@ public:
     MyVector3 getMinimum () const;
     MyVector3 getMaximum () const;
 
-    bool intersects (const Ray& ray) const;
+    double intersects (const Ray& ray) const;
 };
 namespace AABBs {
     constexpr AABB INVALID{true};

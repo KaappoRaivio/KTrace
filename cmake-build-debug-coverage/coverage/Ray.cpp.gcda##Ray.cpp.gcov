@@ -1,0 +1,42 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/geometry/Ray.cpp
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Ray.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Ray.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 11.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#include "Ray.h"
+        -:    6:
+function _ZN3RayC2ERK9MyVector3S2_ called 40000 returned 100% blocks executed 100%
+    40000:    7:Ray::Ray (const MyVector3& origin, const MyVector3& direction) : origin(origin), direction(direction.normalize()) {}
+    40000:    7-block  0
+call    0 returned 40000
+        -:    8:
+function _ZNK3Ray9getOriginEv called 689680000 returned 100% blocks executed 100%
+689680000:    9:const MyVector3& Ray::getOrigin () const {
+689680000:   10:    return origin;
+        -:   11:}
+        -:   12:
+function _ZNK3Ray12getDirectionEv called 492680000 returned 100% blocks executed 100%
+492680000:   13:const MyVector3& Ray::getDirection () const {
+492680000:   14:    return direction;
+        -:   15:}
+        -:   16:
+function _ZNK3Ray5applyEd called 98560000 returned 100% blocks executed 100%
+ 98560000:   17:MyVector3 Ray::apply (double lambda) const {
+ 98560000:   18:    return origin + direction * lambda;
+ 98560000:   18-block  0
+call    0 returned 98560000
+call    1 returned 98560000
+        -:   19:}
+        -:   20:
+function _ZlsRSoRK3Ray called 0 returned 0% blocks executed 0%
+    #####:   21:std::ostream& operator<< (std::ostream& os, const Ray& ray) {
+    %%%%%:   21-block  0
+call    0 never executed
+    #####:   22:    os << "origin: " << ray.origin << " direction: " << ray.direction;
+call    0 never executed
+call    1 never executed
+    #####:   23:    return os;
+        -:   24:}

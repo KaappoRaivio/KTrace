@@ -1,0 +1,115 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/lib/Eigen/src/Core/NoAlias.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcda
+        -:    0:Runs:1
+        -:    1:// This file is part of Eigen, a lightweight C++ template library
+        -:    2:// for linear algebra.
+        -:    3://
+        -:    4:// Copyright (C) 2009 Gael Guennebaud <gael.guennebaud@inria.fr>
+        -:    5://
+        -:    6:// This Source Code Form is subject to the terms of the Mozilla
+        -:    7:// Public License v. 2.0. If a copy of the MPL was not distributed
+        -:    8:// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        -:    9:
+        -:   10:#ifndef EIGEN_NOALIAS_H
+        -:   11:#define EIGEN_NOALIAS_H
+        -:   12:
+        -:   13:namespace Eigen {
+        -:   14:
+        -:   15:/** \class NoAlias
+        -:   16:  * \ingroup Core_Module
+        -:   17:  *
+        -:   18:  * \brief Pseudo expression providing an operator = assuming no aliasing
+        -:   19:  *
+        -:   20:  * \tparam ExpressionType the type of the object on which to do the lazy assignment
+        -:   21:  *
+        -:   22:  * This class represents an expression with special assignment operators
+        -:   23:  * assuming no aliasing between the target expression and the source expression.
+        -:   24:  * More precisely it alloas to bypass the EvalBeforeAssignBit flag of the source expression.
+        -:   25:  * It is the return type of MatrixBase::noalias()
+        -:   26:  * and most of the time this is the only way it is used.
+        -:   27:  *
+        -:   28:  * \sa MatrixBase::noalias()
+        -:   29:  */
+        -:   30:template<typename ExpressionType, template <typename> class StorageBase>
+        -:   31:class NoAlias
+        -:   32:{
+        -:   33:  public:
+        -:   34:    typedef typename ExpressionType::Scalar Scalar;
+        -:   35:    
+        -:   36:    EIGEN_DEVICE_FUNC
+        -:   37:    explicit NoAlias(ExpressionType& expression) : m_expression(expression) {}
+        -:   38:    
+        -:   39:    template<typename OtherDerived>
+        -:   40:    EIGEN_DEVICE_FUNC
+        -:   41:    EIGEN_STRONG_INLINE ExpressionType& operator=(const StorageBase<OtherDerived>& other)
+        -:   42:    {
+    #####:   43:      call_assignment_no_alias(m_expression, other.derived(), internal::assign_op<Scalar,typename OtherDerived::Scalar>());
+call    0 never executed
+call    1 never executed
+        -:   44:      return m_expression;
+        -:   45:    }
+        -:   46:    
+        -:   47:    template<typename OtherDerived>
+        -:   48:    EIGEN_DEVICE_FUNC
+        -:   49:    EIGEN_STRONG_INLINE ExpressionType& operator+=(const StorageBase<OtherDerived>& other)
+        -:   50:    {
+        -:   51:      call_assignment_no_alias(m_expression, other.derived(), internal::add_assign_op<Scalar,typename OtherDerived::Scalar>());
+        -:   52:      return m_expression;
+        -:   53:    }
+        -:   54:    
+        -:   55:    template<typename OtherDerived>
+        -:   56:    EIGEN_DEVICE_FUNC
+        -:   57:    EIGEN_STRONG_INLINE ExpressionType& operator-=(const StorageBase<OtherDerived>& other)
+        -:   58:    {
+    #####:   59:      call_assignment_no_alias(m_expression, other.derived(), internal::sub_assign_op<Scalar,typename OtherDerived::Scalar>());
+        -:   60:      return m_expression;
+        -:   61:    }
+        -:   62:
+        -:   63:    EIGEN_DEVICE_FUNC
+        -:   64:    ExpressionType& expression() const
+        -:   65:    {
+        -:   66:      return m_expression;
+        -:   67:    }
+        -:   68:
+        -:   69:  protected:
+        -:   70:    ExpressionType& m_expression;
+        -:   71:};
+        -:   72:
+        -:   73:/** \returns a pseudo expression of \c *this with an operator= assuming
+        -:   74:  * no aliasing between \c *this and the source expression.
+        -:   75:  *
+        -:   76:  * More precisely, noalias() allows to bypass the EvalBeforeAssignBit flag.
+        -:   77:  * Currently, even though several expressions may alias, only product
+        -:   78:  * expressions have this flag. Therefore, noalias() is only useful when
+        -:   79:  * the source expression contains a matrix product.
+        -:   80:  *
+        -:   81:  * Here are some examples where noalias is useful:
+        -:   82:  * \code
+        -:   83:  * D.noalias()  = A * B;
+        -:   84:  * D.noalias() += A.transpose() * B;
+        -:   85:  * D.noalias() -= 2 * A * B.adjoint();
+        -:   86:  * \endcode
+        -:   87:  *
+        -:   88:  * On the other hand the following example will lead to a \b wrong result:
+        -:   89:  * \code
+        -:   90:  * A.noalias() = A * B;
+        -:   91:  * \endcode
+        -:   92:  * because the result matrix A is also an operand of the matrix product. Therefore,
+        -:   93:  * there is no alternative than evaluating A * B in a temporary, that is the default
+        -:   94:  * behavior when you write:
+        -:   95:  * \code
+        -:   96:  * A = A * B;
+        -:   97:  * \endcode
+        -:   98:  *
+        -:   99:  * \sa class NoAlias
+        -:  100:  */
+        -:  101:template<typename Derived>
+        -:  102:NoAlias<Derived,MatrixBase> EIGEN_DEVICE_FUNC MatrixBase<Derived>::noalias()
+        -:  103:{
+        -:  104:  return NoAlias<Derived, Eigen::MatrixBase >(derived());
+        -:  105:}
+        -:  106:
+        -:  107:} // end namespace Eigen
+        -:  108:
+        -:  109:#endif // EIGEN_NOALIAS_H

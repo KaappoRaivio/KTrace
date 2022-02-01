@@ -1,0 +1,277 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/lib/Eigen/src/Core/SolveTriangular.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcda
+        -:    0:Runs:1
+        -:    1:// This file is part of Eigen, a lightweight C++ template library
+        -:    2:// for linear algebra.
+        -:    3://
+        -:    4:// Copyright (C) 2008-2009 Gael Guennebaud <gael.guennebaud@inria.fr>
+        -:    5://
+        -:    6:// This Source Code Form is subject to the terms of the Mozilla
+        -:    7:// Public License v. 2.0. If a copy of the MPL was not distributed
+        -:    8:// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        -:    9:
+        -:   10:#ifndef EIGEN_SOLVETRIANGULAR_H
+        -:   11:#define EIGEN_SOLVETRIANGULAR_H
+        -:   12:
+        -:   13:namespace Eigen {
+        -:   14:
+        -:   15:namespace internal {
+        -:   16:
+        -:   17:// Forward declarations:
+        -:   18:// The following two routines are implemented in the products/TriangularSolver*.h files
+        -:   19:template<typename LhsScalar, typename RhsScalar, typename Index, int Side, int Mode, bool Conjugate, int StorageOrder>
+        -:   20:struct triangular_solve_vector;
+        -:   21:
+        -:   22:template <typename Scalar, typename Index, int Side, int Mode, bool Conjugate, int TriStorageOrder, int OtherStorageOrder, int OtherInnerStride>
+        -:   23:struct triangular_solve_matrix;
+        -:   24:
+        -:   25:// small helper struct extracting some traits on the underlying solver operation
+        -:   26:template<typename Lhs, typename Rhs, int Side>
+        -:   27:class trsolve_traits
+        -:   28:{
+        -:   29:  private:
+        -:   30:    enum {
+        -:   31:      RhsIsVectorAtCompileTime = (Side==OnTheLeft ? Rhs::ColsAtCompileTime : Rhs::RowsAtCompileTime)==1
+        -:   32:    };
+        -:   33:  public:
+        -:   34:    enum {
+        -:   35:      Unrolling   = (RhsIsVectorAtCompileTime && Rhs::SizeAtCompileTime != Dynamic && Rhs::SizeAtCompileTime <= 8)
+        -:   36:                  ? CompleteUnrolling : NoUnrolling,
+        -:   37:      RhsVectors  = RhsIsVectorAtCompileTime ? 1 : Dynamic
+        -:   38:    };
+        -:   39:};
+        -:   40:
+        -:   41:template<typename Lhs, typename Rhs,
+        -:   42:  int Side, // can be OnTheLeft/OnTheRight
+        -:   43:  int Mode, // can be Upper/Lower | UnitDiag
+        -:   44:  int Unrolling = trsolve_traits<Lhs,Rhs,Side>::Unrolling,
+        -:   45:  int RhsVectors = trsolve_traits<Lhs,Rhs,Side>::RhsVectors
+        -:   46:  >
+        -:   47:struct triangular_solver_selector;
+        -:   48:
+        -:   49:template<typename Lhs, typename Rhs, int Side, int Mode>
+        -:   50:struct triangular_solver_selector<Lhs,Rhs,Side,Mode,NoUnrolling,1>
+        -:   51:{
+        -:   52:  typedef typename Lhs::Scalar LhsScalar;
+        -:   53:  typedef typename Rhs::Scalar RhsScalar;
+        -:   54:  typedef blas_traits<Lhs> LhsProductTraits;
+        -:   55:  typedef typename LhsProductTraits::ExtractType ActualLhsType;
+        -:   56:  typedef Map<Matrix<RhsScalar,Dynamic,1>, Aligned> MappedRhs;
+function _ZN5Eigen8internal26triangular_solver_selectorIKNS_5BlockIKNS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELin1ELin1ELb0EEENS2_INS3_IdLi3ELi1ELi0ELi3ELi1EEELin1ELi1ELb0EEELi1ELi2ELi0ELi1EE3runERS7_RS9_ called 0 returned 0% blocks executed 0%
+    #####:   57:  static EIGEN_DEVICE_FUNC void run(const Lhs& lhs, Rhs& rhs)
+    %%%%%:   57-block  0
+branch  0 never executed
+branch  1 never executed
+        -:   58:  {
+        -:   59:    ActualLhsType actualLhs = LhsProductTraits::extract(lhs);
+        -:   60:
+        -:   61:    // FIXME find a way to allow an inner stride if packet_traits<Scalar>::size==1
+        -:   62:
+        -:   63:    bool useRhsDirectly = Rhs::InnerStrideAtCompileTime==1 || rhs.innerStride()==1;
+        -:   64:
+    #####:   65:    ei_declare_aligned_stack_constructed_variable(RhsScalar,actualRhs,rhs.size(),
+    %%%%%:   65-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:   65-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:   65-block  2
+branch  4 never executed
+branch  5 never executed
+    %%%%%:   65-block  3
+    %%%%%:   65-block  4
+call    6 never executed
+    %%%%%:   65-block  5
+branch  7 never executed
+branch  8 never executed
+        -:   66:                                                  (useRhsDirectly ? rhs.data() : 0));
+        -:   67:
+        -:   68:    if(!useRhsDirectly)
+        -:   69:      MappedRhs(actualRhs,rhs.size()) = rhs;
+        -:   70:
+        -:   71:    triangular_solve_vector<LhsScalar, RhsScalar, Index, Side, Mode, LhsProductTraits::NeedToConjugate,
+        -:   72:                            (int(Lhs::Flags) & RowMajorBit) ? RowMajor : ColMajor>
+    #####:   73:      ::run(actualLhs.cols(), actualLhs.data(), actualLhs.outerStride(), actualRhs);
+    %%%%%:   73-block  0
+call    0 never executed
+        -:   74:
+        -:   75:    if(!useRhsDirectly)
+        -:   76:      rhs = MappedRhs(actualRhs, rhs.size());
+    #####:   77:  }
+        -:   78:};
+        -:   79:
+        -:   80:// the rhs is a matrix
+        -:   81:template<typename Lhs, typename Rhs, int Side, int Mode>
+        -:   82:struct triangular_solver_selector<Lhs,Rhs,Side,Mode,NoUnrolling,Dynamic>
+        -:   83:{
+        -:   84:  typedef typename Rhs::Scalar Scalar;
+        -:   85:  typedef blas_traits<Lhs> LhsProductTraits;
+        -:   86:  typedef typename LhsProductTraits::DirectLinearAccessType ActualLhsType;
+        -:   87:
+        -:   88:  static EIGEN_DEVICE_FUNC void run(const Lhs& lhs, Rhs& rhs)
+        -:   89:  {
+        -:   90:    typename internal::add_const_on_value_type<ActualLhsType>::type actualLhs = LhsProductTraits::extract(lhs);
+        -:   91:
+        -:   92:    const Index size = lhs.rows();
+        -:   93:    const Index othersize = Side==OnTheLeft? rhs.cols() : rhs.rows();
+        -:   94:
+        -:   95:    typedef internal::gemm_blocking_space<(Rhs::Flags&RowMajorBit) ? RowMajor : ColMajor,Scalar,Scalar,
+        -:   96:              Rhs::MaxRowsAtCompileTime, Rhs::MaxColsAtCompileTime, Lhs::MaxRowsAtCompileTime,4> BlockingType;
+        -:   97:
+        -:   98:    BlockingType blocking(rhs.rows(), rhs.cols(), size, 1, false);
+        -:   99:
+        -:  100:    triangular_solve_matrix<Scalar,Index,Side,Mode,LhsProductTraits::NeedToConjugate,(int(Lhs::Flags) & RowMajorBit) ? RowMajor : ColMajor,
+        -:  101:                               (Rhs::Flags&RowMajorBit) ? RowMajor : ColMajor, Rhs::InnerStrideAtCompileTime>
+        -:  102:      ::run(size, othersize, &actualLhs.coeffRef(0,0), actualLhs.outerStride(), &rhs.coeffRef(0,0), rhs.innerStride(), rhs.outerStride(), blocking);
+        -:  103:  }
+        -:  104:};
+        -:  105:
+        -:  106:/***************************************************************************
+        -:  107:* meta-unrolling implementation
+        -:  108:***************************************************************************/
+        -:  109:
+        -:  110:template<typename Lhs, typename Rhs, int Mode, int LoopIndex, int Size,
+        -:  111:         bool Stop = LoopIndex==Size>
+        -:  112:struct triangular_solver_unroller;
+        -:  113:
+        -:  114:template<typename Lhs, typename Rhs, int Mode, int LoopIndex, int Size>
+        -:  115:struct triangular_solver_unroller<Lhs,Rhs,Mode,LoopIndex,Size,false> {
+        -:  116:  enum {
+        -:  117:    IsLower = ((Mode&Lower)==Lower),
+        -:  118:    DiagIndex  = IsLower ? LoopIndex : Size - LoopIndex - 1,
+        -:  119:    StartIndex = IsLower ? 0         : DiagIndex+1
+        -:  120:  };
+        -:  121:  static EIGEN_DEVICE_FUNC void run(const Lhs& lhs, Rhs& rhs)
+        -:  122:  {
+        -:  123:    if (LoopIndex>0)
+        -:  124:      rhs.coeffRef(DiagIndex) -= lhs.row(DiagIndex).template segment<LoopIndex>(StartIndex).transpose()
+        -:  125:                                .cwiseProduct(rhs.template segment<LoopIndex>(StartIndex)).sum();
+        -:  126:
+        -:  127:    if(!(Mode & UnitDiag))
+        -:  128:      rhs.coeffRef(DiagIndex) /= lhs.coeff(DiagIndex,DiagIndex);
+        -:  129:
+        -:  130:    triangular_solver_unroller<Lhs,Rhs,Mode,LoopIndex+1,Size>::run(lhs,rhs);
+        -:  131:  }
+        -:  132:};
+        -:  133:
+        -:  134:template<typename Lhs, typename Rhs, int Mode, int LoopIndex, int Size>
+        -:  135:struct triangular_solver_unroller<Lhs,Rhs,Mode,LoopIndex,Size,true> {
+        -:  136:  static EIGEN_DEVICE_FUNC void run(const Lhs&, Rhs&) {}
+        -:  137:};
+        -:  138:
+        -:  139:template<typename Lhs, typename Rhs, int Mode>
+        -:  140:struct triangular_solver_selector<Lhs,Rhs,OnTheLeft,Mode,CompleteUnrolling,1> {
+        -:  141:  static EIGEN_DEVICE_FUNC void run(const Lhs& lhs, Rhs& rhs)
+        -:  142:  { triangular_solver_unroller<Lhs,Rhs,Mode,0,Rhs::SizeAtCompileTime>::run(lhs,rhs); }
+        -:  143:};
+        -:  144:
+        -:  145:template<typename Lhs, typename Rhs, int Mode>
+        -:  146:struct triangular_solver_selector<Lhs,Rhs,OnTheRight,Mode,CompleteUnrolling,1> {
+        -:  147:  static EIGEN_DEVICE_FUNC void run(const Lhs& lhs, Rhs& rhs)
+        -:  148:  {
+        -:  149:    Transpose<const Lhs> trLhs(lhs);
+        -:  150:    Transpose<Rhs> trRhs(rhs);
+        -:  151:
+        -:  152:    triangular_solver_unroller<Transpose<const Lhs>,Transpose<Rhs>,
+        -:  153:                              ((Mode&Upper)==Upper ? Lower : Upper) | (Mode&UnitDiag),
+        -:  154:                              0,Rhs::SizeAtCompileTime>::run(trLhs,trRhs);
+        -:  155:  }
+        -:  156:};
+        -:  157:
+        -:  158:} // end namespace internal
+        -:  159:
+        -:  160:/***************************************************************************
+        -:  161:* TriangularView methods
+        -:  162:***************************************************************************/
+        -:  163:
+        -:  164:#ifndef EIGEN_PARSED_BY_DOXYGEN
+        -:  165:template<typename MatrixType, unsigned int Mode>
+        -:  166:template<int Side, typename OtherDerived>
+function _ZNK5Eigen18TriangularViewImplIKNS_5BlockIKNS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELin1ELin1ELb0EEELj2ENS_5DenseEE12solveInPlaceILi1ENS1_INS2_IdLi3ELi1ELi0ELi3ELi1EEELin1ELi1ELb0EEEEEvRKNS_10MatrixBaseIT0_EE called 0 returned 0% blocks executed 0%
+    #####:  167:EIGEN_DEVICE_FUNC void TriangularViewImpl<MatrixType,Mode,Dense>::solveInPlace(const MatrixBase<OtherDerived>& _other) const
+    %%%%%:  167-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  168:{
+        -:  169:  OtherDerived& other = _other.const_cast_derived();
+    #####:  170:  eigen_assert( derived().cols() == derived().rows() && ((Side==OnTheLeft && derived().cols() == other.rows()) || (Side==OnTheRight && derived().cols() == other.cols())) );
+    %%%%%:  170-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  170-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  170-block  2
+call    4 never executed
+        -:  171:  eigen_assert((!(int(Mode) & int(ZeroDiag))) && bool(int(Mode) & (int(Upper) | int(Lower))));
+        -:  172:  // If solving for a 0x0 matrix, nothing to do, simply return.
+    #####:  173:  if (derived().cols() == 0)
+    %%%%%:  173-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  174:    return;
+        -:  175:
+        -:  176:  enum { copy = (internal::traits<OtherDerived>::Flags & RowMajorBit)  && OtherDerived::IsVectorAtCompileTime && OtherDerived::SizeAtCompileTime!=1};
+        -:  177:  typedef typename internal::conditional<copy,
+        -:  178:    typename internal::plain_matrix_type_column_major<OtherDerived>::type, OtherDerived&>::type OtherCopy;
+        -:  179:  OtherCopy otherCopy(other);
+        -:  180:
+        -:  181:  internal::triangular_solver_selector<MatrixType, typename internal::remove_reference<OtherCopy>::type,
+    #####:  182:    Side, Mode>::run(derived().nestedExpression(), otherCopy);
+    %%%%%:  182-block  0
+call    0 never executed
+        -:  183:
+        -:  184:  if (copy)
+        -:  185:    other = otherCopy;
+        -:  186:}
+        -:  187:
+        -:  188:template<typename Derived, unsigned int Mode>
+        -:  189:template<int Side, typename Other>
+        -:  190:const internal::triangular_solve_retval<Side,TriangularView<Derived,Mode>,Other>
+        -:  191:TriangularViewImpl<Derived,Mode,Dense>::solve(const MatrixBase<Other>& other) const
+        -:  192:{
+        -:  193:  return internal::triangular_solve_retval<Side,TriangularViewType,Other>(derived(), other.derived());
+        -:  194:}
+        -:  195:#endif
+        -:  196:
+        -:  197:namespace internal {
+        -:  198:
+        -:  199:
+        -:  200:template<int Side, typename TriangularType, typename Rhs>
+        -:  201:struct traits<triangular_solve_retval<Side, TriangularType, Rhs> >
+        -:  202:{
+        -:  203:  typedef typename internal::plain_matrix_type_column_major<Rhs>::type ReturnType;
+        -:  204:};
+        -:  205:
+        -:  206:template<int Side, typename TriangularType, typename Rhs> struct triangular_solve_retval
+        -:  207: : public ReturnByValue<triangular_solve_retval<Side, TriangularType, Rhs> >
+        -:  208:{
+        -:  209:  typedef typename remove_all<typename Rhs::Nested>::type RhsNestedCleaned;
+        -:  210:  typedef ReturnByValue<triangular_solve_retval> Base;
+        -:  211:
+        -:  212:  triangular_solve_retval(const TriangularType& tri, const Rhs& rhs)
+        -:  213:    : m_triangularMatrix(tri), m_rhs(rhs)
+        -:  214:  {}
+        -:  215:
+        -:  216:  inline EIGEN_CONSTEXPR Index rows() const EIGEN_NOEXCEPT { return m_rhs.rows(); }
+        -:  217:  inline EIGEN_CONSTEXPR Index cols() const EIGEN_NOEXCEPT { return m_rhs.cols(); }
+        -:  218:
+        -:  219:  template<typename Dest> inline void evalTo(Dest& dst) const
+        -:  220:  {
+        -:  221:    if(!is_same_dense(dst,m_rhs))
+        -:  222:      dst = m_rhs;
+        -:  223:    m_triangularMatrix.template solveInPlace<Side>(dst);
+        -:  224:  }
+        -:  225:
+        -:  226:  protected:
+        -:  227:    const TriangularType& m_triangularMatrix;
+        -:  228:    typename Rhs::Nested m_rhs;
+        -:  229:};
+        -:  230:
+        -:  231:} // namespace internal
+        -:  232:
+        -:  233:} // end namespace Eigen
+        -:  234:
+        -:  235:#endif // EIGEN_SOLVETRIANGULAR_H

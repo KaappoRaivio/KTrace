@@ -1,0 +1,152 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/common/MyVector3.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/main.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/main.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 11.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#pragma once
+        -:    6:
+        -:    7:
+        -:    8:#include <ostream>
+        -:    9:#include <iostream>
+        -:   10:#include "../../../lib/Eigen/Dense"
+        -:   11:
+        -:   12:class MyVector3 {
+        -:   13:private:
+        -:   14:    double i, j, k;
+        -:   15:
+        -:   16:public:
+    9030*:   17:    constexpr MyVector3 (double i, double j, double k) : i{i}, j{j}, k{k} {
+        1:   17-block  0
+call    0 returned 1
+        1:   17-block  1
+call    1 returned 1
+branch  2 taken 1 (fallthrough)
+branch  3 taken 0 (throw)
+        1:   17-block  2
+call    4 returned 1
+branch  5 taken 1 (fallthrough)
+branch  6 taken 0 (throw)
+        1:   17-block  3
+call    7 returned 1
+branch  8 taken 1 (fallthrough)
+branch  9 taken 0 (throw)
+        1:   17-block  4
+call   10 returned 1
+branch 11 taken 1 (fallthrough)
+branch 12 taken 0 (throw)
+        1:   17-block  5
+call   13 returned 1
+branch 14 taken 1 (fallthrough)
+branch 15 taken 0 (throw)
+        1:   17-block  6
+call   16 returned 1
+branch 17 taken 1 (fallthrough)
+branch 18 taken 0 (throw)
+        1:   17-block  7
+call   19 returned 1
+branch 20 taken 1 (fallthrough)
+branch 21 taken 0 (throw)
+        1:   17-block  8
+call   22 returned 1
+branch 23 taken 1 (fallthrough)
+branch 24 taken 0 (throw)
+        1:   17-block  9
+call   25 returned 1
+branch 26 taken 1 (fallthrough)
+branch 27 taken 0 (throw)
+        1:   17-block 10
+call   28 returned 1
+branch 29 taken 1 (fallthrough)
+branch 30 taken 0 (throw)
+        1:   17-block 11
+call   31 returned 1
+branch 32 taken 1 (fallthrough)
+branch 33 taken 0 (throw)
+        1:   17-block 12
+call   34 returned 1
+branch 35 taken 1 (fallthrough)
+branch 36 taken 0 (throw)
+        1:   17-block 13
+call   37 returned 1
+branch 38 taken 1 (fallthrough)
+branch 39 taken 0 (throw)
+        1:   17-block 14
+call   40 returned 1
+branch 41 taken 1 (fallthrough)
+branch 42 taken 0 (throw)
+        1:   17-block 15
+call   43 returned 1
+branch 44 taken 1 (fallthrough)
+branch 45 taken 0 (throw)
+call   46 returned 1
+branch 47 taken 1 (fallthrough)
+branch 48 taken 0 (throw)
+     2256:   17-block 16
+call   49 returned 2256
+branch 50 taken 2256 (fallthrough)
+branch 51 taken 0 (throw)
+     2256:   17-block 17
+call   52 returned 2256
+branch 53 taken 2256 (fallthrough)
+branch 54 taken 0 (throw)
+     2256:   17-block 18
+call   55 returned 2256
+branch 56 taken 2256 (fallthrough)
+branch 57 taken 0 (throw)
+     2256:   17-block 19
+call   58 returned 2256
+branch 59 taken 2256 (fallthrough)
+branch 60 taken 0 (throw)
+        1:   17-block 20
+call   61 returned 1
+branch 62 taken 1 (fallthrough)
+branch 63 taken 0 (throw)
+        -:   18:
+        -:   19:    };
+        -:   20:
+        -:   21:    MyVector3 operator+ (const MyVector3& other) const;
+        -:   22:    MyVector3 operator|| (const MyVector3& other) const;
+        -:   23:    MyVector3 operator- () const;
+        -:   24:    MyVector3 operator- (const MyVector3& other) const;
+        -:   25:    MyVector3 operator* (double other) const;
+        -:   26:    double operator* (const MyVector3& other) const;
+        -:   27:    MyVector3 operator/ (double other) const;
+        -:   28:    explicit operator bool () const;
+        -:   29:    double operator [] (int index) const;
+        -:   30:
+        -:   31:    bool operator== (const MyVector3& rhs) const;
+        -:   32:
+        -:   33:    bool operator!= (const MyVector3& rhs) const;
+        -:   34:
+        -:   35:    MyVector3 rotateInsideCone (double radius) const;
+        -:   36:    MyVector3 reflection (const MyVector3& axis) const;
+        -:   37:    MyVector3 inTermsOfComponents (const MyVector3& i, const MyVector3& j, const MyVector3& k) const;
+        -:   38:
+        -:   39:    MyVector3 rotate (double yaw, double pitch) const;
+        -:   40:    MyVector3 cross (const MyVector3& other) const;
+        -:   41:    double length () const;
+        -:   42:
+        -:   43:    double squared () const;
+        -:   44:    MyVector3 normalize () const;
+        -:   45:
+        -:   46:    double atan2 () const;
+        -:   47:
+        -:   48:    double asin () const;
+        -:   49:
+        -:   50:    friend std::ostream& operator<< (std::ostream& os, const MyVector3& vector3);
+        -:   51:
+        -:   52:    double getI () const;
+        -:   53:    double getJ () const;
+        -:   54:    double getK () const;
+        -:   55:
+        -:   56:    static MyVector3 randomInsideUnitSphere ();
+        -:   57:
+        -:   58:    static const MyVector3& UP;
+        -:   59:    static const MyVector3& OUT;
+        -:   60:    static const MyVector3& SIDE;
+        -:   61:
+        -:   62:    double dot (const MyVector3& vector3) const;
+        -:   63:};

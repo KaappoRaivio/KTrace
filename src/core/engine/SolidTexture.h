@@ -11,11 +11,12 @@ class SolidTexture : public Texture {
 private:
     Intensity intensity;
 public:
-    explicit SolidTexture (const Intensity& intensity);
+    constexpr explicit SolidTexture (const Intensity& intensity) : intensity{intensity} {};
 
 public:
     Intensity get_pixel_at (const MyVector3& uv) const override;
 };
 
-
-
+namespace SolidTextures {
+    constexpr SolidTexture WHITE {{1, 1, 1}};
+}

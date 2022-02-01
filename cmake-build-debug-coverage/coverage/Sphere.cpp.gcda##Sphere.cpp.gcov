@@ -1,0 +1,124 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/geometry/Sphere.cpp
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Sphere.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Sphere.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:
+        -:    3:#include "Sphere.h"
+        -:    4:#include <cmath>
+        -:    5:#include <utility>
+        -:    6:#include "../common/mytypes.h"
+        -:    7:
+        -:    8://
+        -:    9:// Created by kaappo on 14.9.2021.
+function _ZN6SphereC2E9MyVector3dPK8Material called 12 returned 100% blocks executed 100%
+       12:   10:Sphere::Sphere (MyVector3 center, double radius, const Material* material) : center{std::move(center)}, radius{radius}, material(material) {}
+        -:   11:
+function _ZN6Sphere23getIntersectionDistanceERK3RayRP7SurfaceRPK8Material called 0 returned 0% blocks executed 0%
+    #####:   12:double Sphere::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
+        -:   13://    if (includes(ray.getOrigin())) {
+        -:   14://        return 0.0;
+        -:   15://    }
+        -:   16:
+    #####:   17:    const auto& d = ray.getDirection();
+    %%%%%:   17-block  0
+call    0 never executed
+    #####:   18:    const auto& C = ray.getOrigin();
+call    0 never executed
+        -:   19:    const auto& r = radius;
+    #####:   20:    const auto& P = center;
+        -:   21:
+    #####:   22:    const auto discriminant = std::pow(d * (C - P), 2) - ((C - P).squared() - std::pow(r, 2));
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+branch  4 never executed
+branch  5 never executed
+    #####:   23:    if (discriminant < 0) {
+branch  0 never executed
+branch  1 never executed
+        -:   24:        return 0.0;
+        -:   25:    }
+        -:   26:
+    #####:   27:    const auto base = (-d * (C - P));
+    %%%%%:   27-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:   28:    hitSurface = this;
+    #####:   29:    hitMaterial = getMaterial();
+call    0 never executed
+    #####:   30:    if (discriminant == 0) {
+branch  0 never executed
+branch  1 never executed
+    #####:   31:        if (base < PRECISION_LIMIT) return 0.0;
+    %%%%%:   31-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:   32:        else return base;
+    %%%%%:   32-block  0
+        -:   33:    } else {
+    #####:   34:        const double root1 = base - std::sqrt(discriminant);
+    #####:   35:        const double root2 = base + std::sqrt(discriminant);
+        -:   36:
+    #####:   37:        if (root1 < PRECISION_LIMIT) return root2;
+    %%%%%:   37-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:   38:        else if (root2 < PRECISION_LIMIT) return 0.0;
+    %%%%%:   38-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:   39:        else return std::min(root1, root2);
+    %%%%%:   39-block  0
+        -:   40:    }
+        -:   41:}
+        -:   42:
+function _ZNK6Sphere11getNormalAtERK9MyVector3 called 0 returned 0% blocks executed 0%
+    #####:   43:MyVector3 Sphere::getNormalAt (const MyVector3& position) const {
+    #####:   44:    return (position - center).normalize();
+    %%%%%:   44-block  0
+call    0 never executed
+call    1 never executed
+        -:   45:}
+        -:   46:
+function _ZNK6Sphere8includesERK9MyVector3 called 0 returned 0% blocks executed 0%
+    #####:   47:bool Sphere::includes (const MyVector3& point) const {
+    #####:   48:    return std::abs((center - point).squared() - std::pow(radius, 2)) < PRECISION_LIMIT;
+    %%%%%:   48-block  0
+call    0 never executed
+call    1 never executed
+        -:   49:}
+        -:   50:
+function _ZNK6Sphere7getUVAtERK9MyVector3 called 0 returned 0% blocks executed 0%
+    #####:   51:MyVector3 Sphere::getUVAt (const MyVector3& position) const {
+    #####:   52:    const auto& d = (center - position).normalize();
+    %%%%%:   52-block  0
+call    0 never executed
+call    1 never executed
+        -:   53:
+    #####:   54:    double u = 0.5 - d.atan2() / (2 * M_PI);
+call    0 never executed
+    #####:   55:    double v = 0.5 + d.asin() / M_PI;
+call    0 never executed
+        -:   56:
+    #####:   57:    return {u, v, 0};
+        -:   58:}
+        -:   59:
+function _ZNK6Sphere14getBoundingBoxEv called 7831 returned 100% blocks executed 100%
+     7831:   60:AABB Sphere::getBoundingBox () const {
+     7831:   61:    auto corner = MyVector3{radius, radius, radius};
+     7831:   61-block  0
+call    0 returned 7831
+     7831:   62:    return AABB{center - corner, center + corner};
+     7831:   62-block  0
+call    0 returned 7831
+call    1 returned 7831
+call    2 returned 7831
+        -:   63:}
+        -:   64:
+function _ZNK6Sphere11getMaterialEv called 0 returned 0% blocks executed 0%
+    #####:   65:const Material* Sphere::getMaterial () const {
+    #####:   66:    return material;
+        -:   67:}

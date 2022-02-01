@@ -1,0 +1,48 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/geometry/Plane.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Mesh.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Mesh.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 11.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#pragma once
+        -:    6:
+        -:    7:
+        -:    8:#include <optional>
+        -:    9:#include "../common/MyVector3.h"
+        -:   10:#include "Ray.h"
+        -:   11:#include "Surface.h"
+        -:   12:#include "../engine/Material.h"
+        -:   13:
+    #####:   14:class Plane : public Surface {
+    %%%%%:   14-block  0
+        -:   15:private:
+        -:   16:    MyVector3 normal;
+        -:   17:    double intersect;
+        -:   18:
+        -:   19:    const Material* material;
+        -:   20:public:
+        -:   21:    Plane (MyVector3 normal, double intersect, const Material* material);
+        -:   22:
+        -:   23:    static Plane from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material);
+        -:   24:
+        -:   25:    bool includes (const MyVector3& vector) const;
+        -:   26:
+        -:   27:    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
+        -:   28:
+        -:   29:
+        -:   30:    MyVector3 getNormalAt (const MyVector3& position) const override;
+        -:   31:    MyVector3 getUVAt (const MyVector3& position) const override;
+        -:   32:
+        -:   33:    AABB getBoundingBox () const override;
+        -:   34:
+        -:   35:    const MyVector3& getNormal () const;
+        -:   36:
+        -:   37:    double getIntersect () const;
+        -:   38:
+        -:   39:    const Material* getMaterial () const override;
+        -:   40:};
+        -:   41:
+        -:   42:
+        -:   43:

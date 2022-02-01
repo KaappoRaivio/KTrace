@@ -1,0 +1,320 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/lib/Eigen/src/Core/CwiseBinaryOp.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcda
+        -:    0:Runs:1
+        -:    1:// This file is part of Eigen, a lightweight C++ template library
+        -:    2:// for linear algebra.
+        -:    3://
+        -:    4:// Copyright (C) 2008-2014 Gael Guennebaud <gael.guennebaud@inria.fr>
+        -:    5:// Copyright (C) 2006-2008 Benoit Jacob <jacob.benoit.1@gmail.com>
+        -:    6://
+        -:    7:// This Source Code Form is subject to the terms of the Mozilla
+        -:    8:// Public License v. 2.0. If a copy of the MPL was not distributed
+        -:    9:// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        -:   10:
+        -:   11:#ifndef EIGEN_CWISE_BINARY_OP_H
+        -:   12:#define EIGEN_CWISE_BINARY_OP_H
+        -:   13:
+        -:   14:namespace Eigen {
+        -:   15:
+        -:   16:namespace internal {
+        -:   17:template<typename BinaryOp, typename Lhs, typename Rhs>
+        -:   18:struct traits<CwiseBinaryOp<BinaryOp, Lhs, Rhs> >
+        -:   19:{
+        -:   20:  // we must not inherit from traits<Lhs> since it has
+        -:   21:  // the potential to cause problems with MSVC
+        -:   22:  typedef typename remove_all<Lhs>::type Ancestor;
+        -:   23:  typedef typename traits<Ancestor>::XprKind XprKind;
+        -:   24:  enum {
+        -:   25:    RowsAtCompileTime = traits<Ancestor>::RowsAtCompileTime,
+        -:   26:    ColsAtCompileTime = traits<Ancestor>::ColsAtCompileTime,
+        -:   27:    MaxRowsAtCompileTime = traits<Ancestor>::MaxRowsAtCompileTime,
+        -:   28:    MaxColsAtCompileTime = traits<Ancestor>::MaxColsAtCompileTime
+        -:   29:  };
+        -:   30:
+        -:   31:  // even though we require Lhs and Rhs to have the same scalar type (see CwiseBinaryOp constructor),
+        -:   32:  // we still want to handle the case when the result type is different.
+        -:   33:  typedef typename result_of<
+        -:   34:                     BinaryOp(
+        -:   35:                       const typename Lhs::Scalar&,
+        -:   36:                       const typename Rhs::Scalar&
+        -:   37:                     )
+        -:   38:                   >::type Scalar;
+        -:   39:  typedef typename cwise_promote_storage_type<typename traits<Lhs>::StorageKind,
+        -:   40:                                              typename traits<Rhs>::StorageKind,
+        -:   41:                                              BinaryOp>::ret StorageKind;
+        -:   42:  typedef typename promote_index_type<typename traits<Lhs>::StorageIndex,
+        -:   43:                                      typename traits<Rhs>::StorageIndex>::type StorageIndex;
+        -:   44:  typedef typename Lhs::Nested LhsNested;
+        -:   45:  typedef typename Rhs::Nested RhsNested;
+        -:   46:  typedef typename remove_reference<LhsNested>::type _LhsNested;
+        -:   47:  typedef typename remove_reference<RhsNested>::type _RhsNested;
+        -:   48:  enum {
+        -:   49:    Flags = cwise_promote_storage_order<typename traits<Lhs>::StorageKind,typename traits<Rhs>::StorageKind,_LhsNested::Flags & RowMajorBit,_RhsNested::Flags & RowMajorBit>::value
+        -:   50:  };
+        -:   51:};
+        -:   52:} // end namespace internal
+        -:   53:
+        -:   54:template<typename BinaryOp, typename Lhs, typename Rhs, typename StorageKind>
+        -:   55:class CwiseBinaryOpImpl;
+        -:   56:
+        -:   57:/** \class CwiseBinaryOp
+        -:   58:  * \ingroup Core_Module
+        -:   59:  *
+        -:   60:  * \brief Generic expression where a coefficient-wise binary operator is applied to two expressions
+        -:   61:  *
+        -:   62:  * \tparam BinaryOp template functor implementing the operator
+        -:   63:  * \tparam LhsType the type of the left-hand side
+        -:   64:  * \tparam RhsType the type of the right-hand side
+        -:   65:  *
+        -:   66:  * This class represents an expression  where a coefficient-wise binary operator is applied to two expressions.
+        -:   67:  * It is the return type of binary operators, by which we mean only those binary operators where
+        -:   68:  * both the left-hand side and the right-hand side are Eigen expressions.
+        -:   69:  * For example, the return type of matrix1+matrix2 is a CwiseBinaryOp.
+        -:   70:  *
+        -:   71:  * Most of the time, this is the only way that it is used, so you typically don't have to name
+        -:   72:  * CwiseBinaryOp types explicitly.
+        -:   73:  *
+        -:   74:  * \sa MatrixBase::binaryExpr(const MatrixBase<OtherDerived> &,const CustomBinaryOp &) const, class CwiseUnaryOp, class CwiseNullaryOp
+        -:   75:  */
+        -:   76:template<typename BinaryOp, typename LhsType, typename RhsType>
+    #####:   77:class CwiseBinaryOp :
+    %%%%%:   77-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:   77-block  1
+call    2 never executed
+call    3 never executed
+        -:   78:  public CwiseBinaryOpImpl<
+        -:   79:          BinaryOp, LhsType, RhsType,
+        -:   80:          typename internal::cwise_promote_storage_type<typename internal::traits<LhsType>::StorageKind,
+        -:   81:                                                        typename internal::traits<RhsType>::StorageKind,
+        -:   82:                                                        BinaryOp>::ret>,
+        -:   83:  internal::no_assignment_operator
+        -:   84:{
+        -:   85:  public:
+        -:   86:
+        -:   87:    typedef typename internal::remove_all<BinaryOp>::type Functor;
+        -:   88:    typedef typename internal::remove_all<LhsType>::type Lhs;
+        -:   89:    typedef typename internal::remove_all<RhsType>::type Rhs;
+        -:   90:
+        -:   91:    typedef typename CwiseBinaryOpImpl<
+        -:   92:        BinaryOp, LhsType, RhsType,
+        -:   93:        typename internal::cwise_promote_storage_type<typename internal::traits<LhsType>::StorageKind,
+        -:   94:                                                      typename internal::traits<Rhs>::StorageKind,
+        -:   95:                                                      BinaryOp>::ret>::Base Base;
+        -:   96:    EIGEN_GENERIC_PUBLIC_INTERFACE(CwiseBinaryOp)
+        -:   97:
+        -:   98:    typedef typename internal::ref_selector<LhsType>::type LhsNested;
+        -:   99:    typedef typename internal::ref_selector<RhsType>::type RhsNested;
+        -:  100:    typedef typename internal::remove_reference<LhsNested>::type _LhsNested;
+        -:  101:    typedef typename internal::remove_reference<RhsNested>::type _RhsNested;
+        -:  102:
+        -:  103:#if EIGEN_COMP_MSVC && EIGEN_HAS_CXX11
+        -:  104:    //Required for Visual Studio or the Copy constructor will probably not get inlined!
+        -:  105:    EIGEN_STRONG_INLINE
+        -:  106:    CwiseBinaryOp(const CwiseBinaryOp<BinaryOp,LhsType,RhsType>&) = default;
+        -:  107:#endif
+        -:  108:
+        -:  109:    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+    #####:  110:    CwiseBinaryOp(const Lhs& aLhs, const Rhs& aRhs, const BinaryOp& func = BinaryOp())
+    #####:  111:      : m_lhs(aLhs), m_rhs(aRhs), m_functor(func)
+        -:  112:    {
+        -:  113:      EIGEN_CHECK_BINARY_COMPATIBILIY(BinaryOp,typename Lhs::Scalar,typename Rhs::Scalar);
+        -:  114:      // require the sizes to match
+        -:  115:      EIGEN_STATIC_ASSERT_SAME_MATRIX_SIZE(Lhs, Rhs)
+    #####:  116:      eigen_assert(aLhs.rows() == aRhs.rows() && aLhs.cols() == aRhs.cols());
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  116-block  0
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+    %%%%%:  116-block  1
+call    5 never executed
+    #####:  117:    }
+------------------
+_ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_9TransposeIKNS_5BlockIKNS4_IKNS5_IKNS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELin1ELi1ELb0EEEEELi1ELin1ELb1EEEEEKNS5_IKNS5_INS5_INS6_IdLi3ELi1ELi0ELi3ELi1EEELin1ELin1ELb0EEELin1ELin1ELb0EEELin1ELi1ELb1EEEEC2ERSG_RSM_RKS3_:
+function _ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_9TransposeIKNS_5BlockIKNS4_IKNS5_IKNS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELin1ELi1ELb0EEEEELi1ELin1ELb1EEEEEKNS5_IKNS5_INS5_INS6_IdLi3ELi1ELi0ELi3ELi1EEELin1ELin1ELb0EEELin1ELin1ELb0EEELin1ELi1ELb1EEEEC2ERSG_RSM_RKS3_ called 0 returned 0% blocks executed 0%
+    #####:  110:    CwiseBinaryOp(const Lhs& aLhs, const Rhs& aRhs, const BinaryOp& func = BinaryOp())
+    #####:  111:      : m_lhs(aLhs), m_rhs(aRhs), m_functor(func)
+    %%%%%:  111-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  112:    {
+        -:  113:      EIGEN_CHECK_BINARY_COMPATIBILIY(BinaryOp,typename Lhs::Scalar,typename Rhs::Scalar);
+        -:  114:      // require the sizes to match
+        -:  115:      EIGEN_STATIC_ASSERT_SAME_MATRIX_SIZE(Lhs, Rhs)
+    #####:  116:      eigen_assert(aLhs.rows() == aRhs.rows() && aLhs.cols() == aRhs.cols());
+    %%%%%:  116-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  117:    }
+    %%%%%:  117-block  0
+------------------
+_ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_9TransposeIKNS_5BlockIKNS4_IKNS5_INS5_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEEEELi1ELin1ELb1EEEEEKNS5_IKNS5_INS5_IS7_Lin1ELin1ELb0EEELin1ELin1ELb0EEELin1ELi1ELb1EEEEC2ERSG_RSL_RKS3_:
+function _ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_9TransposeIKNS_5BlockIKNS4_IKNS5_INS5_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEEEELi1ELin1ELb1EEEEEKNS5_IKNS5_INS5_IS7_Lin1ELin1ELb0EEELin1ELin1ELb0EEELin1ELi1ELb1EEEEC2ERSG_RSL_RKS3_ called 0 returned 0% blocks executed 0%
+    #####:  110:    CwiseBinaryOp(const Lhs& aLhs, const Rhs& aRhs, const BinaryOp& func = BinaryOp())
+    #####:  111:      : m_lhs(aLhs), m_rhs(aRhs), m_functor(func)
+    %%%%%:  111-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  112:    {
+        -:  113:      EIGEN_CHECK_BINARY_COMPATIBILIY(BinaryOp,typename Lhs::Scalar,typename Rhs::Scalar);
+        -:  114:      // require the sizes to match
+        -:  115:      EIGEN_STATIC_ASSERT_SAME_MATRIX_SIZE(Lhs, Rhs)
+    #####:  116:      eigen_assert(aLhs.rows() == aRhs.rows() && aLhs.cols() == aRhs.cols());
+    %%%%%:  116-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  117:    }
+    %%%%%:  117-block  0
+------------------
+_ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS_6MatrixIdLin1ELi1ELi0ELin1ELi1EEEEEKNS_5BlockIKNSC_IKNS_3MapIKNS7_IdLin1ELin1ELi0ELin1ELin1EEELi0ENS_11OuterStrideILin1EEEEELin1ELi1ELb1EEELin1ELi1ELb0EEEEC2ERSB_RSN_RKS3_:
+function _ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS_6MatrixIdLin1ELi1ELi0ELin1ELi1EEEEEKNS_5BlockIKNSC_IKNS_3MapIKNS7_IdLin1ELin1ELi0ELin1ELin1EEELi0ENS_11OuterStrideILin1EEEEELin1ELi1ELb1EEELin1ELi1ELb0EEEEC2ERSB_RSN_RKS3_ called 0 returned 0% blocks executed 0%
+    #####:  110:    CwiseBinaryOp(const Lhs& aLhs, const Rhs& aRhs, const BinaryOp& func = BinaryOp())
+    %%%%%:  110-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  111:      : m_lhs(aLhs), m_rhs(aRhs), m_functor(func)
+        -:  112:    {
+        -:  113:      EIGEN_CHECK_BINARY_COMPATIBILIY(BinaryOp,typename Lhs::Scalar,typename Rhs::Scalar);
+        -:  114:      // require the sizes to match
+        -:  115:      EIGEN_STATIC_ASSERT_SAME_MATRIX_SIZE(Lhs, Rhs)
+    #####:  116:      eigen_assert(aLhs.rows() == aRhs.rows() && aLhs.cols() == aRhs.cols());
+    %%%%%:  116-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  117:    }
+    %%%%%:  117-block  0
+------------------
+_ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS_6MatrixIdLin1ELi1ELi0ELi3ELi1EEEEEKNS_5BlockIKNS7_IdLi3ELi3ELi0ELi3ELi3EEELin1ELi1ELb0EEEEC2ERSB_RSG_RKS3_:
+function _ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS_6MatrixIdLin1ELi1ELi0ELi3ELi1EEEEEKNS_5BlockIKNS7_IdLi3ELi3ELi0ELi3ELi3EEELin1ELi1ELb0EEEEC2ERSB_RSG_RKS3_ called 0 returned 0% blocks executed 0%
+    #####:  110:    CwiseBinaryOp(const Lhs& aLhs, const Rhs& aRhs, const BinaryOp& func = BinaryOp())
+    %%%%%:  110-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  111:      : m_lhs(aLhs), m_rhs(aRhs), m_functor(func)
+    %%%%%:  111-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  112:    {
+        -:  113:      EIGEN_CHECK_BINARY_COMPATIBILIY(BinaryOp,typename Lhs::Scalar,typename Rhs::Scalar);
+        -:  114:      // require the sizes to match
+        -:  115:      EIGEN_STATIC_ASSERT_SAME_MATRIX_SIZE(Lhs, Rhs)
+    #####:  116:      eigen_assert(aLhs.rows() == aRhs.rows() && aLhs.cols() == aRhs.cols());
+    %%%%%:  116-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  117:    }
+    %%%%%:  117-block  0
+------------------
+_ZN5Eigen13CwiseBinaryOpINS_8internal18scalar_quotient_opIddEEKNS_5BlockIKNS4_INS4_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEELin1ELi1ELb0EEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS5_IdLin1ELi1ELi0ELi3ELi1EEEEEEC2ERSB_RSI_RKS3_:
+function _ZN5Eigen13CwiseBinaryOpINS_8internal18scalar_quotient_opIddEEKNS_5BlockIKNS4_INS4_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEELin1ELi1ELb0EEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS5_IdLin1ELi1ELi0ELi3ELi1EEEEEEC2ERSB_RSI_RKS3_ called 0 returned 0% blocks executed 0%
+    #####:  110:    CwiseBinaryOp(const Lhs& aLhs, const Rhs& aRhs, const BinaryOp& func = BinaryOp())
+    #####:  111:      : m_lhs(aLhs), m_rhs(aRhs), m_functor(func)
+    %%%%%:  111-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  112:    {
+        -:  113:      EIGEN_CHECK_BINARY_COMPATIBILIY(BinaryOp,typename Lhs::Scalar,typename Rhs::Scalar);
+        -:  114:      // require the sizes to match
+        -:  115:      EIGEN_STATIC_ASSERT_SAME_MATRIX_SIZE(Lhs, Rhs)
+    #####:  116:      eigen_assert(aLhs.rows() == aRhs.rows() && aLhs.cols() == aRhs.cols());
+    %%%%%:  116-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  117:    }
+    %%%%%:  117-block  0
+------------------
+_ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS_6MatrixIdLin1ELi1ELi0ELi3ELi1EEEEEKNS_5BlockINSC_INS7_IdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEEEC2ERSB_RSG_RKS3_:
+function _ZN5Eigen13CwiseBinaryOpINS_8internal17scalar_product_opIddEEKNS_14CwiseNullaryOpINS1_18scalar_constant_opIdEEKNS_6MatrixIdLin1ELi1ELi0ELi3ELi1EEEEEKNS_5BlockINSC_INS7_IdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEEEC2ERSB_RSG_RKS3_ called 0 returned 0% blocks executed 0%
+    #####:  110:    CwiseBinaryOp(const Lhs& aLhs, const Rhs& aRhs, const BinaryOp& func = BinaryOp())
+    %%%%%:  110-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  111:      : m_lhs(aLhs), m_rhs(aRhs), m_functor(func)
+    %%%%%:  111-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  112:    {
+        -:  113:      EIGEN_CHECK_BINARY_COMPATIBILIY(BinaryOp,typename Lhs::Scalar,typename Rhs::Scalar);
+        -:  114:      // require the sizes to match
+        -:  115:      EIGEN_STATIC_ASSERT_SAME_MATRIX_SIZE(Lhs, Rhs)
+    #####:  116:      eigen_assert(aLhs.rows() == aRhs.rows() && aLhs.cols() == aRhs.cols());
+    %%%%%:  116-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  117:    }
+    %%%%%:  117-block  0
+------------------
+        -:  118:
+        -:  119:    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE EIGEN_CONSTEXPR
+        -:  120:    Index rows() const EIGEN_NOEXCEPT {
+        -:  121:      // return the fixed size type if available to enable compile time optimizations
+        -:  122:      return internal::traits<typename internal::remove_all<LhsNested>::type>::RowsAtCompileTime==Dynamic ? m_rhs.rows() : m_lhs.rows();
+        -:  123:    }
+        -:  124:    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE EIGEN_CONSTEXPR
+        -:  125:    Index cols() const EIGEN_NOEXCEPT {
+        -:  126:      // return the fixed size type if available to enable compile time optimizations
+        -:  127:      return internal::traits<typename internal::remove_all<LhsNested>::type>::ColsAtCompileTime==Dynamic ? m_rhs.cols() : m_lhs.cols();
+        -:  128:    }
+        -:  129:
+        -:  130:    /** \returns the left hand side nested expression */
+        -:  131:    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+        -:  132:    const _LhsNested& lhs() const { return m_lhs; }
+        -:  133:    /** \returns the right hand side nested expression */
+        -:  134:    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+        -:  135:    const _RhsNested& rhs() const { return m_rhs; }
+        -:  136:    /** \returns the functor representing the binary operation */
+        -:  137:    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+        -:  138:    const BinaryOp& functor() const { return m_functor; }
+        -:  139:
+        -:  140:  protected:
+        -:  141:    LhsNested m_lhs;
+        -:  142:    RhsNested m_rhs;
+        -:  143:    const BinaryOp m_functor;
+        -:  144:};
+        -:  145:
+        -:  146:// Generic API dispatcher
+        -:  147:template<typename BinaryOp, typename Lhs, typename Rhs, typename StorageKind>
+        -:  148:class CwiseBinaryOpImpl
+        -:  149:  : public internal::generic_xpr_base<CwiseBinaryOp<BinaryOp, Lhs, Rhs> >::type
+        -:  150:{
+        -:  151:public:
+        -:  152:  typedef typename internal::generic_xpr_base<CwiseBinaryOp<BinaryOp, Lhs, Rhs> >::type Base;
+        -:  153:};
+        -:  154:
+        -:  155:/** replaces \c *this by \c *this - \a other.
+        -:  156:  *
+        -:  157:  * \returns a reference to \c *this
+        -:  158:  */
+        -:  159:template<typename Derived>
+        -:  160:template<typename OtherDerived>
+        -:  161:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE Derived &
+        -:  162:MatrixBase<Derived>::operator-=(const MatrixBase<OtherDerived> &other)
+        -:  163:{
+    #####:  164:  call_assignment(derived(), other.derived(), internal::sub_assign_op<Scalar,typename OtherDerived::Scalar>());
+call    0 never executed
+call    1 never executed
+        -:  165:  return derived();
+        -:  166:}
+        -:  167:
+        -:  168:/** replaces \c *this by \c *this + \a other.
+        -:  169:  *
+        -:  170:  * \returns a reference to \c *this
+        -:  171:  */
+        -:  172:template<typename Derived>
+        -:  173:template<typename OtherDerived>
+        -:  174:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE Derived &
+        -:  175:MatrixBase<Derived>::operator+=(const MatrixBase<OtherDerived>& other)
+        -:  176:{
+    #####:  177:  call_assignment(derived(), other.derived(), internal::add_assign_op<Scalar,typename OtherDerived::Scalar>());
+call    0 never executed
+call    1 never executed
+        -:  178:  return derived();
+        -:  179:}
+        -:  180:
+        -:  181:} // end namespace Eigen
+        -:  182:
+        -:  183:#endif // EIGEN_CWISE_BINARY_OP_H

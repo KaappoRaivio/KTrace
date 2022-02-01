@@ -1,0 +1,32 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/light/Color.cpp
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/light/Color.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/light/Color.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 13.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#include "Color.h"
+        -:    6:
+function _ZN5ColorC2Edddd called 40000 returned 100% blocks executed 100%
+    40000:    7:Color::Color (double r, double g, double b, double gamma) : r(r), g(g), b(b), gamma{gamma} {}
+        -:    8:
+function _ZNK5Color4getREv called 40000 returned 100% blocks executed 100%
+    40000:    9:double Color::getR () const {
+    40000:   10:    return r;
+        -:   11:}
+        -:   12:
+function _ZNK5Color4getGEv called 40000 returned 100% blocks executed 100%
+    40000:   13:double Color::getG () const {
+    40000:   14:    return g;
+        -:   15:}
+        -:   16:
+function _ZNK5Color4getBEv called 40000 returned 100% blocks executed 100%
+    40000:   17:double Color::getB () const {
+    40000:   18:    return b;
+        -:   19:}
+        -:   20:
+function _ZNK5Color8getGammaEv called 0 returned 0% blocks executed 0%
+    #####:   21:double Color::getGamma () const {
+    #####:   22:    return gamma;
+        -:   23:}

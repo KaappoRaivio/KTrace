@@ -13,9 +13,9 @@ protected:
     double m_r, m_g, m_b;
 
 public:
-    Intensity (double r, double g, double b);
+    constexpr Intensity (double r, double g, double b) : m_r{r}, m_g{g}, m_b{b} {};
 
-    Intensity (const Intensity& other) = default;
+//    Intensity (const Intensity& other) = default;
 //    Intensity (Intensity&& original) noexcept;
 //    Intensity& operator=(Intensity&& original) noexcept;
 

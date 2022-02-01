@@ -1,0 +1,176 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/interface/MyOpenGLWindow.cpp
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/interface/MyOpenGLWindow.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/interface/MyOpenGLWindow.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 10.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#include <iostream>
+        -:    6:#include "MyOpenGLWindow.h"
+        -:    7:
+function _ZN14MyOpenGLWindowC2Eiidi called 1 returned 100% blocks executed 64%
+        1:    8:MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale} { // NOLINT(cppcoreguidelines-pro-type-member-init)
+        1:    8-block  0
+call    0 returned 1
+        -:    9:    std::cout << "creating window" << std::endl;
+        1:   10:    if (!MyOpenGLWindow::initialized) {
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        1:   11:        SDL_Init(SDL_INIT_VIDEO);
+        1:   11-block  0
+call    0 returned 1
+        1:   12:        MyOpenGLWindow::initialized = true;
+        -:   13:    }
+        -:   14:
+        1:   15:    SDL_CreateWindowAndRenderer(m_width, m_height, 0, &window, &renderer);
+        1:   15-block  0
+call    0 returned 1
+        1:   16:    SDL_SetWindowTitle(window, "Raytracer");
+call    0 returned 1
+        -:   17:
+        1:   18:    if (window == nullptr || renderer == nullptr) {
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        1:   18-block  0
+branch  2 taken 0 (fallthrough)
+branch  3 taken 1
+    #####:   19:        std::cerr << "Could not create window: " << SDL_GetError() << std::endl;
+call    0 never executed
+call    1 never executed
+    #####:   20:        throw std::runtime_error("SDL initialization error!");
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+    %%%%%:   20-block  0
+call    4 never executed
+    $$$$$:   20-block  1
+call    5 never executed
+        -:   21:    }
+        -:   22:
+        1:   23:    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
+        1:   23-block  0
+call    0 returned 1
+        1:   24:    SDL_RenderClear(renderer);
+call    0 returned 1
+        1:   25:    SDL_RaiseWindow(window);
+call    0 returned 1
+        1:   26:}
+        -:   27:
+function _ZNK14MyOpenGLWindow9set_pixelEiiRK9Intensity called 40000 returned 100% blocks executed 62%
+    40000:   28:void MyOpenGLWindow::set_pixel (int x, int y, const Intensity& color) const {
+        -:   29:    constexpr auto epsilon = 1e-5;
+        -:   30:
+        -:   31:
+    40000:   32:    auto gamma_corrected = color.applyGamma(m_gamma);
+    40000:   32-block  0
+call    0 returned 40000
+        -:   33:
+    40000:   34:    auto r = std::clamp((gamma_corrected.getR() * 256.0 - epsilon), 0.0, 256.0 - epsilon);
+call    0 returned 40000
+branch  1 taken 0 (fallthrough)
+branch  2 taken 40000
+    40000:   35:    auto g = std::clamp((gamma_corrected.getG() * 256.0 - epsilon), 0.0, 256.0 - epsilon);
+    40000:   35-block  0
+call    0 returned 40000
+branch  1 taken 0 (fallthrough)
+branch  2 taken 40000
+    40000:   36:    auto b = std::clamp((gamma_corrected.getB() * 256.0 - epsilon), 0.0, 256.0 - epsilon);
+    40000:   36-block  0
+call    0 returned 40000
+branch  1 taken 0 (fallthrough)
+branch  2 taken 40000
+        -:   37:
+    40000:   38:    SDL_SetRenderDrawColor(renderer, r, g, b, 1.0);
+    40000:   38-block  0
+call    0 returned 40000
+        -:   39:
+        -:   40:    SDL_Rect rect;
+    40000:   41:    rect.x = x * scale;
+    40000:   42:    rect.y = y * scale;
+    40000:   43:    rect.w = scale;
+    40000:   44:    rect.h = scale;
+    40000:   45:    SDL_RenderFillRect(renderer, &rect);
+call    0 returned 40000
+        -:   46://    SDL_RenderDrawPoint(renderer, x, y);
+    40000:   47:}
+        -:   48:
+function _ZNK14MyOpenGLWindow6updateEv called 0 returned 0% blocks executed 0%
+    #####:   49:void MyOpenGLWindow::update () const {
+       1*:   50:    SDL_RenderPresent(renderer);
+        1:   50-block  0
+call    0 returned 1
+    %%%%%:   50-block  1
+call    1 never executed
+    #####:   51:}
+        -:   52:
+function _ZN14MyOpenGLWindow5delayEi called 0 returned 0% blocks executed 0%
+    #####:   53:void MyOpenGLWindow::delay (int millis) {
+    %%%%%:   53-block  0
+        -:   54://    struct Container
+        -:   55://    {
+        -:   56://        static Uint32 TimerCallback( Uint32 interval, void* param )
+        -:   57://        {
+        -:   58://            SDL_Event event;
+        -:   59://            event.type = SDL_USEREVENT;
+        -:   60://            event.user.code = 42;
+        -:   61://            SDL_PushEvent( &event );
+        -:   62://            return 0;
+        -:   63://        }
+        -:   64://    };
+        -:   65://
+        -:   66://    SDL_AddTimer( millis, Container::TimerCallback, NULL );
+        -:   67://
+        -:   68://    SDL_Event event;
+        -:   69://    while( SDL_WaitEvent( &event ) )
+        -:   70://    {
+        -:   71://        if( event.type == SDL_USEREVENT && event.user.code == 42 )
+        -:   72://            break;
+        -:   73://    }
+        -:   74:
+        -:   75:    while (true) {
+    #####:   76:        SDL_PumpEvents();
+    %%%%%:   76-block  0
+call    0 never executed
+    #####:   77:        SDL_Delay(millis);
+call    0 never executed
+        -:   78:    }
+        -:   79:}
+        -:   80:
+function _ZN14MyOpenGLWindowD2Ev called 1 returned 100% blocks executed 100%
+        1:   81:MyOpenGLWindow::~MyOpenGLWindow () {
+        1:   81-block  0
+call    0 returned 1
+        -:   82:    std::cout << "closing!" << std::endl;
+        1:   83:    SDL_DestroyRenderer(renderer);
+call    0 returned 1
+        1:   84:    SDL_DestroyWindow(window);
+call    0 returned 1
+        1:   85:}
+        -:   86:
+function _ZNK14MyOpenGLWindow5paintESt6vectorIS0_I9IntensitySaIS1_EESaIS3_EE called 1 returned 100% blocks executed 100%
+        1:   87:void MyOpenGLWindow::paint (std::vector<std::vector<Intensity>> pixels) const {
+        1:   88:    SDL_RenderClear(renderer);
+        1:   88-block  0
+call    0 returned 1
+        1:   89:    SDL_PumpEvents();
+call    0 returned 1
+      201:   90:    for (int y = 0; y < pixels.size(); ++y) {
+      201:   90-block  0
+branch  0 taken 200 (fallthrough)
+branch  1 taken 1
+      200:   90-block  1
+    40200:   91:        for (int x = 0; x < pixels[y].size(); ++x) {
+    40200:   91-block  0
+branch  0 taken 40000 (fallthrough)
+branch  1 taken 200
+    40000:   92:            set_pixel(x, y, pixels[y][x]);
+    40000:   92-block  0
+call    0 returned 40000
+        -:   93:
+        -:   94:        }
+        -:   95:    }
+        -:   96:    update();
+        1:   97:}
+        -:   98:

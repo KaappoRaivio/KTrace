@@ -9,7 +9,7 @@
 // Created by kaappo on 14.9.2021.
 Sphere::Sphere (MyVector3 center, double radius, const Material* material) : center{std::move(center)}, radius{radius}, material(material) {}
 
-double Sphere::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
+double Sphere::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
 //    if (includes(ray.getOrigin())) {
 //        return 0.0;
 //    }

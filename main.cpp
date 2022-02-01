@@ -28,15 +28,15 @@ int main () {
 //    Camera camera = {{0, -5, 4}, {0, 0}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
     Camera camera = {{0, -5, 8}, {0, 0.5}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
-    auto triangleTexture = std::make_shared<ImageTexture>("../res/texture3.png");
+    auto triangleTexture = std::make_unique<ImageTexture>("../res/texture3.png");
 //    auto triangleTexture = std::make_shared<ImageTexture>("../res/wood.jpg");
-    auto planeTexture = std::make_shared<SolidTexture>(Intensity{1, 1, 1});
+    auto planeTexture = std::make_unique<SolidTexture>(Intensity{1, 1, 1});
 
 //
-    Material triangleMaterial{planeTexture, 0.5};
-    Material sphereMaterial{triangleTexture, 0.5};
-    Material planeMaterial{planeTexture};
-    Material mirror{std::make_shared<SolidTexture>(SolidTexture{{1, 1, 1}}), 0};
+    Material triangleMaterial{planeTexture.get(), 0.5};
+    Material sphereMaterial{triangleTexture.get(), 0.5};
+    Material planeMaterial{planeTexture.get()};
+    Material mirror{std::make_unique<SolidTexture>(SolidTexture{{1, 1, 1}}).get(), 0};
 
     auto triangle = std::make_shared<Triangle>(
             MyVector3{-5, 6, 3},
@@ -45,17 +45,23 @@ int main () {
             &triangleMaterial
     );
 
-    auto plane = std::make_shared<Plane>(MyVector3{0, 0, 1}, 20, &planeMaterial);
-    auto sphere1 = std::make_shared<Sphere>(MyVector3{-2.5, 4, 4.5}, 0.3, &sphereMaterial);
-    auto sphere2 = std::make_shared<Sphere>(MyVector3{-1, 4, 4.3}, 0.6, &sphereMaterial);
+    auto plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 20, &planeMaterial);
+    auto sphere1 = std::make_unique<Sphere>(MyVector3{-2.5, 4, 4.5}, 0.3, &sphereMaterial);
+    auto sphere2 = std::make_unique<Sphere>(MyVector3{-1, 4, 4.3}, 0.6, &sphereMaterial);
     auto sphere3 = std::make_shared<Sphere>(MyVector3{1, 4, 4}, 1.0, &sphereMaterial);
     auto sphere4 = std::make_shared<Sphere>(MyVector3{0.5, 2, 3}, 0.5, &sphereMaterial);
     auto sphere5 = std::make_shared<Sphere>(MyVector3{-0.75, 2, 3.25}, 0.4, &sphereMaterial);
     auto sphere6 = std::make_shared<Sphere>(MyVector3{-0, 6, 6}, 15, &sphereMaterial);
 
 //    auto surfaces = std::make_shared<Objects>(sur);
+//    auto test1 = std::make_shared<Sphere>(MyVector3{0, 0, 0}, 1.0, &sphereMaterial);
+//    auto test2 = std::make_shared<Sphere>(MyVector3{2, 0, 0}, 1.0, &sphereMaterial);
+//    auto test3 = std::make_shared<Sphere>(MyVector3{20, 0, 0}, 1.0, &sphereMaterial);
+//    auto test4 = std::make_shared<Sphere>(MyVector3{21, 0, 0}, 1.0, &sphereMaterial);
 
-    BVHNode tree{{sphere1, sphere2, sphere3, sphere4, sphere5, triangle}};
+//    BVHNode tree{{sphere1, sphere2, sphere3, sphere4, sphere5}};
+//    std::cout << tree << std::endl;
+//    std::exit(0);
 //    BVHNode tree{{triangle, }};
 
 //    std::exit(0);
@@ -65,8 +71,7 @@ int main () {
 //    std::cout << tree.getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
 //    std::cout << triangle->getIntersectionDistance({{2, 2, 10}, {0, 0, -1}}, surface, material) << std::endl;
 //    std::exit(0);
-    Objects sur = {{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get(), plane.get()}};
-    auto surfaces = std::make_shared<Objects>(sur);
+    Objects sur = {{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get()}};
 
     auto bloat1 = std::make_shared<Sphere>(MyVector3{-2.5, 4, 5.0}, 0.3, &sphereMaterial);
     auto bloat2 = std::make_shared<Sphere>(MyVector3{-100, 4, 4.3}, 0.6, &sphereMaterial);
@@ -75,69 +80,73 @@ int main () {
     auto bloat5 = std::make_shared<Sphere>(MyVector3{-75, 2, 3.25}, 0.4, &sphereMaterial);
     auto bloat6 = std::make_shared<Sphere>(MyVector3{-100, 6, 6}, 15, &sphereMaterial);
 
-    BVHNode testTree {
-            {
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
-            }
-    };
-
-    Objects testTreeSlo = {
-            {
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-                    bloat1.get(), bloat2.get(), bloat3.get(), bloat4.get(), bloat5.get(), bloat6.get(),
-            }
-    };
-
-    auto testTreeSlow = std::make_shared<Objects>(testTreeSlo);
+//    BVHNode testTree{
+//            {
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//            }
+//    };
+//
+//    Objects testTreeSlo = {
+//            {
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//                    bloat1, bloat2, bloat3, bloat4, bloat5, bloat6,
+//            }
+//    };
+//
+//    auto testTreeSlow = std::make_shared<Objects>(testTreeSlo);
 
 ////    Sphere sphere2 = {{-1, 4, 4.3}, 0.6};
 ////    Sphere sphere3 = {{1, 4, 4}, 1};
@@ -146,9 +155,24 @@ int main () {
 //    Sphere sphere6 = {{0, 6, 6}, 1.5};
 //
 //
-//    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/teapot.obj", {0, 4, 3});
-//    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/texture.obj", MyVector3{0, 0, 3});
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot.obj", {0, 4, 2}, {M_PI / 4, -M_PI / 2}, &Materials::WHITE);
+//    std::unique_ptr<Surface> model = MyOBJLoader::readOBJ("../res/teapot.obj", {0, 4, 2}, {M_PI / 4, -M_PI / 2}, &Materials::WHITE);
+    std::vector<Surface*> rawPointers;
+    rawPointers.reserve(polygons.size());
+    for (const auto& object : polygons) {
+        rawPointers.push_back(object.get());
+    }
+    std::unique_ptr<Surface> model = std::make_unique<Objects>(rawPointers);
+//    std::unique_ptr<Surface> model = std::make_unique<BVH>(polygons);
+    std::cout << model->getBoundingBox() << std::endl;
 
+    std::vector<Surface*> surfaces{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get()};
+
+    std::unique_ptr<Surface> tree = std::make_unique<BVHNode>(surfaces);
+//    Objects sur = {{sphere1.get(), sphere2.get(), sphere3.get(), sphere4.get(), sphere5.get(), triangle.get(), plane.get()}};
+
+//    std::shared_ptr<Surface> model = MyOBJLoader::readOBJ("../res/texture.obj", MyVector3{0, 0, 3});
+//    std::cout << *dynamic_cast<BVHNode*>(model.get()) << std::endl;
 //
 //
 //
@@ -157,11 +181,14 @@ int main () {
 //            sphere1.get(),
 //            sphere2.get(),
 //            surfaces.get(),
-            plane.get(),
+//            plane.get(),
 //            triangle.get(),
-            &tree,
+//            tree.get(),
+//            &sur,
+//            &obje
+            model.get(),
 //            &testTree,
-            testTreeSlow.get(),
+//            testTreeSlow.get(),
 //            surfaces.get(),
 //            model.get(),
 //            SingleSceneObject{triangle.get(), triangleMaterial},
@@ -176,10 +203,10 @@ int main () {
 
     double radius = 0;
     std::vector<LightSource> lights = {
-            {{4,     4.5,  4},   Intensity{0.1, 0.1, 1} * 70, radius * 7},
+            {{4,     0,  4},   Intensity{0.1, 0.1, 1} * 70, radius * 7},
             {{-4,    4.5,  5.5}, Intensity{1, 0.25, 1} * 30,  radius * 3},
-            {{-0.12, 3.83, 3.9}, Intensity{1, 1, 0.25} * 1,   radius},
-            {{10,    -40,  40},  Intensity{1, 1, 0.8} * 00,   radius * 100},
+//            {{-0.12, 3.83, 3.9}, Intensity{1, 1, 0.25} * 1,   radius},
+            {{10, -40, 40}, Intensity{1, 1, 0.8} * 400, radius * 100},
     };
 
 

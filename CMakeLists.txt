@@ -3,6 +3,7 @@ project(raytracercpp)
 
 set(CMAKE_CXX_STANDARD 20)
 
+SET(CMAKE_BUILD_TYPE Debug)
 #set(SDL2_PATH "/usr/lib/SDL2-2.0.16")
 find_package(SDL2 REQUIRED SDL2)
 #include_directories( ${SDL2_INCLUDE_DIR} )
@@ -18,8 +19,8 @@ target_link_libraries(Main
         PRIVATE SDL2
         )
 
-#set(CMAKE_CXX_FLAGS_DEBUG "-Og --std=c++2a")
-set(CMAKE_CXX_FLAGS_DEBUG "-O3 --std=c++2a -fopenmp")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og --std=c++2a")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 --std=c++2a -fopenmp")
 
 
 

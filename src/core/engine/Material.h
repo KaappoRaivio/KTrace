@@ -12,11 +12,14 @@
 #include "SolidTexture.h"
 
 struct Material {
-    const std::shared_ptr<Texture> albedo;
+    const Texture* albedo;
     double glossiness;
 
-    Material (const std::shared_ptr<Texture>& albedo, double glossiness) : albedo{albedo}, glossiness{glossiness} {}
-    explicit Material (const std::shared_ptr<Texture>& albedo) : albedo{albedo}, glossiness{0} {}
+    Material (const Texture* const albedo, double glossiness) : albedo{albedo}, glossiness{glossiness} {}
+    explicit Material (const Texture* const albedo) : albedo{albedo}, glossiness{0} {}
+
+    Material(const Material& other) = delete;
+    void operator=(const Material& other) = delete;
 
 public:
     Intensity get_albedo_at (const MyVector3& uv) const;

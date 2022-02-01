@@ -12,7 +12,7 @@ class Objects : public Surface {
 private:
     std::vector<Surface*> surfaces;
 public:
-    Objects (const std::vector<Surface*> surfaces);
+    Objects (const std::vector<Surface*>& surfaces);
 
 public:
 //    MyVector3 getNormalAt (const MyVector3& position) const override;
@@ -23,7 +23,7 @@ public:
 
     const Material* getMaterial () const override;
 
-    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
+    double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
 //    std::optional<Intersection> get_intersection (const Ray& ray) const override;
     AABB getBoundingBox () const override;
 

@@ -1,0 +1,344 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/lib/Eigen/src/Core/Dot.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcda
+        -:    0:Runs:1
+        -:    1:// This file is part of Eigen, a lightweight C++ template library
+        -:    2:// for linear algebra.
+        -:    3://
+        -:    4:// Copyright (C) 2006-2008, 2010 Benoit Jacob <jacob.benoit.1@gmail.com>
+        -:    5://
+        -:    6:// This Source Code Form is subject to the terms of the Mozilla
+        -:    7:// Public License v. 2.0. If a copy of the MPL was not distributed
+        -:    8:// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        -:    9:
+        -:   10:#ifndef EIGEN_DOT_H
+        -:   11:#define EIGEN_DOT_H
+        -:   12:
+        -:   13:namespace Eigen { 
+        -:   14:
+        -:   15:namespace internal {
+        -:   16:
+        -:   17:// helper function for dot(). The problem is that if we put that in the body of dot(), then upon calling dot
+        -:   18:// with mismatched types, the compiler emits errors about failing to instantiate cwiseProduct BEFORE
+        -:   19:// looking at the static assertions. Thus this is a trick to get better compile errors.
+        -:   20:template<typename T, typename U,
+        -:   21:// the NeedToTranspose condition here is taken straight from Assign.h
+        -:   22:         bool NeedToTranspose = T::IsVectorAtCompileTime
+        -:   23:                && U::IsVectorAtCompileTime
+        -:   24:                && ((int(T::RowsAtCompileTime) == 1 && int(U::ColsAtCompileTime) == 1)
+        -:   25:                      |  // FIXME | instead of || to please GCC 4.4.0 stupid warning "suggest parentheses around &&".
+        -:   26:                         // revert to || as soon as not needed anymore.
+        -:   27:                    (int(T::ColsAtCompileTime) == 1 && int(U::RowsAtCompileTime) == 1))
+        -:   28:>
+        -:   29:struct dot_nocheck
+        -:   30:{
+        -:   31:  typedef scalar_conj_product_op<typename traits<T>::Scalar,typename traits<U>::Scalar> conj_prod;
+        -:   32:  typedef typename conj_prod::result_type ResScalar;
+        -:   33:  EIGEN_DEVICE_FUNC
+        -:   34:  EIGEN_STRONG_INLINE
+        -:   35:  static ResScalar run(const MatrixBase<T>& a, const MatrixBase<U>& b)
+        -:   36:  {
+        -:   37:    return a.template binaryExpr<conj_prod>(b).sum();
+        -:   38:  }
+        -:   39:};
+        -:   40:
+        -:   41:template<typename T, typename U>
+        -:   42:struct dot_nocheck<T, U, true>
+        -:   43:{
+        -:   44:  typedef scalar_conj_product_op<typename traits<T>::Scalar,typename traits<U>::Scalar> conj_prod;
+        -:   45:  typedef typename conj_prod::result_type ResScalar;
+        -:   46:  EIGEN_DEVICE_FUNC
+        -:   47:  EIGEN_STRONG_INLINE
+        -:   48:  static ResScalar run(const MatrixBase<T>& a, const MatrixBase<U>& b)
+        -:   49:  {
+        -:   50:    return a.transpose().template binaryExpr<conj_prod>(b).sum();
+        -:   51:  }
+        -:   52:};
+        -:   53:
+        -:   54:} // end namespace internal
+        -:   55:
+        -:   56:/** \fn MatrixBase::dot
+        -:   57:  * \returns the dot product of *this with other.
+        -:   58:  *
+        -:   59:  * \only_for_vectors
+        -:   60:  *
+        -:   61:  * \note If the scalar type is complex numbers, then this function returns the hermitian
+        -:   62:  * (sesquilinear) dot product, conjugate-linear in the first variable and linear in the
+        -:   63:  * second variable.
+        -:   64:  *
+        -:   65:  * \sa squaredNorm(), norm()
+        -:   66:  */
+        -:   67:template<typename Derived>
+        -:   68:template<typename OtherDerived>
+        -:   69:EIGEN_DEVICE_FUNC
+        -:   70:EIGEN_STRONG_INLINE
+        -:   71:typename ScalarBinaryOpTraits<typename internal::traits<Derived>::Scalar,typename internal::traits<OtherDerived>::Scalar>::ReturnType
+        -:   72:MatrixBase<Derived>::dot(const MatrixBase<OtherDerived>& other) const
+        -:   73:{
+        -:   74:  EIGEN_STATIC_ASSERT_VECTOR_ONLY(Derived)
+        -:   75:  EIGEN_STATIC_ASSERT_VECTOR_ONLY(OtherDerived)
+        -:   76:  EIGEN_STATIC_ASSERT_SAME_VECTOR_SIZE(Derived,OtherDerived)
+        -:   77:#if !(defined(EIGEN_NO_STATIC_ASSERT) && defined(EIGEN_NO_DEBUG))
+        -:   78:  typedef internal::scalar_conj_product_op<Scalar,typename OtherDerived::Scalar> func;
+        -:   79:  EIGEN_CHECK_BINARY_COMPATIBILIY(func,Scalar,typename OtherDerived::Scalar);
+        -:   80:#endif
+        -:   81:  
+        -:   82:  eigen_assert(size() == other.size());
+        -:   83:
+        -:   84:  return internal::dot_nocheck<Derived,OtherDerived>::run(*this, other);
+        -:   85:}
+        -:   86:
+        -:   87://---------- implementation of L2 norm and related functions ----------
+        -:   88:
+        -:   89:/** \returns, for vectors, the squared \em l2 norm of \c *this, and for matrices the squared Frobenius norm.
+        -:   90:  * In both cases, it consists in the sum of the square of all the matrix entries.
+        -:   91:  * For vectors, this is also equals to the dot product of \c *this with itself.
+        -:   92:  *
+        -:   93:  * \sa dot(), norm(), lpNorm()
+        -:   94:  */
+        -:   95:template<typename Derived>
+    #####:   96:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE typename NumTraits<typename internal::traits<Derived>::Scalar>::Real MatrixBase<Derived>::squaredNorm() const
+        -:   97:{
+    #####:   98:  return numext::real((*this).cwiseAbs2().sum());
+        -:   99:}
+------------------
+_ZNK5Eigen10MatrixBaseINS_5BlockIKNS1_INS1_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEELin1ELi1ELb0EEEE11squaredNormEv:
+function _ZNK5Eigen10MatrixBaseINS_5BlockIKNS1_INS1_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEELin1ELi1ELb0EEEE11squaredNormEv called 0 returned 0% blocks executed 0%
+    #####:   96:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE typename NumTraits<typename internal::traits<Derived>::Scalar>::Real MatrixBase<Derived>::squaredNorm() const
+    %%%%%:   96-block  0
+branch  0 never executed
+branch  1 never executed
+        -:   97:{
+    #####:   98:  return numext::real((*this).cwiseAbs2().sum());
+        -:   99:}
+------------------
+_ZNK5Eigen10MatrixBaseINS_5BlockINS1_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEEE11squaredNormEv:
+function _ZNK5Eigen10MatrixBaseINS_5BlockINS1_INS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEELi3ELi1ELb1EEELin1ELi1ELb0EEEE11squaredNormEv called 0 returned 0% blocks executed 0%
+    #####:   96:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE typename NumTraits<typename internal::traits<Derived>::Scalar>::Real MatrixBase<Derived>::squaredNorm() const
+    %%%%%:   96-block  0
+branch  0 never executed
+branch  1 never executed
+        -:   97:{
+    #####:   98:  return numext::real((*this).cwiseAbs2().sum());
+        -:   99:}
+------------------
+        -:  100:
+        -:  101:/** \returns, for vectors, the \em l2 norm of \c *this, and for matrices the Frobenius norm.
+        -:  102:  * In both cases, it consists in the square root of the sum of the square of all the matrix entries.
+        -:  103:  * For vectors, this is also equals to the square root of the dot product of \c *this with itself.
+        -:  104:  *
+        -:  105:  * \sa lpNorm(), dot(), squaredNorm()
+        -:  106:  */
+        -:  107:template<typename Derived>
+        -:  108:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE typename NumTraits<typename internal::traits<Derived>::Scalar>::Real MatrixBase<Derived>::norm() const
+        -:  109:{
+    #####:  110:  return numext::sqrt(squaredNorm());
+call    0 never executed
+        -:  111:}
+        -:  112:
+        -:  113:/** \returns an expression of the quotient of \c *this by its own norm.
+        -:  114:  *
+        -:  115:  * \warning If the input vector is too small (i.e., this->norm()==0),
+        -:  116:  *          then this function returns a copy of the input.
+        -:  117:  *
+        -:  118:  * \only_for_vectors
+        -:  119:  *
+        -:  120:  * \sa norm(), normalize()
+        -:  121:  */
+        -:  122:template<typename Derived>
+        -:  123:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const typename MatrixBase<Derived>::PlainObject
+        -:  124:MatrixBase<Derived>::normalized() const
+        -:  125:{
+        -:  126:  typedef typename internal::nested_eval<Derived,2>::type _Nested;
+        -:  127:  _Nested n(derived());
+        -:  128:  RealScalar z = n.squaredNorm();
+        -:  129:  // NOTE: after extensive benchmarking, this conditional does not impact performance, at least on recent x86 CPU
+        -:  130:  if(z>RealScalar(0))
+        -:  131:    return n / numext::sqrt(z);
+        -:  132:  else
+        -:  133:    return n;
+        -:  134:}
+        -:  135:
+        -:  136:/** Normalizes the vector, i.e. divides it by its own norm.
+        -:  137:  *
+        -:  138:  * \only_for_vectors
+        -:  139:  *
+        -:  140:  * \warning If the input vector is too small (i.e., this->norm()==0), then \c *this is left unchanged.
+        -:  141:  *
+        -:  142:  * \sa norm(), normalized()
+        -:  143:  */
+        -:  144:template<typename Derived>
+        -:  145:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void MatrixBase<Derived>::normalize()
+        -:  146:{
+        -:  147:  RealScalar z = squaredNorm();
+        -:  148:  // NOTE: after extensive benchmarking, this conditional does not impact performance, at least on recent x86 CPU
+        -:  149:  if(z>RealScalar(0))
+        -:  150:    derived() /= numext::sqrt(z);
+        -:  151:}
+        -:  152:
+        -:  153:/** \returns an expression of the quotient of \c *this by its own norm while avoiding underflow and overflow.
+        -:  154:  *
+        -:  155:  * \only_for_vectors
+        -:  156:  *
+        -:  157:  * This method is analogue to the normalized() method, but it reduces the risk of
+        -:  158:  * underflow and overflow when computing the norm.
+        -:  159:  *
+        -:  160:  * \warning If the input vector is too small (i.e., this->norm()==0),
+        -:  161:  *          then this function returns a copy of the input.
+        -:  162:  *
+        -:  163:  * \sa stableNorm(), stableNormalize(), normalized()
+        -:  164:  */
+        -:  165:template<typename Derived>
+        -:  166:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const typename MatrixBase<Derived>::PlainObject
+        -:  167:MatrixBase<Derived>::stableNormalized() const
+        -:  168:{
+        -:  169:  typedef typename internal::nested_eval<Derived,3>::type _Nested;
+        -:  170:  _Nested n(derived());
+        -:  171:  RealScalar w = n.cwiseAbs().maxCoeff();
+        -:  172:  RealScalar z = (n/w).squaredNorm();
+        -:  173:  if(z>RealScalar(0))
+        -:  174:    return n / (numext::sqrt(z)*w);
+        -:  175:  else
+        -:  176:    return n;
+        -:  177:}
+        -:  178:
+        -:  179:/** Normalizes the vector while avoid underflow and overflow
+        -:  180:  *
+        -:  181:  * \only_for_vectors
+        -:  182:  *
+        -:  183:  * This method is analogue to the normalize() method, but it reduces the risk of
+        -:  184:  * underflow and overflow when computing the norm.
+        -:  185:  *
+        -:  186:  * \warning If the input vector is too small (i.e., this->norm()==0), then \c *this is left unchanged.
+        -:  187:  *
+        -:  188:  * \sa stableNorm(), stableNormalized(), normalize()
+        -:  189:  */
+        -:  190:template<typename Derived>
+        -:  191:EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void MatrixBase<Derived>::stableNormalize()
+        -:  192:{
+        -:  193:  RealScalar w = cwiseAbs().maxCoeff();
+        -:  194:  RealScalar z = (derived()/w).squaredNorm();
+        -:  195:  if(z>RealScalar(0))
+        -:  196:    derived() /= numext::sqrt(z)*w;
+        -:  197:}
+        -:  198:
+        -:  199://---------- implementation of other norms ----------
+        -:  200:
+        -:  201:namespace internal {
+        -:  202:
+        -:  203:template<typename Derived, int p>
+        -:  204:struct lpNorm_selector
+        -:  205:{
+        -:  206:  typedef typename NumTraits<typename traits<Derived>::Scalar>::Real RealScalar;
+        -:  207:  EIGEN_DEVICE_FUNC
+        -:  208:  static inline RealScalar run(const MatrixBase<Derived>& m)
+        -:  209:  {
+        -:  210:    EIGEN_USING_STD(pow)
+        -:  211:    return pow(m.cwiseAbs().array().pow(p).sum(), RealScalar(1)/p);
+        -:  212:  }
+        -:  213:};
+        -:  214:
+        -:  215:template<typename Derived>
+        -:  216:struct lpNorm_selector<Derived, 1>
+        -:  217:{
+        -:  218:  EIGEN_DEVICE_FUNC
+        -:  219:  static inline typename NumTraits<typename traits<Derived>::Scalar>::Real run(const MatrixBase<Derived>& m)
+        -:  220:  {
+        -:  221:    return m.cwiseAbs().sum();
+        -:  222:  }
+        -:  223:};
+        -:  224:
+        -:  225:template<typename Derived>
+        -:  226:struct lpNorm_selector<Derived, 2>
+        -:  227:{
+        -:  228:  EIGEN_DEVICE_FUNC
+        -:  229:  static inline typename NumTraits<typename traits<Derived>::Scalar>::Real run(const MatrixBase<Derived>& m)
+        -:  230:  {
+        -:  231:    return m.norm();
+        -:  232:  }
+        -:  233:};
+        -:  234:
+        -:  235:template<typename Derived>
+        -:  236:struct lpNorm_selector<Derived, Infinity>
+        -:  237:{
+        -:  238:  typedef typename NumTraits<typename traits<Derived>::Scalar>::Real RealScalar;
+        -:  239:  EIGEN_DEVICE_FUNC
+        -:  240:  static inline RealScalar run(const MatrixBase<Derived>& m)
+        -:  241:  {
+        -:  242:    if(Derived::SizeAtCompileTime==0 || (Derived::SizeAtCompileTime==Dynamic && m.size()==0))
+        -:  243:      return RealScalar(0);
+        -:  244:    return m.cwiseAbs().maxCoeff();
+        -:  245:  }
+        -:  246:};
+        -:  247:
+        -:  248:} // end namespace internal
+        -:  249:
+        -:  250:/** \returns the \b coefficient-wise \f$ \ell^p \f$ norm of \c *this, that is, returns the p-th root of the sum of the p-th powers of the absolute values
+        -:  251:  *          of the coefficients of \c *this. If \a p is the special value \a Eigen::Infinity, this function returns the \f$ \ell^\infty \f$
+        -:  252:  *          norm, that is the maximum of the absolute values of the coefficients of \c *this.
+        -:  253:  *
+        -:  254:  * In all cases, if \c *this is empty, then the value 0 is returned.
+        -:  255:  *
+        -:  256:  * \note For matrices, this function does not compute the <a href="https://en.wikipedia.org/wiki/Operator_norm">operator-norm</a>. That is, if \c *this is a matrix, then its coefficients are interpreted as a 1D vector. Nonetheless, you can easily compute the 1-norm and \f$\infty\f$-norm matrix operator norms using \link TutorialReductionsVisitorsBroadcastingReductionsNorm partial reductions \endlink.
+        -:  257:  *
+        -:  258:  * \sa norm()
+        -:  259:  */
+        -:  260:template<typename Derived>
+        -:  261:template<int p>
+        -:  262:#ifndef EIGEN_PARSED_BY_DOXYGEN
+        -:  263:EIGEN_DEVICE_FUNC inline typename NumTraits<typename internal::traits<Derived>::Scalar>::Real
+        -:  264:#else
+        -:  265:EIGEN_DEVICE_FUNC MatrixBase<Derived>::RealScalar
+        -:  266:#endif
+        -:  267:MatrixBase<Derived>::lpNorm() const
+        -:  268:{
+        -:  269:  return internal::lpNorm_selector<Derived, p>::run(*this);
+        -:  270:}
+        -:  271:
+        -:  272://---------- implementation of isOrthogonal / isUnitary ----------
+        -:  273:
+        -:  274:/** \returns true if *this is approximately orthogonal to \a other,
+        -:  275:  *          within the precision given by \a prec.
+        -:  276:  *
+        -:  277:  * Example: \include MatrixBase_isOrthogonal.cpp
+        -:  278:  * Output: \verbinclude MatrixBase_isOrthogonal.out
+        -:  279:  */
+        -:  280:template<typename Derived>
+        -:  281:template<typename OtherDerived>
+        -:  282:bool MatrixBase<Derived>::isOrthogonal
+        -:  283:(const MatrixBase<OtherDerived>& other, const RealScalar& prec) const
+        -:  284:{
+        -:  285:  typename internal::nested_eval<Derived,2>::type nested(derived());
+        -:  286:  typename internal::nested_eval<OtherDerived,2>::type otherNested(other.derived());
+        -:  287:  return numext::abs2(nested.dot(otherNested)) <= prec * prec * nested.squaredNorm() * otherNested.squaredNorm();
+        -:  288:}
+        -:  289:
+        -:  290:/** \returns true if *this is approximately an unitary matrix,
+        -:  291:  *          within the precision given by \a prec. In the case where the \a Scalar
+        -:  292:  *          type is real numbers, a unitary matrix is an orthogonal matrix, whence the name.
+        -:  293:  *
+        -:  294:  * \note This can be used to check whether a family of vectors forms an orthonormal basis.
+        -:  295:  *       Indeed, \c m.isUnitary() returns true if and only if the columns (equivalently, the rows) of m form an
+        -:  296:  *       orthonormal basis.
+        -:  297:  *
+        -:  298:  * Example: \include MatrixBase_isUnitary.cpp
+        -:  299:  * Output: \verbinclude MatrixBase_isUnitary.out
+        -:  300:  */
+        -:  301:template<typename Derived>
+        -:  302:bool MatrixBase<Derived>::isUnitary(const RealScalar& prec) const
+        -:  303:{
+        -:  304:  typename internal::nested_eval<Derived,1>::type self(derived());
+        -:  305:  for(Index i = 0; i < cols(); ++i)
+        -:  306:  {
+        -:  307:    if(!internal::isApprox(self.col(i).squaredNorm(), static_cast<RealScalar>(1), prec))
+        -:  308:      return false;
+        -:  309:    for(Index j = 0; j < i; ++j)
+        -:  310:      if(!internal::isMuchSmallerThan(self.col(i).dot(self.col(j)), static_cast<Scalar>(1), prec))
+        -:  311:        return false;
+        -:  312:  }
+        -:  313:  return true;
+        -:  314:}
+        -:  315:
+        -:  316:} // end namespace Eigen
+        -:  317:
+        -:  318:#endif // EIGEN_DOT_H

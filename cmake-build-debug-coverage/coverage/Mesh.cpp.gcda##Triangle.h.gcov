@@ -1,0 +1,52 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/geometry/Triangle.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Mesh.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/geometry/Mesh.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 11.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#pragma once
+        -:    6:
+        -:    7:#include <optional>
+        -:    8:#include <ostream>
+        -:    9:
+        -:   10:#include "../common/MyVector3.h"
+        -:   11:#include "Plane.h"
+        -:   12:#include "Surface.h"
+        -:   13:
+    #####:   14:class Triangle : public Surface {
+    %%%%%:   14-block  0
+        -:   15:private:
+        -:   16:    MyVector3 t1, t2, t3;
+        -:   17:    MyVector3 tu, tv, tw;
+        -:   18:
+        -:   19:    Plane plane;
+        -:   20:
+        -:   21:    bool includes (const MyVector3& vector) const;
+        -:   22:    bool check_bounds (const MyVector3& vector) const;
+        -:   23:public:
+        -:   24:    Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material, const MyVector3& texture1, const MyVector3& texture2, const MyVector3& texture3);
+        -:   25:    Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material);
+        -:   26:    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
+        -:   27:
+        -:   28:    MyVector3 getNormalAt (const MyVector3& position) const override;
+        -:   29:    MyVector3 getUVAt (const MyVector3& position) const override;
+        -:   30:
+        -:   31:    AABB getBoundingBox () const override;
+        -:   32:
+        -:   33:    const Material* getMaterial () const override;
+        -:   34:
+        -:   35:    friend std::ostream& operator<< (std::ostream& os, const Triangle& triangle);
+        -:   36:
+        -:   37:};
+        -:   38:
+        -:   39:
+        -:   40://extern const double PRECISION_LIMIT = 0.001;
+        -:   41://
+        -:   42://int main () {
+        -:   43://    Triangle triangle = {MyVector3{-5, 6, 5}, {0, 0, 3}, {5, 6, 3}};
+        -:   44://    std::cout << triangle.getUVAt({4.01, 5.46, 3.11}) << std::endl;
+        -:   45://    std::cout << triangle.getUVAt({-1.95, 2.72, 3.84}) << std::endl;
+        -:   46:////    std::cout << "done" << std::endl;
+        -:   47://}

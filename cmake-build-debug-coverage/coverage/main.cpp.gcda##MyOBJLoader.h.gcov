@@ -1,0 +1,222 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/interface/MyOBJLoader.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/main.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/main.cpp.gcda
+        -:    0:Runs:1
+        -:    1:#pragma once
+        -:    2:
+        -:    3:#include <memory>
+        -:    4:
+        -:    5:#include "../../../lib/obj-loader/OBJ_Loader.h"
+        -:    6:#include "../engine/Scene.h"
+        -:    7:#include "../common/MyVector3.h"
+        -:    8:#include "../engine/SolidTexture.h"
+        -:    9:#include "../geometry/BVH.h"
+        -:   10:#include "../geometry/Objects.h"
+        -:   11:
+        -:   12:namespace MyOBJLoader {
+function _ZN11MyOBJLoader11toMyVector3ERKN4objl7Vector3E called 0 returned 0% blocks executed 0%
+    #####:   13:    MyVector3 toMyVector3(const objl::Vector3& shittyvector) {
+    4512*:   14:        return {shittyvector.X, shittyvector.Y, shittyvector.Z};
+     2256:   14-block  0
+call    0 returned 2256
+branch  1 taken 2256 (fallthrough)
+branch  2 taken 0 (throw)
+     2256:   14-block  1
+call    3 returned 2256
+branch  4 taken 2256 (fallthrough)
+branch  5 taken 0 (throw)
+        -:   15:    }
+        -:   16:
+function _ZN11MyOBJLoader11toMyVector3ERKN4objl7Vector2E called 0 returned 0% blocks executed 0%
+    #####:   17:    MyVector3 toMyVector3(const objl::Vector2& shittyvector) {
+    2256*:   18:        return {shittyvector.X, shittyvector.Y, 0};
+        -:   19:    }
+        -:   20:
+function _ZN11MyOBJLoader7readOBJERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE9MyVector3St4pairIddEPK8Material called 1 returned 100% blocks executed 66%
+        1:   21:    std::shared_ptr<Surface> readOBJ (const std::string& path, MyVector3 positionOffset, std::pair<double, double> rotationOffset, const Material* material) {
+        1:   21-block  0
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:   22:        objl::Loader loader;
+call    0 returned 1
+        1:   23:        bool success = loader.LoadFile(path);
+        1:   23-block  0
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+    $$$$$:   23-block  1
+call    3 never executed
+       1*:   24:        if (!success) throw std::runtime_error("Couldn't read obj file!");
+        1:   24-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+    %%%%%:   24-block  1
+call    2 never executed
+call    3 never executed
+branch  4 never executed
+branch  5 never executed
+    %%%%%:   24-block  2
+call    6 never executed
+    $$$$$:   24-block  3
+call    7 never executed
+        -:   25:
+        1:   26:        for (int i = 0; i < loader.LoadedMeshes.size(); i++)
+        1:   26-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        -:   27:        {
+        2:   28:            objl::Mesh curMesh = loader.LoadedMeshes[i];
+        1:   28-block  0
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 1
+    $$$$$:   28-block  1
+call    4 never executed
+        -:   29:
+        -:   30:
+        2:   31:            std::cout << "Mesh " << i << ": " << curMesh.MeshName << "\n";
+        1:   31-block  0
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:   31-block  1
+call    3 returned 1
+branch  4 taken 1 (fallthrough)
+branch  5 taken 0 (throw)
+        -:   32:
+        -:   33:            std::cout << curMesh.MeshMaterial.map_Kd << std::endl;
+        -:   34:
+        -:   35://            auto color = Material{std::make_shared<ImageTexture>("../res/texture3.png")};
+        1:   36:            std::vector<std::shared_ptr<Surface>> objects;
+        -:   37:
+     2257:   38:            for (int j = 0; j < curMesh.Indices.size(); j += 3) {
+     2257:   38-block  0
+branch  0 taken 2256 (fallthrough)
+branch  1 taken 1
+     2256:   38-block  1
+        -:   39://                auto minimum = toMyVector3()
+        -:   40:
+     2256:   41:                double index1 = curMesh.Indices[j + 0];
+     2256:   42:                double index2 = curMesh.Indices[j + 1];
+     2256:   43:                double index3 = curMesh.Indices[j + 2];
+        -:   44:
+     2256:   45:                objl::Vertex& vertex1 = curMesh.Vertices[index1];
+     2256:   46:                objl::Vertex& vertex2 = curMesh.Vertices[index2];
+     2256:   47:                objl::Vertex& vertex3 = curMesh.Vertices[index3];
+        -:   48:
+        -:   49://                std::cout << Triangle{toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position)} << std::endl;
+        -:   50:
+     2256:   51:                std::shared_ptr<Surface> t;
+     2256:   51-block  0
+call    0 returned 2256
+branch  1 taken 2256 (fallthrough)
+branch  2 taken 0 (throw)
+     2256:   52:                t = std::make_shared<Triangle>(toMyVector3(vertex1.Position).rotate(rotationOffset.first, rotationOffset.second) + positionOffset, toMyVector3(vertex2.Position).rotate(rotationOffset.first, rotationOffset.second) + positionOffset, toMyVector3(vertex3.Position).rotate(rotationOffset.first, rotationOffset.second) + positionOffset, material,
+     2256:   52-block  0
+call    0 returned 2256
+branch  1 taken 2256 (fallthrough)
+branch  2 taken 0 (throw)
+     2256:   52-block  1
+call    3 returned 2256
+branch  4 taken 2256 (fallthrough)
+branch  5 taken 0 (throw)
+     2256:   52-block  2
+call    6 returned 2256
+branch  7 taken 2256 (fallthrough)
+branch  8 taken 0 (throw)
+     2256:   52-block  3
+call    9 returned 2256
+branch 10 taken 2256 (fallthrough)
+branch 11 taken 0 (throw)
+     2256:   52-block  4
+call   12 returned 2256
+branch 13 taken 2256 (fallthrough)
+branch 14 taken 0 (throw)
+     2256:   52-block  5
+call   15 returned 2256
+branch 16 taken 2256 (fallthrough)
+branch 17 taken 0 (throw)
+     2256:   53:                                               toMyVector3(vertex1.TextureCoordinate), toMyVector3(vertex2.TextureCoordinate), toMyVector3(vertex3.TextureCoordinate));
+     2256:   53-block  0
+call    0 returned 2256
+branch  1 taken 2256 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   54:
+     2256:   55:                std::cout << t->getMaterial()->get_albedo_at({0.5, 0.5, 0}) << std::endl;
+     2256:   55-block  0
+call    0 returned 2256
+branch  1 taken 2256 (fallthrough)
+branch  2 taken 0 (throw)
+     2256:   55-block  1
+call    3 returned 2256
+branch  4 taken 2256 (fallthrough)
+branch  5 taken 0 (throw)
+     2256:   55-block  2
+call    6 returned 2256
+branch  7 taken 2256 (fallthrough)
+branch  8 taken 0 (throw)
+    $$$$$:   55-block  3
+branch  9 never executed
+branch 10 never executed
+     2256:   56:                objects.push_back(t);
+     2256:   56-block  0
+call    0 returned 2256
+branch  1 taken 2256 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   57:
+        -:   58://            std::cout <<
+        -:   59://            std::cout << "T" << j / 3 << ": " << curMesh.Indices[j] << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
+        -:   60:            }
+        -:   61:
+        -:   62:
+        -:   63:
+        -:   64:
+        -:   65:
+        -:   66:            Camera camera = {
+        -:   67:                    {0, -3, 2},
+        -:   68:                    {0, M_PI / 10},
+        -:   69:                    0.4,
+        -:   70:                    {1, 1,},
+        -:   71:                    {500, 500}
+        1:   72:            };
+        1:   72-block  0
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:   72-block  1
+call    3 returned 1
+branch  4 taken 1 (fallthrough)
+branch  5 taken 0 (throw)
+    $$$$$:   72-block  2
+call    6 never executed
+        -:   73:
+        -:   74:            std::cout << objects.size() << std::endl;
+        1:   75:            std::cout << *objects[0]->getMaterial() << std::endl;
+        1:   75-block  0
+call    0 returned 1
+branch  1 taken 1 (fallthrough)
+branch  2 taken 0 (throw)
+        1:   75-block  1
+call    3 returned 1
+branch  4 taken 1 (fallthrough)
+branch  5 taken 0 (throw)
+        -:   76:
+        2:   77:            return std::make_shared<BVHNode>(objects);
+        1:   77-block  0
+call    0 returned 1
+        -:   78://            return std::make_shared<Objects>(objects);
+        -:   79:        }
+    #####:   80:        throw std::runtime_error("Lol nope");
+    %%%%%:   80-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+    %%%%%:   80-block  1
+call    4 never executed
+    $$$$$:   80-block  2
+call    5 never executed
+        -:   81:    }
+        -:   82:}

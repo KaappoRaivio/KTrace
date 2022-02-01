@@ -1,0 +1,583 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/lib/Eigen/src/Householder/HouseholderSequence.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcda
+        -:    0:Runs:1
+        -:    1:// This file is part of Eigen, a lightweight C++ template library
+        -:    2:// for linear algebra.
+        -:    3://
+        -:    4:// Copyright (C) 2009 Gael Guennebaud <gael.guennebaud@inria.fr>
+        -:    5:// Copyright (C) 2010 Benoit Jacob <jacob.benoit.1@gmail.com>
+        -:    6://
+        -:    7:// This Source Code Form is subject to the terms of the Mozilla
+        -:    8:// Public License v. 2.0. If a copy of the MPL was not distributed
+        -:    9:// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        -:   10:
+        -:   11:#ifndef EIGEN_HOUSEHOLDER_SEQUENCE_H
+        -:   12:#define EIGEN_HOUSEHOLDER_SEQUENCE_H
+        -:   13:
+        -:   14:namespace Eigen {
+        -:   15:
+        -:   16:/** \ingroup Householder_Module
+        -:   17:  * \householder_module
+        -:   18:  * \class HouseholderSequence
+        -:   19:  * \brief Sequence of Householder reflections acting on subspaces with decreasing size
+        -:   20:  * \tparam VectorsType type of matrix containing the Householder vectors
+        -:   21:  * \tparam CoeffsType  type of vector containing the Householder coefficients
+        -:   22:  * \tparam Side        either OnTheLeft (the default) or OnTheRight
+        -:   23:  *
+        -:   24:  * This class represents a product sequence of Householder reflections where the first Householder reflection
+        -:   25:  * acts on the whole space, the second Householder reflection leaves the one-dimensional subspace spanned by
+        -:   26:  * the first unit vector invariant, the third Householder reflection leaves the two-dimensional subspace
+        -:   27:  * spanned by the first two unit vectors invariant, and so on up to the last reflection which leaves all but
+        -:   28:  * one dimensions invariant and acts only on the last dimension. Such sequences of Householder reflections
+        -:   29:  * are used in several algorithms to zero out certain parts of a matrix. Indeed, the methods
+        -:   30:  * HessenbergDecomposition::matrixQ(), Tridiagonalization::matrixQ(), HouseholderQR::householderQ(),
+        -:   31:  * and ColPivHouseholderQR::householderQ() all return a %HouseholderSequence.
+        -:   32:  *
+        -:   33:  * More precisely, the class %HouseholderSequence represents an \f$ n \times n \f$ matrix \f$ H \f$ of the
+        -:   34:  * form \f$ H = \prod_{i=0}^{n-1} H_i \f$ where the i-th Householder reflection is \f$ H_i = I - h_i v_i
+        -:   35:  * v_i^* \f$. The i-th Householder coefficient \f$ h_i \f$ is a scalar and the i-th Householder vector \f$
+        -:   36:  * v_i \f$ is a vector of the form
+        -:   37:  * \f[
+        -:   38:  * v_i = [\underbrace{0, \ldots, 0}_{i-1\mbox{ zeros}}, 1, \underbrace{*, \ldots,*}_{n-i\mbox{ arbitrary entries}} ].
+        -:   39:  * \f]
+        -:   40:  * The last \f$ n-i \f$ entries of \f$ v_i \f$ are called the essential part of the Householder vector.
+        -:   41:  *
+        -:   42:  * Typical usages are listed below, where H is a HouseholderSequence:
+        -:   43:  * \code
+        -:   44:  * A.applyOnTheRight(H);             // A = A * H
+        -:   45:  * A.applyOnTheLeft(H);              // A = H * A
+        -:   46:  * A.applyOnTheRight(H.adjoint());   // A = A * H^*
+        -:   47:  * A.applyOnTheLeft(H.adjoint());    // A = H^* * A
+        -:   48:  * MatrixXd Q = H;                   // conversion to a dense matrix
+        -:   49:  * \endcode
+        -:   50:  * In addition to the adjoint, you can also apply the inverse (=adjoint), the transpose, and the conjugate operators.
+        -:   51:  *
+        -:   52:  * See the documentation for HouseholderSequence(const VectorsType&, const CoeffsType&) for an example.
+        -:   53:  *
+        -:   54:  * \sa MatrixBase::applyOnTheLeft(), MatrixBase::applyOnTheRight()
+        -:   55:  */
+        -:   56:
+        -:   57:namespace internal {
+        -:   58:
+        -:   59:template<typename VectorsType, typename CoeffsType, int Side>
+        -:   60:struct traits<HouseholderSequence<VectorsType,CoeffsType,Side> >
+        -:   61:{
+        -:   62:  typedef typename VectorsType::Scalar Scalar;
+        -:   63:  typedef typename VectorsType::StorageIndex StorageIndex;
+        -:   64:  typedef typename VectorsType::StorageKind StorageKind;
+        -:   65:  enum {
+        -:   66:    RowsAtCompileTime = Side==OnTheLeft ? traits<VectorsType>::RowsAtCompileTime
+        -:   67:                                        : traits<VectorsType>::ColsAtCompileTime,
+        -:   68:    ColsAtCompileTime = RowsAtCompileTime,
+        -:   69:    MaxRowsAtCompileTime = Side==OnTheLeft ? traits<VectorsType>::MaxRowsAtCompileTime
+        -:   70:                                           : traits<VectorsType>::MaxColsAtCompileTime,
+        -:   71:    MaxColsAtCompileTime = MaxRowsAtCompileTime,
+        -:   72:    Flags = 0
+        -:   73:  };
+        -:   74:};
+        -:   75:
+        -:   76:struct HouseholderSequenceShape {};
+        -:   77:
+        -:   78:template<typename VectorsType, typename CoeffsType, int Side>
+        -:   79:struct evaluator_traits<HouseholderSequence<VectorsType,CoeffsType,Side> >
+        -:   80:  : public evaluator_traits_base<HouseholderSequence<VectorsType,CoeffsType,Side> >
+        -:   81:{
+        -:   82:  typedef HouseholderSequenceShape Shape;
+        -:   83:};
+        -:   84:
+        -:   85:template<typename VectorsType, typename CoeffsType, int Side>
+        -:   86:struct hseq_side_dependent_impl
+        -:   87:{
+        -:   88:  typedef Block<const VectorsType, Dynamic, 1> EssentialVectorType;
+        -:   89:  typedef HouseholderSequence<VectorsType, CoeffsType, OnTheLeft> HouseholderSequenceType;
+        -:   90:  static EIGEN_DEVICE_FUNC inline const EssentialVectorType essentialVector(const HouseholderSequenceType& h, Index k)
+        -:   91:  {
+    #####:   92:    Index start = k+1+h.m_shift;
+    #####:   93:    return Block<const VectorsType,Dynamic,1>(h.m_vectors, start, k, h.rows()-start, 1);
+    %%%%%:   93-block  0
+call    0 never executed
+        -:   94:  }
+        -:   95:};
+        -:   96:
+        -:   97:template<typename VectorsType, typename CoeffsType>
+        -:   98:struct hseq_side_dependent_impl<VectorsType, CoeffsType, OnTheRight>
+        -:   99:{
+        -:  100:  typedef Transpose<Block<const VectorsType, 1, Dynamic> > EssentialVectorType;
+        -:  101:  typedef HouseholderSequence<VectorsType, CoeffsType, OnTheRight> HouseholderSequenceType;
+        -:  102:  static inline const EssentialVectorType essentialVector(const HouseholderSequenceType& h, Index k)
+        -:  103:  {
+        -:  104:    Index start = k+1+h.m_shift;
+        -:  105:    return Block<const VectorsType,1,Dynamic>(h.m_vectors, k, start, 1, h.rows()-start).transpose();
+        -:  106:  }
+        -:  107:};
+        -:  108:
+        -:  109:template<typename OtherScalarType, typename MatrixType> struct matrix_type_times_scalar_type
+        -:  110:{
+        -:  111:  typedef typename ScalarBinaryOpTraits<OtherScalarType, typename MatrixType::Scalar>::ReturnType
+        -:  112:    ResultScalar;
+        -:  113:  typedef Matrix<ResultScalar, MatrixType::RowsAtCompileTime, MatrixType::ColsAtCompileTime,
+        -:  114:                 0, MatrixType::MaxRowsAtCompileTime, MatrixType::MaxColsAtCompileTime> Type;
+        -:  115:};
+        -:  116:
+        -:  117:} // end namespace internal
+        -:  118:
+        -:  119:template<typename VectorsType, typename CoeffsType, int Side> class HouseholderSequence
+        -:  120:  : public EigenBase<HouseholderSequence<VectorsType,CoeffsType,Side> >
+        -:  121:{
+        -:  122:    typedef typename internal::hseq_side_dependent_impl<VectorsType,CoeffsType,Side>::EssentialVectorType EssentialVectorType;
+        -:  123:
+        -:  124:  public:
+        -:  125:    enum {
+        -:  126:      RowsAtCompileTime = internal::traits<HouseholderSequence>::RowsAtCompileTime,
+        -:  127:      ColsAtCompileTime = internal::traits<HouseholderSequence>::ColsAtCompileTime,
+        -:  128:      MaxRowsAtCompileTime = internal::traits<HouseholderSequence>::MaxRowsAtCompileTime,
+        -:  129:      MaxColsAtCompileTime = internal::traits<HouseholderSequence>::MaxColsAtCompileTime
+        -:  130:    };
+        -:  131:    typedef typename internal::traits<HouseholderSequence>::Scalar Scalar;
+        -:  132:
+        -:  133:    typedef HouseholderSequence<
+        -:  134:      typename internal::conditional<NumTraits<Scalar>::IsComplex,
+        -:  135:        typename internal::remove_all<typename VectorsType::ConjugateReturnType>::type,
+        -:  136:        VectorsType>::type,
+        -:  137:      typename internal::conditional<NumTraits<Scalar>::IsComplex,
+        -:  138:        typename internal::remove_all<typename CoeffsType::ConjugateReturnType>::type,
+        -:  139:        CoeffsType>::type,
+        -:  140:      Side
+        -:  141:    > ConjugateReturnType;
+        -:  142:
+        -:  143:    typedef HouseholderSequence<
+        -:  144:      VectorsType,
+        -:  145:      typename internal::conditional<NumTraits<Scalar>::IsComplex,
+        -:  146:        typename internal::remove_all<typename CoeffsType::ConjugateReturnType>::type,
+        -:  147:        CoeffsType>::type,
+        -:  148:      Side
+        -:  149:    > AdjointReturnType;
+        -:  150:
+        -:  151:    typedef HouseholderSequence<
+        -:  152:      typename internal::conditional<NumTraits<Scalar>::IsComplex,
+        -:  153:        typename internal::remove_all<typename VectorsType::ConjugateReturnType>::type,
+        -:  154:        VectorsType>::type,
+        -:  155:      CoeffsType,
+        -:  156:      Side
+        -:  157:    > TransposeReturnType;
+        -:  158:
+        -:  159:    typedef HouseholderSequence<
+        -:  160:      typename internal::add_const<VectorsType>::type,
+        -:  161:      typename internal::add_const<CoeffsType>::type,
+        -:  162:      Side
+        -:  163:    > ConstHouseholderSequence;
+        -:  164:
+        -:  165:    /** \brief Constructor.
+        -:  166:      * \param[in]  v      %Matrix containing the essential parts of the Householder vectors
+        -:  167:      * \param[in]  h      Vector containing the Householder coefficients
+        -:  168:      *
+        -:  169:      * Constructs the Householder sequence with coefficients given by \p h and vectors given by \p v. The
+        -:  170:      * i-th Householder coefficient \f$ h_i \f$ is given by \p h(i) and the essential part of the i-th
+        -:  171:      * Householder vector \f$ v_i \f$ is given by \p v(k,i) with \p k > \p i (the subdiagonal part of the
+        -:  172:      * i-th column). If \p v has fewer columns than rows, then the Householder sequence contains as many
+        -:  173:      * Householder reflections as there are columns.
+        -:  174:      *
+        -:  175:      * \note The %HouseholderSequence object stores \p v and \p h by reference.
+        -:  176:      *
+        -:  177:      * Example: \include HouseholderSequence_HouseholderSequence.cpp
+        -:  178:      * Output: \verbinclude HouseholderSequence_HouseholderSequence.out
+        -:  179:      *
+        -:  180:      * \sa setLength(), setShift()
+        -:  181:      */
+        -:  182:    EIGEN_DEVICE_FUNC
+        -:  183:    HouseholderSequence(const VectorsType& v, const CoeffsType& h)
+        -:  184:      : m_vectors(v), m_coeffs(h), m_reverse(false), m_length(v.diagonalSize()),
+        -:  185:        m_shift(0)
+        -:  186:    {
+        -:  187:    }
+        -:  188:
+        -:  189:    /** \brief Copy constructor. */
+        -:  190:    EIGEN_DEVICE_FUNC
+        -:  191:    HouseholderSequence(const HouseholderSequence& other)
+        -:  192:      : m_vectors(other.m_vectors),
+        -:  193:        m_coeffs(other.m_coeffs),
+        -:  194:        m_reverse(other.m_reverse),
+        -:  195:        m_length(other.m_length),
+    #####:  196:        m_shift(other.m_shift)
+    %%%%%:  196-block  0
+call    0 never executed
+        -:  197:    {
+        -:  198:    }
+        -:  199:
+        -:  200:    /** \brief Number of rows of transformation viewed as a matrix.
+        -:  201:      * \returns Number of rows
+        -:  202:      * \details This equals the dimension of the space that the transformation acts on.
+        -:  203:      */
+        -:  204:    EIGEN_DEVICE_FUNC EIGEN_CONSTEXPR
+        -:  205:    Index rows() const EIGEN_NOEXCEPT { return Side==OnTheLeft ? m_vectors.rows() : m_vectors.cols(); }
+        -:  206:
+        -:  207:    /** \brief Number of columns of transformation viewed as a matrix.
+        -:  208:      * \returns Number of columns
+        -:  209:      * \details This equals the dimension of the space that the transformation acts on.
+        -:  210:      */
+        -:  211:    EIGEN_DEVICE_FUNC EIGEN_CONSTEXPR
+        -:  212:    Index cols() const EIGEN_NOEXCEPT { return rows(); }
+        -:  213:
+        -:  214:    /** \brief Essential part of a Householder vector.
+        -:  215:      * \param[in]  k  Index of Householder reflection
+        -:  216:      * \returns    Vector containing non-trivial entries of k-th Householder vector
+        -:  217:      *
+        -:  218:      * This function returns the essential part of the Householder vector \f$ v_i \f$. This is a vector of
+        -:  219:      * length \f$ n-i \f$ containing the last \f$ n-i \f$ entries of the vector
+        -:  220:      * \f[
+        -:  221:      * v_i = [\underbrace{0, \ldots, 0}_{i-1\mbox{ zeros}}, 1, \underbrace{*, \ldots,*}_{n-i\mbox{ arbitrary entries}} ].
+        -:  222:      * \f]
+        -:  223:      * The index \f$ i \f$ equals \p k + shift(), corresponding to the k-th column of the matrix \p v
+        -:  224:      * passed to the constructor.
+        -:  225:      *
+        -:  226:      * \sa setShift(), shift()
+        -:  227:      */
+        -:  228:    EIGEN_DEVICE_FUNC
+function _ZNK5Eigen19HouseholderSequenceINS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEENS1_IdLi3ELi1ELi0ELi3ELi1EEELi1EE15essentialVectorEl called 0 returned 0% blocks executed 0%
+    #####:  229:    const EssentialVectorType essentialVector(Index k) const
+        -:  230:    {
+    #####:  231:      eigen_assert(k >= 0 && k < m_length);
+    %%%%%:  231-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  231-block  1
+branch  2 never executed
+branch  3 never executed
+    %%%%%:  231-block  2
+call    4 never executed
+    #####:  232:      return internal::hseq_side_dependent_impl<VectorsType,CoeffsType,Side>::essentialVector(*this, k);
+        -:  233:    }
+        -:  234:
+        -:  235:    /** \brief %Transpose of the Householder sequence. */
+        -:  236:    TransposeReturnType transpose() const
+        -:  237:    {
+        -:  238:      return TransposeReturnType(m_vectors.conjugate(), m_coeffs)
+        -:  239:              .setReverseFlag(!m_reverse)
+        -:  240:              .setLength(m_length)
+        -:  241:              .setShift(m_shift);
+        -:  242:    }
+        -:  243:
+        -:  244:    /** \brief Complex conjugate of the Householder sequence. */
+        -:  245:    ConjugateReturnType conjugate() const
+        -:  246:    {
+        -:  247:      return ConjugateReturnType(m_vectors.conjugate(), m_coeffs.conjugate())
+        -:  248:             .setReverseFlag(m_reverse)
+        -:  249:             .setLength(m_length)
+        -:  250:             .setShift(m_shift);
+        -:  251:    }
+        -:  252:
+        -:  253:    /** \returns an expression of the complex conjugate of \c *this if Cond==true,
+        -:  254:     *           returns \c *this otherwise.
+        -:  255:     */
+        -:  256:    template<bool Cond>
+        -:  257:    EIGEN_DEVICE_FUNC
+        -:  258:    inline typename internal::conditional<Cond,ConjugateReturnType,ConstHouseholderSequence>::type
+        -:  259:    conjugateIf() const
+        -:  260:    {
+        -:  261:      typedef typename internal::conditional<Cond,ConjugateReturnType,ConstHouseholderSequence>::type ReturnType;
+        -:  262:      return ReturnType(m_vectors.template conjugateIf<Cond>(), m_coeffs.template conjugateIf<Cond>());
+        -:  263:    }
+        -:  264:
+        -:  265:    /** \brief Adjoint (conjugate transpose) of the Householder sequence. */
+        -:  266:    AdjointReturnType adjoint() const
+        -:  267:    {
+        -:  268:      return AdjointReturnType(m_vectors, m_coeffs.conjugate())
+        -:  269:              .setReverseFlag(!m_reverse)
+        -:  270:              .setLength(m_length)
+        -:  271:              .setShift(m_shift);
+        -:  272:    }
+        -:  273:
+        -:  274:    /** \brief Inverse of the Householder sequence (equals the adjoint). */
+        -:  275:    AdjointReturnType inverse() const { return adjoint(); }
+        -:  276:
+        -:  277:    /** \internal */
+        -:  278:    template<typename DestType>
+        -:  279:    inline EIGEN_DEVICE_FUNC
+        -:  280:    void evalTo(DestType& dst) const
+        -:  281:    {
+        -:  282:      Matrix<Scalar, DestType::RowsAtCompileTime, 1,
+        -:  283:             AutoAlign|ColMajor, DestType::MaxRowsAtCompileTime, 1> workspace(rows());
+        -:  284:      evalTo(dst, workspace);
+        -:  285:    }
+        -:  286:
+        -:  287:    /** \internal */
+        -:  288:    template<typename Dest, typename Workspace>
+        -:  289:    EIGEN_DEVICE_FUNC
+        -:  290:    void evalTo(Dest& dst, Workspace& workspace) const
+        -:  291:    {
+        -:  292:      workspace.resize(rows());
+        -:  293:      Index vecs = m_length;
+        -:  294:      if(internal::is_same_dense(dst,m_vectors))
+        -:  295:      {
+        -:  296:        // in-place
+        -:  297:        dst.diagonal().setOnes();
+        -:  298:        dst.template triangularView<StrictlyUpper>().setZero();
+        -:  299:        for(Index k = vecs-1; k >= 0; --k)
+        -:  300:        {
+        -:  301:          Index cornerSize = rows() - k - m_shift;
+        -:  302:          if(m_reverse)
+        -:  303:            dst.bottomRightCorner(cornerSize, cornerSize)
+        -:  304:               .applyHouseholderOnTheRight(essentialVector(k), m_coeffs.coeff(k), workspace.data());
+        -:  305:          else
+        -:  306:            dst.bottomRightCorner(cornerSize, cornerSize)
+        -:  307:               .applyHouseholderOnTheLeft(essentialVector(k), m_coeffs.coeff(k), workspace.data());
+        -:  308:
+        -:  309:          // clear the off diagonal vector
+        -:  310:          dst.col(k).tail(rows()-k-1).setZero();
+        -:  311:        }
+        -:  312:        // clear the remaining columns if needed
+        -:  313:        for(Index k = 0; k<cols()-vecs ; ++k)
+        -:  314:          dst.col(k).tail(rows()-k-1).setZero();
+        -:  315:      }
+        -:  316:      else if(m_length>BlockSize)
+        -:  317:      {
+        -:  318:        dst.setIdentity(rows(), rows());
+        -:  319:        if(m_reverse)
+        -:  320:          applyThisOnTheLeft(dst,workspace,true);
+        -:  321:        else
+        -:  322:          applyThisOnTheLeft(dst,workspace,true);
+        -:  323:      }
+        -:  324:      else
+        -:  325:      {
+        -:  326:        dst.setIdentity(rows(), rows());
+        -:  327:        for(Index k = vecs-1; k >= 0; --k)
+        -:  328:        {
+        -:  329:          Index cornerSize = rows() - k - m_shift;
+        -:  330:          if(m_reverse)
+        -:  331:            dst.bottomRightCorner(cornerSize, cornerSize)
+        -:  332:               .applyHouseholderOnTheRight(essentialVector(k), m_coeffs.coeff(k), workspace.data());
+        -:  333:          else
+        -:  334:            dst.bottomRightCorner(cornerSize, cornerSize)
+        -:  335:               .applyHouseholderOnTheLeft(essentialVector(k), m_coeffs.coeff(k), workspace.data());
+        -:  336:        }
+        -:  337:      }
+        -:  338:    }
+        -:  339:
+        -:  340:    /** \internal */
+        -:  341:    template<typename Dest> inline void applyThisOnTheRight(Dest& dst) const
+        -:  342:    {
+        -:  343:      Matrix<Scalar,1,Dest::RowsAtCompileTime,RowMajor,1,Dest::MaxRowsAtCompileTime> workspace(dst.rows());
+        -:  344:      applyThisOnTheRight(dst, workspace);
+        -:  345:    }
+        -:  346:
+        -:  347:    /** \internal */
+        -:  348:    template<typename Dest, typename Workspace>
+        -:  349:    inline void applyThisOnTheRight(Dest& dst, Workspace& workspace) const
+        -:  350:    {
+        -:  351:      workspace.resize(dst.rows());
+        -:  352:      for(Index k = 0; k < m_length; ++k)
+        -:  353:      {
+        -:  354:        Index actual_k = m_reverse ? m_length-k-1 : k;
+        -:  355:        dst.rightCols(rows()-m_shift-actual_k)
+        -:  356:           .applyHouseholderOnTheRight(essentialVector(actual_k), m_coeffs.coeff(actual_k), workspace.data());
+        -:  357:      }
+        -:  358:    }
+        -:  359:
+        -:  360:    /** \internal */
+        -:  361:    template<typename Dest> inline void applyThisOnTheLeft(Dest& dst, bool inputIsIdentity = false) const
+        -:  362:    {
+        -:  363:      Matrix<Scalar,1,Dest::ColsAtCompileTime,RowMajor,1,Dest::MaxColsAtCompileTime> workspace;
+    #####:  364:      applyThisOnTheLeft(dst, workspace, inputIsIdentity);
+    %%%%%:  364-block  0
+call    0 never executed
+        -:  365:    }
+        -:  366:
+        -:  367:    /** \internal */
+        -:  368:    template<typename Dest, typename Workspace>
+function _ZNK5Eigen19HouseholderSequenceINS_6MatrixIdLi3ELi3ELi0ELi3ELi3EEENS1_IdLi3ELi1ELi0ELi3ELi1EEELi1EE18applyThisOnTheLeftIS3_NS1_IdLi1ELi1ELi1ELi1ELi1EEEEEvRT_RT0_b called 0 returned 0% blocks executed 0%
+    #####:  369:    inline void applyThisOnTheLeft(Dest& dst, Workspace& workspace, bool inputIsIdentity = false) const
+        -:  370:    {
+    #####:  371:      if(inputIsIdentity && m_reverse)
+    %%%%%:  371-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  371-block  1
+branch  2 never executed
+branch  3 never executed
+        -:  372:        inputIsIdentity = false;
+        -:  373:      // if the entries are large enough, then apply the reflectors by block
+        -:  374:      if(m_length>=BlockSize && dst.cols()>1)
+        -:  375:      {
+        -:  376:        // Make sure we have at least 2 useful blocks, otherwise it is point-less:
+        -:  377:        Index blockSize = m_length<Index(2*BlockSize) ? (m_length+1)/2 : Index(BlockSize);
+        -:  378:        for(Index i = 0; i < m_length; i+=blockSize)
+        -:  379:        {
+        -:  380:          Index end = m_reverse ? (std::min)(m_length,i+blockSize) : m_length-i;
+        -:  381:          Index k = m_reverse ? i : (std::max)(Index(0),end-blockSize);
+        -:  382:          Index bs = end-k;
+        -:  383:          Index start = k + m_shift;
+        -:  384:
+        -:  385:          typedef Block<typename internal::remove_all<VectorsType>::type,Dynamic,Dynamic> SubVectorsType;
+        -:  386:          SubVectorsType sub_vecs1(m_vectors.const_cast_derived(), Side==OnTheRight ? k : start,
+        -:  387:                                                                   Side==OnTheRight ? start : k,
+        -:  388:                                                                   Side==OnTheRight ? bs : m_vectors.rows()-start,
+        -:  389:                                                                   Side==OnTheRight ? m_vectors.cols()-start : bs);
+        -:  390:          typename internal::conditional<Side==OnTheRight, Transpose<SubVectorsType>, SubVectorsType&>::type sub_vecs(sub_vecs1);
+        -:  391:
+        -:  392:          Index dstStart = dst.rows()-rows()+m_shift+k;
+        -:  393:          Index dstRows  = rows()-m_shift-k;
+        -:  394:          Block<Dest,Dynamic,Dynamic> sub_dst(dst,
+        -:  395:                                              dstStart,
+        -:  396:                                              inputIsIdentity ? dstStart : 0,
+        -:  397:                                              dstRows,
+        -:  398:                                              inputIsIdentity ? dstRows : dst.cols());
+        -:  399:          apply_block_householder_on_the_left(sub_dst, sub_vecs, m_coeffs.segment(k, bs), !m_reverse);
+        -:  400:        }
+        -:  401:      }
+        -:  402:      else
+        -:  403:      {
+        -:  404:        workspace.resize(dst.cols());
+    #####:  405:        for(Index k = 0; k < m_length; ++k)
+    %%%%%:  405-block  0
+branch  0 never executed
+branch  1 never executed
+        -:  406:        {
+    #####:  407:          Index actual_k = m_reverse ? k : m_length-k-1;
+    %%%%%:  407-block  0
+branch  0 never executed
+branch  1 never executed
+    %%%%%:  407-block  1
+    #####:  408:          Index dstStart = rows()-m_shift-actual_k;
+    #####:  409:          dst.bottomRightCorner(dstStart, inputIsIdentity ? dstStart : dst.cols())
+    %%%%%:  409-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  410:            .applyHouseholderOnTheLeft(essentialVector(actual_k), m_coeffs.coeff(actual_k), workspace.data());
+call    0 never executed
+call    1 never executed
+        -:  411:        }
+        -:  412:      }
+    #####:  413:    }
+        -:  414:
+        -:  415:    /** \brief Computes the product of a Householder sequence with a matrix.
+        -:  416:      * \param[in]  other  %Matrix being multiplied.
+        -:  417:      * \returns    Expression object representing the product.
+        -:  418:      *
+        -:  419:      * This function computes \f$ HM \f$ where \f$ H \f$ is the Householder sequence represented by \p *this
+        -:  420:      * and \f$ M \f$ is the matrix \p other.
+        -:  421:      */
+        -:  422:    template<typename OtherDerived>
+        -:  423:    typename internal::matrix_type_times_scalar_type<Scalar, OtherDerived>::Type operator*(const MatrixBase<OtherDerived>& other) const
+        -:  424:    {
+        -:  425:      typename internal::matrix_type_times_scalar_type<Scalar, OtherDerived>::Type
+        -:  426:        res(other.template cast<typename internal::matrix_type_times_scalar_type<Scalar,OtherDerived>::ResultScalar>());
+        -:  427:      applyThisOnTheLeft(res, internal::is_identity<OtherDerived>::value && res.rows()==res.cols());
+        -:  428:      return res;
+        -:  429:    }
+        -:  430:
+        -:  431:    template<typename _VectorsType, typename _CoeffsType, int _Side> friend struct internal::hseq_side_dependent_impl;
+        -:  432:
+        -:  433:    /** \brief Sets the length of the Householder sequence.
+        -:  434:      * \param [in]  length  New value for the length.
+        -:  435:      *
+        -:  436:      * By default, the length \f$ n \f$ of the Householder sequence \f$ H = H_0 H_1 \ldots H_{n-1} \f$ is set
+        -:  437:      * to the number of columns of the matrix \p v passed to the constructor, or the number of rows if that
+        -:  438:      * is smaller. After this function is called, the length equals \p length.
+        -:  439:      *
+        -:  440:      * \sa length()
+        -:  441:      */
+        -:  442:    EIGEN_DEVICE_FUNC
+        -:  443:    HouseholderSequence& setLength(Index length)
+        -:  444:    {
+        -:  445:      m_length = length;
+        -:  446:      return *this;
+        -:  447:    }
+        -:  448:
+        -:  449:    /** \brief Sets the shift of the Householder sequence.
+        -:  450:      * \param [in]  shift  New value for the shift.
+        -:  451:      *
+        -:  452:      * By default, a %HouseholderSequence object represents \f$ H = H_0 H_1 \ldots H_{n-1} \f$ and the i-th
+        -:  453:      * column of the matrix \p v passed to the constructor corresponds to the i-th Householder
+        -:  454:      * reflection. After this function is called, the object represents \f$ H = H_{\mathrm{shift}}
+        -:  455:      * H_{\mathrm{shift}+1} \ldots H_{n-1} \f$ and the i-th column of \p v corresponds to the (shift+i)-th
+        -:  456:      * Householder reflection.
+        -:  457:      *
+        -:  458:      * \sa shift()
+        -:  459:      */
+        -:  460:    EIGEN_DEVICE_FUNC
+        -:  461:    HouseholderSequence& setShift(Index shift)
+        -:  462:    {
+        -:  463:      m_shift = shift;
+        -:  464:      return *this;
+        -:  465:    }
+        -:  466:
+        -:  467:    EIGEN_DEVICE_FUNC
+        -:  468:    Index length() const { return m_length; }  /**< \brief Returns the length of the Householder sequence. */
+        -:  469:
+        -:  470:    EIGEN_DEVICE_FUNC
+        -:  471:    Index shift() const { return m_shift; }    /**< \brief Returns the shift of the Householder sequence. */
+        -:  472:
+        -:  473:    /* Necessary for .adjoint() and .conjugate() */
+        -:  474:    template <typename VectorsType2, typename CoeffsType2, int Side2> friend class HouseholderSequence;
+        -:  475:
+        -:  476:  protected:
+        -:  477:
+        -:  478:    /** \internal
+        -:  479:      * \brief Sets the reverse flag.
+        -:  480:      * \param [in]  reverse  New value of the reverse flag.
+        -:  481:      *
+        -:  482:      * By default, the reverse flag is not set. If the reverse flag is set, then this object represents
+        -:  483:      * \f$ H^r = H_{n-1} \ldots H_1 H_0 \f$ instead of \f$ H = H_0 H_1 \ldots H_{n-1} \f$.
+        -:  484:      * \note For real valued HouseholderSequence this is equivalent to transposing \f$ H \f$.
+        -:  485:      *
+        -:  486:      * \sa reverseFlag(), transpose(), adjoint()
+        -:  487:      */
+        -:  488:    HouseholderSequence& setReverseFlag(bool reverse)
+        -:  489:    {
+        -:  490:      m_reverse = reverse;
+        -:  491:      return *this;
+        -:  492:    }
+        -:  493:
+        -:  494:    bool reverseFlag() const { return m_reverse; }     /**< \internal \brief Returns the reverse flag. */
+        -:  495:
+        -:  496:    typename VectorsType::Nested m_vectors;
+        -:  497:    typename CoeffsType::Nested m_coeffs;
+        -:  498:    bool m_reverse;
+        -:  499:    Index m_length;
+        -:  500:    Index m_shift;
+        -:  501:    enum { BlockSize = 48 };
+        -:  502:};
+        -:  503:
+        -:  504:/** \brief Computes the product of a matrix with a Householder sequence.
+        -:  505:  * \param[in]  other  %Matrix being multiplied.
+        -:  506:  * \param[in]  h      %HouseholderSequence being multiplied.
+        -:  507:  * \returns    Expression object representing the product.
+        -:  508:  *
+        -:  509:  * This function computes \f$ MH \f$ where \f$ M \f$ is the matrix \p other and \f$ H \f$ is the
+        -:  510:  * Householder sequence represented by \p h.
+        -:  511:  */
+        -:  512:template<typename OtherDerived, typename VectorsType, typename CoeffsType, int Side>
+        -:  513:typename internal::matrix_type_times_scalar_type<typename VectorsType::Scalar,OtherDerived>::Type operator*(const MatrixBase<OtherDerived>& other, const HouseholderSequence<VectorsType,CoeffsType,Side>& h)
+        -:  514:{
+        -:  515:  typename internal::matrix_type_times_scalar_type<typename VectorsType::Scalar,OtherDerived>::Type
+        -:  516:    res(other.template cast<typename internal::matrix_type_times_scalar_type<typename VectorsType::Scalar,OtherDerived>::ResultScalar>());
+        -:  517:  h.applyThisOnTheRight(res);
+        -:  518:  return res;
+        -:  519:}
+        -:  520:
+        -:  521:/** \ingroup Householder_Module \householder_module
+        -:  522:  * \brief Convenience function for constructing a Householder sequence.
+        -:  523:  * \returns A HouseholderSequence constructed from the specified arguments.
+        -:  524:  */
+        -:  525:template<typename VectorsType, typename CoeffsType>
+        -:  526:HouseholderSequence<VectorsType,CoeffsType> householderSequence(const VectorsType& v, const CoeffsType& h)
+        -:  527:{
+        -:  528:  return HouseholderSequence<VectorsType,CoeffsType,OnTheLeft>(v, h);
+        -:  529:}
+        -:  530:
+        -:  531:/** \ingroup Householder_Module \householder_module
+        -:  532:  * \brief Convenience function for constructing a Householder sequence.
+        -:  533:  * \returns A HouseholderSequence constructed from the specified arguments.
+        -:  534:  * \details This function differs from householderSequence() in that the template argument \p OnTheSide of
+        -:  535:  * the constructed HouseholderSequence is set to OnTheRight, instead of the default OnTheLeft.
+        -:  536:  */
+        -:  537:template<typename VectorsType, typename CoeffsType>
+        -:  538:HouseholderSequence<VectorsType,CoeffsType,OnTheRight> rightHouseholderSequence(const VectorsType& v, const CoeffsType& h)
+        -:  539:{
+        -:  540:  return HouseholderSequence<VectorsType,CoeffsType,OnTheRight>(v, h);
+        -:  541:}
+        -:  542:
+        -:  543:} // end namespace Eigen
+        -:  544:
+        -:  545:#endif // EIGEN_HOUSEHOLDER_SEQUENCE_H

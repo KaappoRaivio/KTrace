@@ -1,0 +1,21 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/engine/Texture.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/main.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/main.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 21.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#pragma once
+        -:    6:
+        -:    7:
+        -:    8:#include "../light/Intensity.h"
+        -:    9:#include "../common/MyVector3.h"
+        -:   10:
+        1:   11:class Texture {
+        -:   12:public:
+        -:   13:    virtual Intensity get_pixel_at (const MyVector3& uv) const = 0;
+        -:   14:};
+        -:   15:
+        -:   16:
+        -:   17:

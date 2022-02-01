@@ -7,6 +7,7 @@
 #include "../common/MyVector3.h"
 #include "../engine/SolidTexture.h"
 #include "../geometry/BVH.h"
+#include "../geometry/Objects.h"
 
 namespace MyOBJLoader {
     MyVector3 toMyVector3(const objl::Vector3& shittyvector) {
@@ -17,7 +18,7 @@ namespace MyOBJLoader {
         return {shittyvector.X, shittyvector.Y, 0};
     }
 
-    std::shared_ptr<Surface> readOBJ (const std::string& path, MyVector3 positionOffset) {
+    std::vector<std::unique_ptr<Surface>> readOBJ (const std::string& path, MyVector3 positionOffset, std::pair<double, double> rotationOffset, const Material* material) {
         objl::Loader loader;
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
@@ -31,24 +32,8 @@ namespace MyOBJLoader {
 
             std::cout << curMesh.MeshMaterial.map_Kd << std::endl;
 
-//            for (int j = 0; j < curMesh.Vertices.size(); j++)
-//            {
-//                objl::Vertex& vertex = curMesh.Vertices[j];
-//                std::cout << "V" << j << ": " <<
-//                          "Position: (" << vertex.Position.X << ", " << vertex.Position.Y << ", " << vertex.Position.Z << ") " <<
-//                          "Normal: (" << vertex.Normal.X << ", " << vertex.Normal.Y << ", " << vertex.Normal.Z << ") " <<
-//                          "Texture coordinate: (" << vertex.TextureCoordinate.X << ", " << vertex.TextureCoordinate.Y << ")\n";
-//            }
-
-            // Print Indices
-//            std::cout << "Indices:\n";
-
-            // Go through every 3rd index and print the
-            //	triangle that these indices represent
-
-            auto color = std::make_shared<Material>(std::make_shared<SolidTexture>(Intensity{1, 1, 1}));
 //            auto color = Material{std::make_shared<ImageTexture>("../res/texture3.png")};
-            std::vector<std::shared_ptr<Surface>> objects;
+            std::vector<std::unique_ptr<Surface>> objects;
 
             for (int j = 0; j < curMesh.Indices.size(); j += 3) {
 //                auto minimum = toMyVector3()
@@ -63,10 +48,11 @@ namespace MyOBJLoader {
 
 //                std::cout << Triangle{toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position)} << std::endl;
 
-                std::shared_ptr<Surface> t;
-                t = std::make_shared<Triangle>(toMyVector3(vertex1.Position) + positionOffset, toMyVector3(vertex2.Position) + positionOffset, toMyVector3(vertex3.Position) + positionOffset, color.get(),
-                                               toMyVector3(vertex1.TextureCoordinate), toMyVector3(vertex2.TextureCoordinate), toMyVector3(vertex3.TextureCoordinate));
-                objects.push_back(t);
+
+                //                std::cout << t->getMaterial()->get_albedo_at({0.5, 0.5, 0}) << std::endl;
+                objects.push_back(std::make_unique<Triangle>(toMyVector3(vertex1.Position).rotate(rotationOffset.first, rotationOffset.second) + positionOffset, toMyVector3(vertex2.Position).rotate(rotationOffset.first, rotationOffset.second) + positionOffset,
+                                                             toMyVector3(vertex3.Position).rotate(rotationOffset.first, rotationOffset.second) + positionOffset, material,
+                                                             toMyVector3(vertex1.TextureCoordinate), toMyVector3(vertex2.TextureCoordinate), toMyVector3(vertex3.TextureCoordinate)));
 
 //            std::cout <<
 //            std::cout << "T" << j / 3 << ": " << curMesh.Indices[j] << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
@@ -75,18 +61,21 @@ namespace MyOBJLoader {
 
 
 
+//
+//            Camera camera = {
+//                    {0, -3, 2},
+//                    {0, M_PI / 10},
+//                    0.4,
+//                    {1, 1,},
+//                    {500, 500}
+//            };
 
-            Camera camera = {
-                    {0, -3, 2},
-                    {0, M_PI / 10},
-                    0.4,
-                    {1, 1,},
-                    {500, 500}
-            };
+//            std::cout << objects.size() << std::endl;
+//            std::cout << *objects[0]->getMaterial() << std::endl;
 
-            std::cout << objects.size() << std::endl;
-
-            return std::make_shared<BVHNode>(objects);
+            return objects;
+//            return std::make_unique<BVHNode>(objects);
+//            return std::make_shared<Objects>(objects);
         }
         throw std::runtime_error("Lol nope");
     }

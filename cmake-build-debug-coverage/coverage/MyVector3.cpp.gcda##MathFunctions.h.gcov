@@ -1,0 +1,208 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/lib/Eigen/src/Core/arch/SSE/MathFunctions.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcda
+        -:    0:Runs:1
+        -:    1:// This file is part of Eigen, a lightweight C++ template library
+        -:    2:// for linear algebra.
+        -:    3://
+        -:    4:// Copyright (C) 2007 Julien Pommier
+        -:    5:// Copyright (C) 2009 Gael Guennebaud <gael.guennebaud@inria.fr>
+        -:    6://
+        -:    7:// This Source Code Form is subject to the terms of the Mozilla
+        -:    8:// Public License v. 2.0. If a copy of the MPL was not distributed
+        -:    9:// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        -:   10:
+        -:   11:/* The sin and cos and functions of this file come from
+        -:   12: * Julien Pommier's sse math library: http://gruntthepeon.free.fr/ssemath/
+        -:   13: */
+        -:   14:
+        -:   15:#ifndef EIGEN_MATH_FUNCTIONS_SSE_H
+        -:   16:#define EIGEN_MATH_FUNCTIONS_SSE_H
+        -:   17:
+        -:   18:namespace Eigen {
+        -:   19:
+        -:   20:namespace internal {
+        -:   21:
+        -:   22:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   23:Packet4f plog<Packet4f>(const Packet4f& _x) {
+        -:   24:  return plog_float(_x);
+        -:   25:}
+        -:   26:
+        -:   27:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   28:Packet2d plog<Packet2d>(const Packet2d& _x) {
+        -:   29:  return plog_double(_x);
+        -:   30:}
+        -:   31:
+        -:   32:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   33:Packet4f plog2<Packet4f>(const Packet4f& _x) {
+        -:   34:  return plog2_float(_x);
+        -:   35:}
+        -:   36:
+        -:   37:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   38:Packet2d plog2<Packet2d>(const Packet2d& _x) {
+        -:   39:  return plog2_double(_x);
+        -:   40:}
+        -:   41:
+        -:   42:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   43:Packet4f plog1p<Packet4f>(const Packet4f& _x) {
+        -:   44:  return generic_plog1p(_x);
+        -:   45:}
+        -:   46:
+        -:   47:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   48:Packet4f pexpm1<Packet4f>(const Packet4f& _x) {
+        -:   49:  return generic_expm1(_x);
+        -:   50:}
+        -:   51:
+        -:   52:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   53:Packet4f pexp<Packet4f>(const Packet4f& _x)
+        -:   54:{
+        -:   55:  return pexp_float(_x);
+        -:   56:}
+        -:   57:
+        -:   58:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   59:Packet2d pexp<Packet2d>(const Packet2d& x)
+        -:   60:{
+        -:   61:  return pexp_double(x);
+        -:   62:}
+        -:   63:
+        -:   64:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   65:Packet4f psin<Packet4f>(const Packet4f& _x)
+        -:   66:{
+        -:   67:  return psin_float(_x);
+        -:   68:}
+        -:   69:
+        -:   70:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   71:Packet4f pcos<Packet4f>(const Packet4f& _x)
+        -:   72:{
+        -:   73:  return pcos_float(_x);
+        -:   74:}
+        -:   75:
+        -:   76:#if EIGEN_FAST_MATH
+        -:   77:
+        -:   78:// Functions for sqrt.
+        -:   79:// The EIGEN_FAST_MATH version uses the _mm_rsqrt_ps approximation and one step
+        -:   80:// of Newton's method, at a cost of 1-2 bits of precision as opposed to the
+        -:   81:// exact solution. It does not handle +inf, or denormalized numbers correctly.
+        -:   82:// The main advantage of this approach is not just speed, but also the fact that
+        -:   83:// it can be inlined and pipelined with other computations, further reducing its
+        -:   84:// effective latency. This is similar to Quake3's fast inverse square root.
+        -:   85:// For detail see here: http://www.beyond3d.com/content/articles/8/
+        -:   86:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:   87:Packet4f psqrt<Packet4f>(const Packet4f& _x)
+        -:   88:{
+        -:   89:  Packet4f minus_half_x = pmul(_x, pset1<Packet4f>(-0.5f));
+        -:   90:  Packet4f denormal_mask = pandnot(
+        -:   91:      pcmp_lt(_x, pset1<Packet4f>((std::numeric_limits<float>::min)())),
+        -:   92:      pcmp_lt(_x, pzero(_x)));
+        -:   93:
+        -:   94:  // Compute approximate reciprocal sqrt.
+        -:   95:  Packet4f x = _mm_rsqrt_ps(_x);
+        -:   96:  // Do a single step of Newton's iteration.
+        -:   97:  x = pmul(x, pmadd(minus_half_x, pmul(x,x), pset1<Packet4f>(1.5f)));
+        -:   98:  // Flush results for denormals to zero.
+        -:   99:  return pandnot(pmul(_x,x), denormal_mask);
+        -:  100:}
+        -:  101:
+        -:  102:#else
+        -:  103:
+        -:  104:template<>EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:  105:Packet4f psqrt<Packet4f>(const Packet4f& x) { return _mm_sqrt_ps(x); }
+        -:  106:
+        -:  107:#endif
+        -:  108:
+        -:  109:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:  110:Packet2d psqrt<Packet2d>(const Packet2d& x) { return _mm_sqrt_pd(x); }
+        -:  111:
+        -:  112:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:  113:Packet16b psqrt<Packet16b>(const Packet16b& x) { return x; }
+        -:  114:
+        -:  115:#if EIGEN_FAST_MATH
+        -:  116:
+        -:  117:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:  118:Packet4f prsqrt<Packet4f>(const Packet4f& _x) {
+        -:  119:  _EIGEN_DECLARE_CONST_Packet4f(one_point_five, 1.5f);
+        -:  120:  _EIGEN_DECLARE_CONST_Packet4f(minus_half, -0.5f);
+        -:  121:  _EIGEN_DECLARE_CONST_Packet4f_FROM_INT(inf, 0x7f800000u);
+        -:  122:  _EIGEN_DECLARE_CONST_Packet4f_FROM_INT(flt_min, 0x00800000u);
+        -:  123:
+        -:  124:  Packet4f neg_half = pmul(_x, p4f_minus_half);
+        -:  125:
+        -:  126:  // Identity infinite, zero, negative and denormal arguments.
+        -:  127:  Packet4f lt_min_mask = _mm_cmplt_ps(_x, p4f_flt_min);
+        -:  128:  Packet4f inf_mask = _mm_cmpeq_ps(_x, p4f_inf);
+        -:  129:  Packet4f not_normal_finite_mask = _mm_or_ps(lt_min_mask, inf_mask);
+        -:  130:
+        -:  131:  // Compute an approximate result using the rsqrt intrinsic.
+        -:  132:  Packet4f y_approx = _mm_rsqrt_ps(_x);
+        -:  133:
+        -:  134:  // Do a single step of Newton-Raphson iteration to improve the approximation.
+        -:  135:  // This uses the formula y_{n+1} = y_n * (1.5 - y_n * (0.5 * x) * y_n).
+        -:  136:  // It is essential to evaluate the inner term like this because forming
+        -:  137:  // y_n^2 may over- or underflow.
+        -:  138:  Packet4f y_newton = pmul(
+        -:  139:      y_approx, pmadd(y_approx, pmul(neg_half, y_approx), p4f_one_point_five));
+        -:  140:
+        -:  141:  // Select the result of the Newton-Raphson step for positive normal arguments.
+        -:  142:  // For other arguments, choose the output of the intrinsic. This will
+        -:  143:  // return rsqrt(+inf) = 0, rsqrt(x) = NaN if x < 0, and rsqrt(x) = +inf if
+        -:  144:  // x is zero or a positive denormalized float (equivalent to flushing positive
+        -:  145:  // denormalized inputs to zero).
+        -:  146:  return pselect<Packet4f>(not_normal_finite_mask, y_approx, y_newton);
+        -:  147:}
+        -:  148:
+        -:  149:#else
+        -:  150:
+        -:  151:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:  152:Packet4f prsqrt<Packet4f>(const Packet4f& x) {
+        -:  153:  // Unfortunately we can't use the much faster mm_rsqrt_ps since it only provides an approximation.
+        -:  154:  return _mm_div_ps(pset1<Packet4f>(1.0f), _mm_sqrt_ps(x));
+        -:  155:}
+        -:  156:
+        -:  157:#endif
+        -:  158:
+        -:  159:template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
+        -:  160:Packet2d prsqrt<Packet2d>(const Packet2d& x) {
+        -:  161:  return _mm_div_pd(pset1<Packet2d>(1.0), _mm_sqrt_pd(x));
+        -:  162:}
+        -:  163:
+        -:  164:// Hyperbolic Tangent function.
+        -:  165:template <>
+        -:  166:EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED Packet4f
+        -:  167:ptanh<Packet4f>(const Packet4f& x) {
+        -:  168:  return internal::generic_fast_tanh_float(x);
+        -:  169:}
+        -:  170:
+        -:  171:} // end namespace internal
+        -:  172:
+        -:  173:namespace numext {
+        -:  174:
+        -:  175:template<>
+        -:  176:EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE
+        -:  177:float sqrt(const float &x)
+        -:  178:{
+        -:  179:  return internal::pfirst(internal::Packet4f(_mm_sqrt_ss(_mm_set_ss(x))));
+        -:  180:}
+        -:  181:
+        -:  182:template<>
+        -:  183:EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE
+        -:  184:double sqrt(const double &x)
+        -:  185:{
+        -:  186:#if EIGEN_COMP_GNUC_STRICT
+        -:  187:  // This works around a GCC bug generating poor code for _mm_sqrt_pd
+        -:  188:  // See https://gitlab.com/libeigen/eigen/commit/8dca9f97e38970
+    #####:  189:  return internal::pfirst(internal::Packet2d(__builtin_ia32_sqrtsd(_mm_set_sd(x))));
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    %%%%%:  189-block  0
+call    3 never executed
+        -:  190:#else
+        -:  191:  return internal::pfirst(internal::Packet2d(_mm_sqrt_pd(_mm_set_sd(x))));
+        -:  192:#endif
+        -:  193:}
+        -:  194:
+        -:  195:} // end namespace numex
+        -:  196:
+        -:  197:} // end namespace Eigen
+        -:  198:
+        -:  199:#endif // EIGEN_MATH_FUNCTIONS_SSE_H

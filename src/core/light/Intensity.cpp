@@ -8,7 +8,7 @@
 #include "Intensity.h"
 
 
-Intensity::Intensity (double r, double g, double b) : m_r{r}, m_g{g}, m_b{b} {}
+
 //Intensity::Intensity(Intensity &&original) noexcept: m_r{original.r()}, m_g{original.g()}, m_b{original.b()} {}
 //Intensity &Intensity::operator=(Intensity &&original) noexcept {
 //    m_r = original.r();

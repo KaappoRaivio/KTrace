@@ -10,7 +10,7 @@
 
 Plane::Plane (MyVector3 normal, double intersect, const Material* material) : normal{std::move(normal)}, intersect{intersect}, material(material) {}
 
-double Plane::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
+double Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
     hitMaterial = getMaterial();
 
     if (normal * ray.getDirection() == 0) {

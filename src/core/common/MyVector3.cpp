@@ -15,7 +15,7 @@ MyVector3 MyVector3::operator+ (const MyVector3& other) const {
 }
 
 std::ostream& operator<< (std::ostream& os, const MyVector3& vector3) {
-    os << "MyVector3(" << vector3.i << ", " << vector3.j << ", " << vector3.k << ")";
+    os << "(" << vector3.i << ", " << vector3.j << ", " << vector3.k << ")";
     return os;
 }
 

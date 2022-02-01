@@ -17,17 +17,17 @@ const Material* Objects::getMaterial () const {
     return surfaces[0]->getMaterial();
 }
 
-Objects::Objects (const std::vector<Surface*> surfaces) : surfaces{surfaces} {
+Objects::Objects (const std::vector<Surface*>& surfaces) : surfaces{surfaces} {
 
 }
 
-double Objects::getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) {
-    Surface* tempHitSurface = nullptr;
+double Objects::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+    const Surface* tempHitSurface = nullptr;
     const Material* tempHitMaterial = nullptr;
 
     double closest_hit = 1e9;
 
-    for (auto* const surface : surfaces) {
+    for (const auto& surface : surfaces) {
         double candidate = surface->getIntersectionDistance(ray, tempHitSurface, tempHitMaterial);
 
         if (std::abs(candidate) > PRECISION_LIMIT && candidate < closest_hit) {
@@ -53,7 +53,7 @@ AABB Objects::getBoundingBox () const {
     AABB result = AABBs::INVALID;
     bool firstBox = true;
 //
-    for (const auto* surface : surfaces) {
+    for (const auto& surface : surfaces) {
         const AABB& temp = surface->getBoundingBox();
         if (temp == AABBs::INVALID) return AABBs::INVALID;
         if (firstBox) result = temp;
@@ -61,5 +61,7 @@ AABB Objects::getBoundingBox () const {
 
         result = result.expand(temp);
     }
+
+    return result;
 }
 

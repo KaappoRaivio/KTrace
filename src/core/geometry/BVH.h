@@ -5,29 +5,52 @@
 #pragma once
 
 
+#include <ostream>
 #include "Surface.h"
 #include "AABB.h"
+#include "Objects.h"
+
 
 class BVHNode : public Surface {
 public:
-    BVHNode (std::vector<std::shared_ptr<Surface>> surfaces);
-    BVHNode (std::vector<std::shared_ptr<Surface>>& src_surfaces, int axis, size_t start, size_t end);
+    BVHNode ();
 
-    double getIntersectionDistance (const Ray& ray, Surface*& hitSurface, const Material*& hitMaterial) override;
+    BVHNode (std::vector<Surface*> surfaces);
+    BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, size_t end);
 
+    double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
     AABB getBoundingBox () const override;
-
     MyVector3 getNormalAt (const MyVector3& position) const override;
-
     MyVector3 getUVAt (const MyVector3& position) const override;
-
     const Material* getMaterial () const override;
 
+    bool isLeaf () const;
+    friend std::ostream& operator<< (std::ostream& os, const BVHNode& node);
 private:
     AABB box;
-    std::shared_ptr<Surface> left;
-    std::shared_ptr<Surface> right;
+//    BVHNode left;
+//    Objects leafs;
+    const Surface* payload = nullptr;
+    std::unique_ptr<BVHNode> left;
+    std::unique_ptr<BVHNode> right;
+    int depth;
 };
 
 
 
+class BVH : public Surface {
+private:
+    std::unique_ptr<BVHNode> root{nullptr};
+//    std::vector<std::unique_ptr<Surface>> objects;
+
+public:
+    BVH (const std::vector<std::unique_ptr<Surface>>& objects);
+
+    double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    AABB getBoundingBox () const override;
+    MyVector3 getNormalAt (const MyVector3& position) const override;
+    MyVector3 getUVAt (const MyVector3& position) const override;
+    const Material* getMaterial () const override;
+
+    friend std::ostream& operator<< (std::ostream& os, const BVHNode& node);
+};

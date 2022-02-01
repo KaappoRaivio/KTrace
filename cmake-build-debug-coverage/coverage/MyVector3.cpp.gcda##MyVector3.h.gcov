@@ -1,0 +1,72 @@
+        -:    0:Source:/home/kaappo/git/raytracercpp/src/core/common/MyVector3.h
+        -:    0:Graph:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcno
+        -:    0:Data:/home/kaappo/git/raytracercpp/cmake-build-debug-coverage/CMakeFiles/Main.dir/src/core/common/MyVector3.cpp.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by kaappo on 11.9.2021.
+        -:    3://
+        -:    4:
+        -:    5:#pragma once
+        -:    6:
+        -:    7:
+        -:    8:#include <ostream>
+        -:    9:#include <iostream>
+        -:   10:#include "../../../lib/Eigen/Dense"
+        -:   11:
+        -:   12:class MyVector3 {
+        -:   13:private:
+        -:   14:    double i, j, k;
+        -:   15:
+        -:   16:public:
+    #####:   17:    constexpr MyVector3 (double i, double j, double k) : i{i}, j{j}, k{k} {
+    %%%%%:   17-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:   17-block  1
+call    2 never executed
+        -:   18:
+        -:   19:    };
+        -:   20:
+        -:   21:    MyVector3 operator+ (const MyVector3& other) const;
+        -:   22:    MyVector3 operator|| (const MyVector3& other) const;
+        -:   23:    MyVector3 operator- () const;
+        -:   24:    MyVector3 operator- (const MyVector3& other) const;
+        -:   25:    MyVector3 operator* (double other) const;
+        -:   26:    double operator* (const MyVector3& other) const;
+        -:   27:    MyVector3 operator/ (double other) const;
+        -:   28:    explicit operator bool () const;
+        -:   29:    double operator [] (int index) const;
+        -:   30:
+        -:   31:    bool operator== (const MyVector3& rhs) const;
+        -:   32:
+        -:   33:    bool operator!= (const MyVector3& rhs) const;
+        -:   34:
+        -:   35:    MyVector3 rotateInsideCone (double radius) const;
+        -:   36:    MyVector3 reflection (const MyVector3& axis) const;
+        -:   37:    MyVector3 inTermsOfComponents (const MyVector3& i, const MyVector3& j, const MyVector3& k) const;
+        -:   38:
+        -:   39:    MyVector3 rotate (double yaw, double pitch) const;
+        -:   40:    MyVector3 cross (const MyVector3& other) const;
+        -:   41:    double length () const;
+        -:   42:
+        -:   43:    double squared () const;
+        -:   44:    MyVector3 normalize () const;
+        -:   45:
+        -:   46:    double atan2 () const;
+        -:   47:
+        -:   48:    double asin () const;
+        -:   49:
+        -:   50:    friend std::ostream& operator<< (std::ostream& os, const MyVector3& vector3);
+        -:   51:
+        -:   52:    double getI () const;
+        -:   53:    double getJ () const;
+        -:   54:    double getK () const;
+        -:   55:
+        -:   56:    static MyVector3 randomInsideUnitSphere ();
+        -:   57:
+        -:   58:    static const MyVector3& UP;
+        -:   59:    static const MyVector3& OUT;
+        -:   60:    static const MyVector3& SIDE;
+        -:   61:
+        -:   62:    double dot (const MyVector3& vector3) const;
+        -:   63:};

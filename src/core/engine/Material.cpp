@@ -15,5 +15,5 @@ std::ostream& operator<< (std::ostream& os, const Material& material) {
 }
 
 namespace Materials {
-    extern const Material WHITE{std::make_shared<SolidTexture>(Intensity{1, 1, 1})};
+    extern const Material WHITE{&SolidTextures::WHITE};
 }
