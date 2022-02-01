@@ -1,4 +1,0 @@
-/home/kaappo/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/212.5080.54/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=--coverage -DCMAKE_C_FLAGS=--coverage -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles" /home/kaappo/git/raytracercpp
--- Configuring done
--- Generating done
--- Build files have been written to: /home/kaappo/git/raytracercpp/cmake-build-debug-coverage

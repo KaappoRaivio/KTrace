@@ -1,4 +1,0 @@
-/home/kaappo/git/cliontest/cmake-build-release/CMakeFiles/edit_cache.dir
-/home/kaappo/git/cliontest/cmake-build-release/CMakeFiles/OBJ_LOAD.dir
-/home/kaappo/git/cliontest/cmake-build-release/CMakeFiles/rebuild_cache.dir
-/home/kaappo/git/cliontest/cmake-build-release/CMakeFiles/Main.dir
