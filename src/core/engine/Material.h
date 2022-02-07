@@ -15,7 +15,7 @@ struct Material {
     const Texture* albedo;
     double glossiness;
 
-    Material (const Texture* const albedo, double glossiness) : albedo{albedo}, glossiness{glossiness} {}
+    constexpr Material (const Texture* const albedo, double glossiness) : albedo{albedo}, glossiness{glossiness} {}
     explicit Material (const Texture* const albedo) : albedo{albedo}, glossiness{0} {}
 
     Material(const Material& other) = delete;
@@ -29,5 +29,11 @@ public:
 
 
 namespace Materials {
-    extern const Material WHITE;
+    constexpr Material WHITE_GLOSSY{&SolidTextures::WHITE, 0.8};
+    constexpr Material BLUE_GLOSSY{&SolidTextures::BLUE, 0.8};
+    constexpr Material RED_GLOSSY{&SolidTextures::RED, 0.8};
+//    constexpr Material BLUE_GLOSSY{&SolidTextures::BLUE, 0.8};
+    constexpr Material YELLOW_GLOSSY{&SolidTextures::YELLOW, 0.8};
+    constexpr Material GREEN_GLOSSY{&SolidTextures::GREEN, 0.8};
+    constexpr Material WHITE{&SolidTextures::WHITE, 0};
 }

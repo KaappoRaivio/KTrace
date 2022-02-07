@@ -36,7 +36,7 @@ std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
     }
 
 
-//#pragma omp parallel for collapse(2)
+#pragma omp parallel for collapse(2)
 //#pragma omp target teams distribute parallel for  collapse(2)
     for (int y = 0; y < viewport_height; ++y) {
         for (int x = 0; x < viewport_width; ++x) {

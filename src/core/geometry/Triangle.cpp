@@ -92,42 +92,22 @@ MyVector3 Triangle::getNormalAt (const MyVector3& position) const {
 }
 
 MyVector3 Triangle::getUVAt (const MyVector3& position) const {
-//    const MyVector3& tangent = t3 - minimum;
-//    const MyVector3& normal = getNormalAt(position);
-//
-//    const MyVector3& width = tangent;
-//    const MyVector3& height = maximum - minimum - width * ((width * maximum - width * minimum) / width.squared());
-//
-//    const MyVector3& local_position = position - minimum;
-//    const MyVector3& uv = local_position.inTermsOfComponents(width, height, normal.normalize());
-//    return uv;
-
-
     const MyVector3& P = position;
 
-// Compute vectors
-    const MyVector3& v0 = t3 - t1;
-    const MyVector3& v1 = t2 - t1;
-    const MyVector3& v2 = P - t1;
+    MyVector3 v0 = t2 - t1;
+    MyVector3 v1 = t3 - t1;
+    MyVector3 v2 = P - t1;
 
-// Compute dot products
-    double dot00 = v0.squared();
-    double dot01 = v0.dot(v1);
-    double dot02 = v0.dot(v2);
-    double dot11 = v1.squared();
-    double dot12 = v1.dot(v2);
+    double d00 = v0 * v0;
+    double d01 = v0 * v1;
+    double d11 = v1 * v1;
+    double d20 = v2 * v0;
+    double d21 = v2 * v1;
 
-// Compute barycentric coordinates
-    double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
-    double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-    double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-
-    u = u - std::floor(u);
-    v = v - std::floor(v);
-    double w = 1 - u - v;
-
-//    std::cout << tu << tv  << tw << std::endl;
-
+    float invDenom = 1.0 / (d00 * d11 - d01 * d01);
+    double v = (d11 * d20 - d01 * d21) * invDenom;
+    double w = (d00 * d21 - d01 * d20) * invDenom;
+    double u = 1.0f - v - w;
 
     return tu * u + tv * v + tw * w;
 

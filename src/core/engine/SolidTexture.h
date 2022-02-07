@@ -19,4 +19,8 @@ public:
 
 namespace SolidTextures {
     constexpr SolidTexture WHITE {{1, 1, 1}};
+    constexpr SolidTexture BLUE {{0.1, 0.1, 1}};
+    constexpr SolidTexture RED {{1, 0.1, 0.1}};
+    constexpr SolidTexture YELLOW {{1, 1, 0.5}};
+    constexpr SolidTexture GREEN {{1, 0.5, 0.5}};
 }

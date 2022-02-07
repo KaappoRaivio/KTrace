@@ -32,6 +32,7 @@ Image::~Image () {
 
 Intensity Image::get_pixel_at (int x, int y) const {
     int index = bytes_per_pixel * (width * y + x);
+    index %= width * height;
 //    std::cout << data[0] << std::endl;
 //    return {std::sqrt(data[index] / 256.0), std::sqrt(data[index + 1] / 256.0), std::sqrt(data[index + 2] / 256.0)};
     return {data[index] / 256.0, data[index + 1] / 256.0, data[index + 2] / 256.0};

@@ -143,7 +143,6 @@ BVHNode::BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, si
                                       : ((axis % 3 == 1) ? boxCompareY
                                                          : boxCompareZ);
 
-    std::cout << (comparator == boxCompareX) << std::endl;
 
 //    std::vector<std::shared_ptr<Surface>> surfaces = src_surfaces;
 

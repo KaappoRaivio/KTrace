@@ -15,5 +15,5 @@ std::ostream& operator<< (std::ostream& os, const Material& material) {
 }
 
 namespace Materials {
-    extern const Material WHITE{&SolidTextures::WHITE};
+//    extern const Material WHITE{&SolidTextures::WHITE, 0.8};
 }
