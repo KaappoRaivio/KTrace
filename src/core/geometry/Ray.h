@@ -15,6 +15,9 @@ public:
 private:
     MyVector3 origin;
     MyVector3 direction;
+    MyVector3 inverse_direction;
+public:
+    const MyVector3& getInverseDirection () const;
 
 public:
     const MyVector3& getOrigin () const;

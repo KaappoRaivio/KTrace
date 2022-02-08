@@ -16,17 +16,24 @@ private:
     MyVector3 t1, t2, t3;
     MyVector3 tu, tv, tw;
 
+    double d00;
+    double d01;
+    double d11;
+    double invDenom;
+
+    MyVector3 v0, v1;
+
     Plane plane;
 
     bool includes (const MyVector3& vector) const;
-    bool check_bounds (const MyVector3& vector) const;
+    bool check_bounds (const MyVector3& P) const;
 public:
     Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material, const MyVector3& texture1, const MyVector3& texture2, const MyVector3& texture3);
     Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material);
     double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
 
     MyVector3 getNormalAt (const MyVector3& position) const override;
-    MyVector3 getUVAt (const MyVector3& position) const override;
+    MyVector3 getUVAt (const MyVector3& P) const override;
 
     AABB getBoundingBox () const override;
 

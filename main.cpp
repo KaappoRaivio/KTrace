@@ -22,8 +22,8 @@
 
 
 int main () {
-    constexpr int window_side_length = 2000;
-    constexpr int viewport_side_length = 2000;
+    constexpr int window_side_length = 1000;
+    constexpr int viewport_side_length = 1000;
 
     Camera camera = {{0, -5, 7}, {0.175, 0.4}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
@@ -54,19 +54,19 @@ int main () {
 
     std::cout << sphereMaterial.get_albedo_at({0.5, 0.7, 1}) << std::endl;
 
-//    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {2, 4, 2}, 1, {M_PI / 4, 0}, &sphereMaterial);
-    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {0, 0, 0}, 2, {0, 0}, &sphereMaterial);
-//    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/teapot.obj", {-2, 4, 2}, 1, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &sphereMaterial);
+//    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {0, 0, 0}, 2, {0, 0}, &sphereMaterial);
+    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/lasi.obj", {0, 4, 2}, 20, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
 //    std::vector<std::unique_ptr<Surface>> polygons3 = MyOBJLoader::readOBJ("../res/teapot.obj", {-2, 20, 0}, 1, {M_PI / 4, -M_PI / 2}, &Materials::GREEN_GLOSSY);
     std::vector<Surface*> rawPointers;
     rawPointers.reserve(polygons.size());
-    for (const auto& object : polygons) {
-        rawPointers.push_back(object.get());
-    }
-
-//    for (auto& paska : polygons2) {
-//        polygons.push_back(std::move(paska));
+//    for (const auto& object : polygons) {
+//        rawPointers.push_back(object.get());
 //    }
+
+    for (auto& paska : polygons2) {
+        polygons.push_back(std::move(paska));
+    }
 //    for (auto& paska : polygons3) {
 //        polygons.push_back(std::move(paska));
 //    }
@@ -79,14 +79,14 @@ int main () {
             model.get(),
     };
 
-    double radius = 0;
+    double radius = 0.5;
     std::vector<LightSource> lights = {
-            {{4,  0,   4},   Intensity{1, 1, 1} * 70,  radius * 7},
-            {{-4, 4.5, 5.5}, Intensity{1, 1, 1} * 30,  radius * 3},
-            {{10, -40, 40},  Intensity{1, 1, 1} * 400, radius * 100},
+            {{-2, 4, 3}, Intensity{0.8, 1, 0.5} * 7, radius},
+            {{4, 4.5, 5.5}, Intensity{1, 1, 1} * 30,  radius * 3},
+//            {{10, -40, 40},  Intensity{1, 1, 1} * 400, radius * 100},
     };
 
-    Scene scene = {objects, lights, camera, 1, 1};
+    Scene scene = {objects, lights, camera, 4, 2};
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
 
 #pragma clang diagnostic push
@@ -106,6 +106,7 @@ int main () {
 
 
         window.paint(pixels);
+        std::cout << "moi " << std::endl;
         window.delay(50);
         break;
     }

@@ -12,7 +12,8 @@ double AABB::getIntersectionDistance (const Ray& ray) const {
 }
 
 double AABB::intersects (const Ray& ray) const {
-    auto d_inv = MyVector3{1 / ray.getDirection().getI(), 1 / ray.getDirection().getJ(), 1 / ray.getDirection().getK()};
+//    auto d_inv = MyVector3{1 / ray.getDirection().getI(), 1 / ray.getDirection().getJ(), 1 / ray.getDirection().getK()};
+    const auto& d_inv = ray.getInverseDirection();
 
     double tx1 = (minimum.getI() - ray.getOrigin().getI()) * d_inv.getI();
     double tx2 = (maximum.getI() - ray.getOrigin().getI()) * d_inv.getI();
