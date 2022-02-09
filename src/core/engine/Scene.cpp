@@ -83,12 +83,12 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
         const Material* material = closest.material;
         const auto* const surface = closest.hitSurface;
 
-        const Intensity& albedo = material->get_albedo_at(surface->getUVAt(closest.position));
+        const Intensity& albedo = material->getAlbedoAt(surface->getUVAt(closest.position));
 
 //        Intensity diffuse_light = {0, 0, 0};
         IntensityBlend diffuse_light;
         IntensityBlend specular_light;
-        const MyVector3& face_normal = surface->getNormalAt(closest.position).normalize();
+        const MyVector3& face_normal = surface->getBumpedNormalAt(closest.position).normalize();
         const MyVector3& N = face_normal;
 
         const MyVector3& d = closest.ray.getDirection();

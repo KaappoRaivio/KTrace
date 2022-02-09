@@ -55,7 +55,7 @@ namespace MyOBJLoader {
 //                std::cout << Triangle{toMyVector3(vertex1.Position), toMyVector3(vertex2.Position), toMyVector3(vertex3.Position)} << std::endl;
 
 
-                //                std::cout << t->getMaterial()->get_albedo_at({0.5, 0.5, 0}) << std::endl;
+                //                std::cout << t->getMaterial()->getAlbedoAt({0.5, 0.5, 0}) << std::endl;
 //                std::cout << toMyVector3(vertex1.TextureCoordinate) << toMyVector3(vertex2.TextureCoordinate) << toMyVector3(vertex3.TextureCoordinate) << std::endl;
                 objects.push_back(std::make_unique<Triangle>(toMyVector3(vertex1.Position).rotate(rotationOffset.first, rotationOffset.second) * scale + positionOffset, toMyVector3(vertex2.Position).rotate(rotationOffset.first, rotationOffset.second) * scale + positionOffset,
                                                              toMyVector3(vertex3.Position).rotate(rotationOffset.first, rotationOffset.second) * scale + positionOffset, material,

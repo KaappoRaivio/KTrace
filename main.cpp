@@ -22,14 +22,15 @@
 
 
 int main () {
-    constexpr int window_side_length = 1000;
-    constexpr int viewport_side_length = 1000;
+    constexpr int window_side_length = 2000;
+    constexpr int viewport_side_length = 2000;
 
     Camera camera = {{0, -5, 7}, {0.175, 0.4}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     auto triangleTexture = std::make_unique<ImageTexture>("../res/texture3.png");
 //    auto triangleTexture = std::make_shared<ImageTexture>("../res/wood.jpg");
     auto earthTexture = std::make_unique<ImageTexture>("../res/earth.png");
+    auto earthBump = std::make_unique<ImageTexture>("../res/earth_bump.jpg");
 
     auto planeTexture = std::make_unique<SolidTexture>(Intensity{1, 1, 1});
 
@@ -38,7 +39,8 @@ int main () {
     Material sphereMaterial{triangleTexture.get(), 0.5};
     Material planeMaterial{planeTexture.get()};
     Material mirror{&SolidTextures::WHITE, 1};
-    Material earthSurface{earthTexture.get(), 0.2};
+    Material earthSurface{earthTexture.get(), 0.2, earthBump.get()};
+    Material testSurface{triangleTexture.get(), 0.2};
 
     auto triangle = std::make_unique<Triangle>(
             MyVector3{-5, 6, 3},
@@ -56,10 +58,11 @@ int main () {
     std::unique_ptr<Surface> sphere6 = std::make_unique<Sphere>(MyVector3{-0, 6, 6}, 15, &sphereMaterial);
     std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, &mirror);
     std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, &earthSurface);
+    std::unique_ptr<Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, &testSurface);
 
-    std::cout << sphereMaterial.get_albedo_at({0.5, 0.7, 1}) << std::endl;
+    std::cout << sphereMaterial.getAlbedoAt({0.5, 0.7, 1}) << std::endl;
 
-    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
 //    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {0, 0, 0}, 2, {0, 0}, &sphereMaterial);
     std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
 //    std::vector<std::unique_ptr<Surface>> polygons3 = MyOBJLoader::readOBJ("../res/teapot.obj", {-2, 20, 0}, 1, {M_PI / 4, -M_PI / 2}, &Materials::GREEN_GLOSSY);
@@ -70,6 +73,7 @@ int main () {
 
     polygons.push_back(std::move(mirrorSphere));
     polygons.push_back(std::move(earth));
+    polygons.push_back(std::move(test));
 
     std::unique_ptr<Surface> model = std::make_unique<BVH>(polygons);
     std::cout << model->getBoundingBox() << std::endl;
@@ -79,14 +83,14 @@ int main () {
             model.get(),
     };
 
-    double radius = 0.5;
+    double radius = 0;
     std::vector<LightSource> lights = {
             {{-2, 1, 3}, Intensity{1, 1, 1} * 21, radius},
 //            {{4, 4.5, 10}, Intensity{1, 1, 1} * 30,  radius * 3},
             {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
     };
 
-    Scene scene = {objects, lights, camera, 32, 2};
+    Scene scene = {objects, lights, camera, 1, 1};
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
 
 #pragma clang diagnostic push

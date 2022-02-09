@@ -15,7 +15,7 @@ public:
     Objects (const std::vector<Surface*>& surfaces);
 
 public:
-//    MyVector3 getNormalAt (const MyVector3& position) const override;
+//    MyVector3 getBumpAt (const MyVector3& position) const override;
 //    MyVector3 getUVAt (const MyVector3& position) const override;
     MyVector3 getNormalAt (const MyVector3& position) const override;
 

@@ -10,7 +10,7 @@
 
 class Texture {
 public:
-    virtual Intensity get_pixel_at (const MyVector3& uv) const = 0;
+    virtual Intensity getPixelAt (const MyVector3& uv) const = 0;
 };
 
 

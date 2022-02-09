@@ -55,9 +55,12 @@ public:
 
     static MyVector3 randomInsideUnitSphere ();
 
-    static const MyVector3& UP;
-    static const MyVector3& OUT;
-    static const MyVector3& SIDE;
 
     double dot (const MyVector3& vector3) const;
 };
+
+namespace MyVector3s {
+    constexpr MyVector3 UP{0, 0, 1};
+    constexpr MyVector3 OUT{0, 1, 0};
+    constexpr MyVector3 SIDE{1, 0, 0};
+}

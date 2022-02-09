@@ -101,7 +101,7 @@ MyVector3 MyVector3::rotateInsideCone (double radius) const {
         return *this;
     }
 
-    const MyVector3& tangent = cross(MyVector3::UP).normalize();
+    const MyVector3& tangent = cross(MyVector3s::UP).normalize();
     const MyVector3& bitangent = cross(tangent).normalize();
 
     const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -138,11 +138,6 @@ double MyVector3::asin () const {
     return std::asin(k);
 }
 
-const MyVector3& MyVector3::UP = {0, 0, 1};
-
-const MyVector3& MyVector3::OUT = {0, 1, 0};
-
-const MyVector3& MyVector3::SIDE = {1, 0, 0};
 
 double MyVector3::getI () const {
     return i;

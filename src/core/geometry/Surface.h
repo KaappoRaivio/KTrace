@@ -16,6 +16,7 @@
 class Surface : public Hittable {
 public:
     virtual MyVector3 getNormalAt (const MyVector3& position) const = 0;
+
     virtual MyVector3 getUVAt (const MyVector3& position) const = 0;
     virtual AABB getBoundingBox () const = 0;
 
@@ -23,6 +24,7 @@ public:
 
     std::optional<Intersection> getIntersection (const Ray& ray);
 
+    MyVector3 getBumpedNormalAt (const MyVector3& position) const;
     friend std::ostream& operator<< (std::ostream& os, const Surface& surface);
 };
 

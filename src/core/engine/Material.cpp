@@ -4,9 +4,9 @@
 
 #include "Material.h"
 
-Intensity Material::get_albedo_at (const MyVector3& uv) const {
-//    return (*albedo).get_pixel_at(uv);
-    return albedo->get_pixel_at(uv);
+Intensity Material::getAlbedoAt (const MyVector3& uv) const {
+//    return (*albedo).getPixelAt(uv);
+    return albedo->getPixelAt(uv);
 }
 
 std::ostream& operator<< (std::ostream& os, const Material& material) {
@@ -14,6 +14,14 @@ std::ostream& operator<< (std::ostream& os, const Material& material) {
     return os;
 }
 
-namespace Materials {
-//    extern const Material WHITE{&SolidTextures::WHITE, 0.8};
+MyVector3 Material::getBumpAt (const MyVector3& uv, const MyVector3& normal) const {
+    const Intensity& intensity = bump->getPixelAt(uv);
+
+    MyVector3 originBump {intensity.r() - 0.5, intensity.g() - 0.5, intensity.b()};
+
+    const auto& newSide = normal.cross(MyVector3s::UP);
+    const auto& newOut = newSide.cross(normal);
+    const auto& newUp = normal;
+
+    return newSide * originBump.getI() + newOut * originBump.getJ() + newUp * originBump.getK();
 }

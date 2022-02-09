@@ -23,7 +23,7 @@ std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
 //        return Intersection{distance, ray.apply(distance), *this, ray};
         if (DEBUG) {
 //            std::cout <<" moi" << *hitMaterial << std::endl;
-//            std::cout <<" moi" << hitMaterial->get_albedo_at({0.5, 0.5, 0}) << std::endl;
+//            std::cout <<" moi" << hitMaterial->getAlbedoAt({0.5, 0.5, 0}) << std::endl;
         }
 
         return Intersection{distance, ray.apply(distance), hitSurface, hitMaterial, ray};
@@ -33,4 +33,8 @@ std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
 std::ostream& operator<< (std::ostream& os, const Surface& surface) {
     os << "Surface{" << *surface.getMaterial() << "}";
     return os;
+}
+
+MyVector3 Surface::getBumpedNormalAt (const MyVector3& position) const {
+    return getMaterial()->getBumpAt(getUVAt(position), getNormalAt(position));
 }

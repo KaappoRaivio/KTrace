@@ -175,7 +175,7 @@ AABB BVHNode::getBoundingBox () const {
 }
 
 MyVector3 BVHNode::getNormalAt (const MyVector3& position) const {
-    throw std::runtime_error("getNormalAt not implemented for BVHNode!");
+    throw std::runtime_error("getBumpAt not implemented for BVHNode!");
 }
 
 MyVector3 BVHNode::getUVAt (const MyVector3& position) const {

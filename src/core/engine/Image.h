@@ -30,6 +30,6 @@ public:
 //int main () {
 ////    std::cout << "Hello, world!" << std::endl;
 //    Image image{std::string{"../res/texture1.png"}};
-//    const Intensity& intensity = image.get_pixel_at(0, 0);
+//    const Intensity& intensity = image.getPixelAt(0, 0);
 //    std::cout << intensity << std::endl;
 //}
