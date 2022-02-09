@@ -54,7 +54,7 @@ MyVector3 Sphere::getUVAt (const MyVector3& position) const {
     double u = 0.5 - d.atan2() / (2 * M_PI);
     double v = 0.5 + d.asin() / M_PI;
 
-    return {u, v, 0};
+    return {u + 0.2, v, 0};
 }
 
 AABB Sphere::getBoundingBox () const {

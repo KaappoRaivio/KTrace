@@ -30,6 +30,7 @@ int main () {
     auto triangleTexture = std::make_unique<ImageTexture>("../res/texture3.png");
 //    auto triangleTexture = std::make_shared<ImageTexture>("../res/wood.jpg");
     auto earthTexture = std::make_unique<ImageTexture>("../res/earth.png");
+//    auto earthTexture = std::make_unique<SolidTexture>("../res/earth.png");
     auto earthBump = std::make_unique<ImageTexture>("../res/earth_bump.jpg");
 
     auto planeTexture = std::make_unique<SolidTexture>(Intensity{1, 1, 1});
@@ -40,7 +41,8 @@ int main () {
     Material planeMaterial{planeTexture.get()};
     Material mirror{&SolidTextures::WHITE, 1};
     Material earthSurface{earthTexture.get(), 0.2, earthBump.get()};
-    Material testSurface{triangleTexture.get(), 0.2};
+//    Material earthSurface{&SolidTextures::WHITE, 0, earthBump.get()};
+    Material testSurface{triangleTexture.get(), 0.2, &SolidTextures::GREEN};
 
     auto triangle = std::make_unique<Triangle>(
             MyVector3{-5, 6, 3},
