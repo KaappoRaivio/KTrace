@@ -16,7 +16,7 @@ struct LightSource {
     Intensity intensity;
     double radius;
 
-//    LightSource (MyVector3 position, const Intensity& intensity, double radius) : position{std::move(position)}, intensity{intensity}, radius{radius} {}
+    constexpr LightSource (MyVector3 position, const Intensity& intensity, double radius) : position{std::move(position)}, intensity{intensity}, radius{radius} {}
 
 //    LightSource& operator= (const LightSource& other) = default;
 

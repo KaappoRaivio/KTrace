@@ -29,13 +29,16 @@ int main () {
 
     auto triangleTexture = std::make_unique<ImageTexture>("../res/texture3.png");
 //    auto triangleTexture = std::make_shared<ImageTexture>("../res/wood.jpg");
+    auto earthTexture = std::make_unique<ImageTexture>("../res/earth.png");
+
     auto planeTexture = std::make_unique<SolidTexture>(Intensity{1, 1, 1});
 
 //
     Material triangleMaterial{planeTexture.get(), 0.5};
     Material sphereMaterial{triangleTexture.get(), 0.5};
     Material planeMaterial{planeTexture.get()};
-    Material mirror{std::make_unique<SolidTexture>(SolidTexture{{1, 1, 1}}).get(), 0};
+    Material mirror{&SolidTextures::WHITE, 1};
+    Material earthSurface{earthTexture.get(), 0.2};
 
     auto triangle = std::make_unique<Triangle>(
             MyVector3{-5, 6, 3},
@@ -44,32 +47,29 @@ int main () {
             &triangleMaterial
     );
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 5, &planeMaterial);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, &planeMaterial);
     std::unique_ptr<Surface> sphere1 = std::make_unique<Sphere>(MyVector3{-2.5, 4, 4.5}, 0.3, &sphereMaterial);
     std::unique_ptr<Surface> sphere2 = std::make_unique<Sphere>(MyVector3{-1, 4, 4.3}, 0.6, &sphereMaterial);
     std::unique_ptr<Surface> sphere3 = std::make_unique<Sphere>(MyVector3{1, 4, 4}, 1.0, &sphereMaterial);
     std::unique_ptr<Surface> sphere4 = std::make_unique<Sphere>(MyVector3{0.5, 2, 3}, 0.5, &sphereMaterial);
     std::unique_ptr<Surface> sphere5 = std::make_unique<Sphere>(MyVector3{-0.75, 2, 3.25}, 0.4, &sphereMaterial);
     std::unique_ptr<Surface> sphere6 = std::make_unique<Sphere>(MyVector3{-0, 6, 6}, 15, &sphereMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, &mirror);
+    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, &earthSurface);
 
     std::cout << sphereMaterial.get_albedo_at({0.5, 0.7, 1}) << std::endl;
 
-    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &sphereMaterial);
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
 //    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {0, 0, 0}, 2, {0, 0}, &sphereMaterial);
-    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/lasi.obj", {0, 4, 2}, 20, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
 //    std::vector<std::unique_ptr<Surface>> polygons3 = MyOBJLoader::readOBJ("../res/teapot.obj", {-2, 20, 0}, 1, {M_PI / 4, -M_PI / 2}, &Materials::GREEN_GLOSSY);
-    std::vector<Surface*> rawPointers;
-    rawPointers.reserve(polygons.size());
-//    for (const auto& object : polygons) {
-//        rawPointers.push_back(object.get());
-//    }
 
-    for (auto& paska : polygons2) {
-        polygons.push_back(std::move(paska));
+    for (auto& pointer : polygons2) {
+        polygons.push_back(std::move(pointer));
     }
-//    for (auto& paska : polygons3) {
-//        polygons.push_back(std::move(paska));
-//    }
+
+    polygons.push_back(std::move(mirrorSphere));
+    polygons.push_back(std::move(earth));
 
     std::unique_ptr<Surface> model = std::make_unique<BVH>(polygons);
     std::cout << model->getBoundingBox() << std::endl;
@@ -81,12 +81,12 @@ int main () {
 
     double radius = 0.5;
     std::vector<LightSource> lights = {
-            {{-2, 4, 3}, Intensity{0.8, 1, 0.5} * 7, radius},
-            {{4, 4.5, 5.5}, Intensity{1, 1, 1} * 30,  radius * 3},
-//            {{10, -40, 40},  Intensity{1, 1, 1} * 400, radius * 100},
+            {{-2, 1, 3}, Intensity{1, 1, 1} * 21, radius},
+//            {{4, 4.5, 10}, Intensity{1, 1, 1} * 30,  radius * 3},
+            {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
     };
 
-    Scene scene = {objects, lights, camera, 4, 2};
+    Scene scene = {objects, lights, camera, 32, 2};
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
 
 #pragma clang diagnostic push
