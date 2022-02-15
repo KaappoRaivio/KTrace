@@ -8,7 +8,7 @@
 #include "Plane.h"
 #include "../common/mytypes.h"
 
-Plane::Plane (MyVector3 normal, double intersect, const Material* material) : normal{std::move(normal)}, intersect{intersect}, material(material) {}
+Plane::Plane (MyVector3 normal, double intersect, Material material) : normal{std::move(normal.normalize())}, intersect{intersect}, material(material) {}
 
 double Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
     hitMaterial = getMaterial();
@@ -23,7 +23,7 @@ double Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurfac
     }
 }
 
-Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material) {
+Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, Material material) {
     auto normal = (t1 - t2).cross(t1 - t3);
     auto intersect = -normal * t1;
 
@@ -61,7 +61,7 @@ AABB Plane::getBoundingBox () const {
 }
 
 const Material* Plane::getMaterial () const {
-    return material;
+    return &material;
 }
 
 

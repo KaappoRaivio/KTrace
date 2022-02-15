@@ -102,10 +102,10 @@ const Material* BVH::getMaterial () const {
     return root->getMaterial();
 }
 
-BVH::BVH (const std::vector<std::unique_ptr<Surface>>& objects) {
+BVH::BVH (std::vector<std::unique_ptr<Surface>> objects) : objects{std::move(objects)} {
     std::vector<Surface*> rawPointers;
-    rawPointers.reserve(objects.size());
-    for (const auto& object : objects) {
+    rawPointers.reserve(this->objects.size());
+    for (const auto& object : this->objects) {
         rawPointers.push_back(object.get());
     }
 
@@ -148,6 +148,7 @@ BVHNode::BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, si
 
 
     size_t objectSpan = end - start;
+    if (objectSpan == 0) throw std::runtime_error("A BVH hierarchy cannot be empty!");
     if (objectSpan == 1) {
         payload = src_surfaces[start];
         box = payload->getBoundingBox();

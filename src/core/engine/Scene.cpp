@@ -7,6 +7,10 @@
 #include "../common/LightSource.h"
 #include "../light/IntensityBlend.h"
 #include "../common/mytypes.h"
+#include "ImageTexture.h"
+#include "../geometry/Sphere.h"
+#include "../interface/MyOBJLoader.h"
+#include "TextureManager.h"
 
 #include <utility>
 #include <cmath>
@@ -14,7 +18,8 @@
 //#include <numbers>
 constexpr double PI = 3.1415926;
 
-Scene::Scene (const std::vector<Surface*>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler) : objects(std::move(objects)), camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler} {}
+Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler, TextureManager textureManager)
+        : objects{std::move(objects)}, camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)} {}
 
 #pragma clang diagnostic push
 
@@ -88,7 +93,7 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 //        Intensity diffuse_light = {0, 0, 0};
         IntensityBlend diffuse_light;
         IntensityBlend specular_light;
-        const MyVector3& face_normal = surface->getBumpedNormalAt(closest.position).normalize();
+        const MyVector3& face_normal = surface->getBumpedNormalAt(closest.position);
         const MyVector3& N = face_normal;
 
         const MyVector3& d = closest.ray.getDirection();
@@ -165,6 +170,7 @@ std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, dou
     std::vector<Intersection> intersections;
 
     for (const auto& object: objects) {
+//        std::cout << *object << std::endl;
         const std::optional<Intersection> possibleIntersection = object->getIntersection(ray);
         if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
             intersections.push_back(possibleIntersection.value());
@@ -232,3 +238,110 @@ std::ostream& operator<< (std::ostream& os, const Scene& scene) {
     return os;
 }
 
+Scene Scenes::getSceneOne (int viewport_side_length) {
+    Camera camera = {{0, -5, 7}, {0.175, 0.4}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+
+
+    TextureManager textureManager;
+
+    auto triangleTexture = textureManager.getImageTexture("../res/texture3.png");
+    auto earthTexture = textureManager.getImageTexture("../res/earth.png");
+    auto earthBump = textureManager.getImageTexture("../res/earth_bump.jpg");
+
+    auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
+
+//
+    Material triangleMaterial{planeTexture, 0.5};
+    Material planeMaterial{planeTexture};
+    Material mirror{&SolidTextures::WHITE, 1};
+    Material earthSurface{earthTexture, 0.2, earthBump};
+    Material testSurface{triangleTexture, 0.2, &SolidTextures::BUMP_UP};
+
+    auto triangle = std::make_unique<Triangle>(
+            MyVector3{-5, 6, 3},
+            MyVector3{0, 0, 3},
+            MyVector3{5, 4, 4},
+            &triangleMaterial
+    );
+
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
+    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
+    std::unique_ptr<Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
+
+//    std::vector<std::unique_ptr<Surface>> polygons;
+
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
+//    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
+//
+//    for (auto& pointer : polygons2) {
+//        polygons.push_back(std::move(pointer));
+//    }
+
+    polygons.push_back(std::move(mirrorSphere));
+//    polygons.push_back(std::move(earth));
+//    polygons.push_back(std::move(test));
+
+    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
+
+    std::vector<std::unique_ptr<Surface>> objects;
+
+    objects.push_back(std::move(plane));
+    objects.push_back(std::move(bvh));
+
+    double radius = 0;
+    std::vector<LightSource> lights = {
+            {{-2, 1, 3}, Intensity{1, 1, 1} * 21, radius},
+            {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
+    };
+
+    return {std::move(objects), lights, camera, 1, 1, std::move(textureManager)};
+}
+
+Scene Scenes::getSceneTwo (int viewport_side_length) {
+    Camera camera = {{0, -5, 7}, {0.175, 0.7}, 10, {1, 1,}, {viewport_side_length, viewport_side_length}};
+
+    TextureManager textureManager;
+
+    auto triangleTexture = textureManager.getImageTexture("../res/texture3.png");
+    auto earthTexture = textureManager.getImageTexture("../res/earth.png");
+    auto earthBump = textureManager.getImageTexture("../res/test.png");
+
+    auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
+
+    Material planeMaterial{planeTexture};
+    Material mirror{&SolidTextures::WHITE, 1};
+    Material earthSurface{earthTexture, 0.4, earthBump};
+    Material testSurface{triangleTexture, 0.2, &SolidTextures::BUMP_UP};
+
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
+    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
+    std::unique_ptr<Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
+
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
+//
+//    for (auto& pointer : polygons2) {
+//        polygons.push_back(std::move(pointer));
+//    }
+
+    polygons.push_back(std::move(mirrorSphere));
+    polygons.push_back(std::move(earth));
+    polygons.push_back(std::move(test));
+
+    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
+
+    std::vector<std::unique_ptr<Surface>> objects;
+
+    objects.push_back(std::move(plane));
+    objects.push_back(std::move(bvh));
+
+    double radius = 0;
+    std::vector<LightSource> lights = {
+            {{-2, 1, 3}, Intensity{1, 1, 1} * 21, radius},
+            {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
+    };
+
+    return {std::move(objects), lights, camera, 1, 2, std::move(textureManager)};
+}

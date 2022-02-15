@@ -16,11 +16,11 @@ private:
     MyVector3 normal;
     double intersect;
 
-    const Material* material;
+    Material material;
 public:
-    Plane (MyVector3 normal, double intersect, const Material* material);
+    Plane (MyVector3 normal, double intersect, Material material);
 
-    static Plane from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material);
+    static Plane from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, Material material);
 
     bool includes (const MyVector3& vector) const;
 

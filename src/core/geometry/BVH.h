@@ -40,11 +40,12 @@ private:
 
 class BVH : public Surface {
 private:
+    std::vector<std::unique_ptr<Surface>> objects;
     std::unique_ptr<BVHNode> root{nullptr};
 //    std::vector<std::unique_ptr<Surface>> objects;
 
 public:
-    BVH (const std::vector<std::unique_ptr<Surface>>& objects);
+    BVH (std::vector<std::unique_ptr<Surface>> objects);
 
     double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
     AABB getBoundingBox () const override;

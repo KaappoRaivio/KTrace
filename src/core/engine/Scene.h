@@ -13,16 +13,21 @@
 #include "../geometry/Triangle.h"
 #include "SingleSceneObject.h"
 #include "../common/LightSource.h"
+#include "TextureManager.h"
 
 class Scene {
 //private:
 public:
-    std::vector<Surface*> objects;
+    std::vector<std::unique_ptr<Surface>> objects;
     std::vector<LightSource> lightSources;
-    const Camera& camera;
+    Camera camera;
     int raysPerPixel;
     int antialiasingScaler;
-    Scene (const std::vector<Surface*>& objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler);
+    TextureManager textureManager;
+
+    Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler, TextureManager textureManager);
+    Scene (const Scene& other) = delete;
+    void operator= (const Scene& other) = delete;
 
     std::vector<std::vector<Intensity>> trace (int bounces) const;
 
@@ -41,6 +46,13 @@ public:
     friend std::ostream& operator<< (std::ostream& os, const Scene& scene);
 
 };
+
+namespace Scenes {
+    Scene getSceneOne (int viewport_side_length);
+
+    Scene getSceneTwo (int viewport_side_length);
+}
+
 
 //std::ostream& operator<< (std::ostream& os, const Scene& scene) {
 //

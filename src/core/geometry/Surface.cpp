@@ -15,7 +15,7 @@ std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
 
 
 //    std::cout << "Ray: " << ray << std::endl;
-    if (distance == 0 || distance < 0.001) {
+    if (distance == 0 || distance < PRECISION_LIMIT) {
 //        std::cout << distance << std::endl;
         return std::nullopt;
     } else {

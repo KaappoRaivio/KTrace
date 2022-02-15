@@ -19,9 +19,9 @@ MyVector3 Material::getBumpAt (const MyVector3& uv, const MyVector3& normal) con
 
     MyVector3 originBump {intensity.r() - 0.5, intensity.g() - 0.5, intensity.b()};
 
-    const auto& newSide = normal.cross(MyVector3s::UP);
+    const auto& newSide = -normal.cross(MyVector3s::UP);
     const auto& newOut = newSide.cross(normal);
     const auto& newUp = normal;
 
-    return newSide * originBump.getI() * 10 + newOut * originBump.getJ() * 10 + newUp * originBump.getK();
+    return newSide * originBump.getI() * 1 + newOut * originBump.getJ() * 1 + newUp * originBump.getK();
 }

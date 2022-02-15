@@ -20,9 +20,6 @@ struct Material {
     constexpr Material (const Texture* const albedo, double glossiness) : albedo{albedo}, glossiness{glossiness}, bump{&SolidTextures::BUMP_UP} {}
     explicit Material (const Texture* const albedo) : albedo{albedo}, glossiness{0}, bump{&SolidTextures::BUMP_UP} {}
 
-    Material(const Material& other) = delete;
-    void operator=(const Material& other) = delete;
-
 public:
     Intensity getAlbedoAt (const MyVector3& uv) const;
     MyVector3 getBumpAt (const MyVector3& uv, const MyVector3& normal) const;

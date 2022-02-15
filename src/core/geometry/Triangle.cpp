@@ -5,7 +5,7 @@
 #include "Triangle.h"
 
 Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material, const MyVector3& texture1, const MyVector3& texture2, const MyVector3& texture3)
-        : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3, material)}, tu{texture1}, tv{texture2}, tw{texture3}, v0{t2 - t1}, v1{t3 - t1} {
+        : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3, *material)}, tu{texture1}, tv{texture2}, tw{texture3}, v0{t2 - t1}, v1{t3 - t1} {
 
 //    v0 = t2 - t1;
 //    v1 = t3 - t1;

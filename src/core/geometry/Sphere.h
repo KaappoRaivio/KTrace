@@ -11,12 +11,12 @@ class Sphere : public Surface {
 private:
     MyVector3 center;
     double radius;
-    const Material* material;
+    Material material;
 
     bool includes (const MyVector3& point) const;
 
 public:
-    Sphere (MyVector3 center, double radius, const Material* material);
+    Sphere (MyVector3 center, double radius, Material material);
 
     double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
 
