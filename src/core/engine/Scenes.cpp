@@ -88,15 +88,15 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
 //    std::vector<std::unique_ptr<Surface>> polygons;
 
     std::vector <std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
-//    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
 //
-//    for (auto& pointer : polygons2) {
-//        polygons.push_back(std::move(pointer));
-//    }
+    for (auto& pointer : polygons2) {
+        polygons.push_back(std::move(pointer));
+    }
 
     polygons.push_back(std::move(mirrorSphere));
-//    polygons.push_back(std::move(earth));
-//    polygons.push_back(std::move(test));
+    polygons.push_back(std::move(earth));
+    polygons.push_back(std::move(test));
 
     std::unique_ptr <Surface> bvh = std::make_unique<BVH>(std::move(polygons));
 

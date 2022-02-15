@@ -74,11 +74,17 @@ void MyOpenGLWindow::delay (int millis) {
 
     SDL_Event event;
 
+    double x, y;
+
     while (SDL_WaitEvent(&event)) {
         switch (event.type) {
             case SDL_MOUSEMOTION:
-                std::cout<<  "(" << event.motion.x << ", " << event.motion.y << ")" << std::endl;
+                x = event.motion.x;
+                y = event.motion.y;
 //                SDL_Delay();
+                break;
+            case SDL_MOUSEBUTTONUP:
+                std::cout<<  "(" << x << ", " << y << ")" << std::endl;
                 break;
         }
     }
