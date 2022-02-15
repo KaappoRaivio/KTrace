@@ -53,10 +53,13 @@ std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
                     const auto& pixel = viewplane[y * antialiasingScaler + dy][x * antialiasingScaler + dx];
                     const Ray ray = {camera.getOrigin(), pixel};
 
-                    if (x == 1448 / 2 and y == 1151 / 2)
+                    if (x == 885 and y == 362)
                         std::cout << "Debug!" << std::endl;
 
-                    pixelValue += calculate_color(ray, x + dx, y + dy, bounces);
+                    std::stack<double> densities;
+                    densities.push(1);
+                    pixelValue += calculate_color(ray, x + dx, y + dy, bounces, densities);
+//                    densities.
 
                 }
             }
@@ -70,7 +73,7 @@ std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
 
 #pragma clang diagnostic pop
 
-Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left) const {
+Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left, std::stack<double>& opticalDensities) const {
     const auto& intersection = get_closest_intersection(ray, 0);
 //    std::cout << intersection.value() << std::endl;
     if (DEBUG) {
@@ -101,6 +104,7 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 
         const MyVector3& d = closest.ray.getDirection();
         const MyVector3& R = d.reflection(face_normal).normalize();
+
         for (int i = 0; i < raysPerPixel; ++i) {
             for (const auto& lightSource: lightSources) {
                 const MyVector3& vector_to_light = (lightSource.position - closest.position).rotateInsideCone(lightSource.radius);
@@ -115,11 +119,6 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 //                    double diffuse_direction_coefficient = orenNayarDiffuseReflection(N, V, R, 1 - material.glossiness);
 //                    double diffuse_direction_coefficient = 0;
 
-
-
-                    //                double specular_direction_coefficient = std::pow(std::abs(closest.ray.getDirection().reflection(face_normal) * V), 16);
-
-//                double specular_direction_coefficient = std::pow(std::abs(R * V), 16);
                     double specular_direction_coefficient = calculate_beckmann_distribution(R, V, material->glossiness);
                     diffuse_light += lightSource.intensity / raysPerPixel * distance_coefficient * diffuse_direction_coefficient;
                     specular_light += lightSource.intensity / raysPerPixel * distance_coefficient * specular_direction_coefficient;
@@ -128,12 +127,23 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
         }
 
         if (material->glossiness > 0 && bounces_left > 0) {
-            specular_light += calculate_color({closest.position, R}, x, y, bounces_left - 1);
+            specular_light += calculate_color({closest.position, R}, x, y, bounces_left - 1, opticalDensities);
         }
+
+
+        Intensity underlying{0, 0, 0};
+        if (material->alpha < 1 and bounces_left > 0) {
+            MyVector3 refracted = surface->refract(closest.position, d, opticalDensities);
+//            std::cout << refracted << std::endl;
+            underlying = calculate_color({closest.position, refracted}, x, y, bounces_left - 1, opticalDensities);
+//            std::cout << underlying << std::endl;
+        }
+
         const Intensity& specular_intensity = specular_light.commitSum();
         const Intensity& diffuse_intensity = diffuse_light.commitSum();
 
-        return albedo * (specular_intensity * material->glossiness + diffuse_intensity * (1 - material->glossiness));
+        return albedo * material->alpha * (specular_intensity * material->glossiness + diffuse_intensity * (1 - material->glossiness))
+        + underlying * (1 - material->alpha);
     }
 
 }

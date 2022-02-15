@@ -6,6 +6,7 @@
 
 #include <optional>
 #include <ostream>
+#include <stack>
 
 #include "Ray.h"
 #include "AABB.h"
@@ -15,9 +16,10 @@
 
 class Surface : public Hittable {
 public:
-    virtual MyVector3 getNormalAt (const MyVector3& position) const = 0;
 
     virtual MyVector3 getUVAt (const MyVector3& position) const = 0;
+    virtual MyVector3 refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const;
+    virtual MyVector3 getNormalAt (const MyVector3& position) const = 0;
     virtual AABB getBoundingBox () const = 0;
 
     virtual const Material* getMaterial () const = 0;
@@ -28,6 +30,7 @@ public:
 
     MyVector3 getBumpedNormalAt (const MyVector3& position) const;
     friend std::ostream& operator<< (std::ostream& os, const Surface& surface);
+
 };
 
 

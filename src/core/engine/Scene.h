@@ -31,7 +31,7 @@ public:
 
     std::vector<std::vector<Intensity>> trace (int bounces) const;
 
-    Intensity calculate_color (const Ray& ray, int x, int y, int bounces_left) const;
+    Intensity calculate_color (const Ray& ray, int x, int y, int bounces_left, std::stack<double>& opticalDensities) const;
 
 //    std::vector<Intersection> getIntersections(const Ray &ray);
 

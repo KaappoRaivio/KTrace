@@ -44,6 +44,31 @@ MyVector3 Sphere::getNormalAt (const MyVector3& position) const {
     return (position - center).normalize();
 }
 
+MyVector3 Sphere::refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const {
+    const MyVector3& n = getNormalAt(position);
+    bool inwards = n * direction < 0;
+
+
+    double n1;
+    double n2;
+    if (inwards) {
+        n1 = opticalDensities.top();
+        n2 = material.opticalDensity;
+        opticalDensities.push(n2);
+    } else {
+        n1 = opticalDensities.top();
+        opticalDensities.pop();
+        n2 = opticalDensities.top();
+    }
+
+
+    double r = n1 / n2;
+    double c = -n * direction;
+//    V_refraction = r*V_incedence + (rc - sqrt(1-Math.pow(r,2)(1-Math.pow(c,2))))n
+//    where r = n1/n2 and c = -n dot V_incedence.
+    return direction * r + n *(r * c - std::sqrt(1 - std::pow(r, 2) * (1 - std::pow (c, 1))));
+}
+
 bool Sphere::includes (const MyVector3& point) const {
     return std::abs((center - point).squared() - std::pow(radius, 2)) < PRECISION_LIMIT;
 }

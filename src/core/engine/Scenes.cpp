@@ -67,9 +67,9 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
     auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
 
 //
-    Material triangleMaterial{planeTexture, 0.5};
+    Material triangleMaterial{planeTexture, 0.5, 1};
     Material planeMaterial{planeTexture};
-    Material mirror{&SolidTextures::WHITE, 1};
+    Material mirror{&SolidTextures::WHITE, 1, 1};
     Material earthSurface{earthTexture, 0.2, earthBump};
     Material testSurface{triangleTexture, 0.2, &SolidTextures::BUMP_UP};
 
@@ -126,7 +126,7 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
     auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
 
     Material planeMaterial{planeTexture};
-    Material mirror{&SolidTextures::WHITE, 1};
+    Material mirror{&SolidTextures::WHITE, 1, 1};
     Material earthSurface{earthTexture, 0.4, earthBump};
     Material testSurface{triangleTexture, 0.2, &SolidTextures::BUMP_UP};
 
@@ -160,4 +160,56 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
     };
 
     return {std::move(objects), lights, camera, 1, 2, std::move(textureManager)};
+}
+
+Scene Scenes::getSceneThree(int viewport_side_length) {
+    Camera camera = {{0, -5, 7}, {0.175, 0.7}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+
+    TextureManager textureManager;
+
+    auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
+
+    Material planeMaterial{planeTexture};
+    Material mirror{&SolidTextures::WHITE, 0, 0.5};
+    mirror.opticalDensity = 1.33;
+
+    std::unique_ptr <Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr <Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
+
+
+
+    std::stack<double> a;
+    a.push(1);
+    auto ray = Ray{{0, -5, 7}, {0.07, 0.98, -0.13}};
+    const std::optional<Intersection>& intersection = mirrorSphere->getIntersection(ray);
+    std::cout << intersection->distance << std::endl;
+    std::cout << intersection->position << std::endl;
+    
+    std::cout << mirrorSphere->refract(intersection.value().position, ray.getDirection(), a) << std::endl;
+    
+    
+//    std::exit(0);
+
+
+    std::vector<std::unique_ptr<Surface>> polygons;
+    polygons.push_back(std::move(mirrorSphere));
+    std::unique_ptr <Surface> bvh = std::make_unique<BVH>(std::move(polygons));
+
+    std::vector <std::unique_ptr<Surface>> objects;
+
+    objects.push_back(std::move(plane));
+    objects.push_back(std::move(bvh));
+
+    double radius = 0;
+    std::vector <LightSource> lights = {
+            {{-2, 1,   3},  Intensity{1, 1, 1} * 21,  radius},
+            {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
+    };
+
+
+
+
+
+
+    return {std::move(objects), lights, camera, 1, 1, std::move(textureManager)};
 }

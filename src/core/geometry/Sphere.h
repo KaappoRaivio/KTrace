@@ -5,6 +5,7 @@
 #pragma once
 
 
+#include <stack>
 #include "Surface.h"
 
 class Sphere : public Surface {
@@ -26,6 +27,8 @@ public:
     AABB getBoundingBox () const override;
 
     const Material* getMaterial () const override;
+
+    MyVector3 refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const override;
 };
 
 

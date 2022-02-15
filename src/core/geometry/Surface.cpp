@@ -30,6 +30,10 @@ std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
     }
 }
 
+MyVector3 Surface::refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const {
+    return direction;
+}
+
 std::ostream& operator<< (std::ostream& os, const Surface& surface) {
     surface.print(os);
     return os;
