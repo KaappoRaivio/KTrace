@@ -72,9 +72,15 @@ void MyOpenGLWindow::delay (int millis) {
 //            break;
 //    }
 
-    while (true) {
-        SDL_PumpEvents();
-        SDL_Delay(millis);
+    SDL_Event event;
+
+    while (SDL_WaitEvent(&event)) {
+        switch (event.type) {
+            case SDL_MOUSEMOTION:
+                std::cout<<  "(" << event.motion.x << ", " << event.motion.y << ")" << std::endl;
+//                SDL_Delay();
+                break;
+        }
     }
 }
 

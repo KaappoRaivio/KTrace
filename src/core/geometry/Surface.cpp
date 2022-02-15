@@ -31,10 +31,15 @@ std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
 }
 
 std::ostream& operator<< (std::ostream& os, const Surface& surface) {
-    os << "Surface{" << *surface.getMaterial() << "}";
+    surface.print(os);
     return os;
 }
 
 MyVector3 Surface::getBumpedNormalAt (const MyVector3& position) const {
     return getMaterial()->getBumpAt(getUVAt(position), getNormalAt(position));
+}
+
+std::ostream& Surface::print (std::ostream& os) const {
+    os << "Surface{}" << std::endl;
+    return os;
 }

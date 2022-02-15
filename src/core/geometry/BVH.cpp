@@ -57,11 +57,10 @@ double BVHNode::getIntersectionDistance (const Ray& ray, const Surface*& hitSurf
 }
 
 std::ostream& operator<< (std::ostream& os, const BVHNode& node) {
-
     std::stringstream tab;
     for (int i = 0 ; i < node.depth ; ++i) tab << "\t";
-    if (node.left == node.right) {
-        os << tab.str() << node.left->getBoundingBox();
+    if (node.isLeaf()) {
+        os << tab.str() << node.payload->getBoundingBox();
         return os;
     }
 
@@ -110,6 +109,12 @@ BVH::BVH (std::vector<std::unique_ptr<Surface>> objects) : objects{std::move(obj
     }
 
     root = std::make_unique<BVHNode>(rawPointers);
+}
+
+std::ostream& BVH::print (std::ostream& os) const {
+//    os << "paska" << std::endl;
+    os << *root;
+    return os;
 }
 
 bool boxCompare (const Surface* const a, const Surface* const b, int axis) {

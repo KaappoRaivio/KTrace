@@ -17,7 +17,7 @@ const Material* Objects::getMaterial () const {
     return surfaces[0]->getMaterial();
 }
 
-Objects::Objects (const std::vector<Surface*>& surfaces) : surfaces{surfaces} {
+Objects::Objects (std::vector<std::unique_ptr<Surface>> surfaces) : surfaces{std::move(surfaces)} {
 
 }
 

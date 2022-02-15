@@ -41,6 +41,8 @@ public:
 
     friend std::ostream& operator<< (std::ostream& os, const Triangle& triangle);
 
+    std::ostream& print (std::ostream& os) const override;
+
 };
 
 

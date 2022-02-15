@@ -17,6 +17,7 @@
 //#include "src/core/interface/MyOBJLoader.h"
 #include "src/core/geometry/Objects.h"
 #include "src/core/geometry/BVH.h"
+#include "src/core/engine/Scenes.h"
 
 #define DEBUG
 
@@ -25,7 +26,7 @@ int main () {
     constexpr int window_side_length = 2000;
     constexpr int viewport_side_length = 1000;
 
-    const Scene& scene = Scenes::getSceneOne(viewport_side_length);
+    const Scene& scene = Scenes::getDebug(viewport_side_length);
 
 
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};

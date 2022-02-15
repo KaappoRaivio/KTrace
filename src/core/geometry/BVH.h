@@ -54,4 +54,6 @@ public:
     const Material* getMaterial () const override;
 
     friend std::ostream& operator<< (std::ostream& os, const BVHNode& node);
+
+    std::ostream& print (std::ostream& os) const override;
 };

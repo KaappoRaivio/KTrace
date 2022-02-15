@@ -22,6 +22,8 @@ public:
 
     virtual const Material* getMaterial () const = 0;
 
+    virtual std::ostream& print (std::ostream& os) const;
+
     std::optional<Intersection> getIntersection (const Ray& ray);
 
     MyVector3 getBumpedNormalAt (const MyVector3& position) const;

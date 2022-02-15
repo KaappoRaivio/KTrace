@@ -15,6 +15,10 @@ Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t
     invDenom = 1.0 / (d00 * d11 - d01 * d01);
 }
 
+std::ostream& Triangle::print (std::ostream& os) const {
+    return os << "Triangle{" << t1 << ", " << t2 << ", " << t3 << "}";
+}
+
 
 Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material) : Triangle{t1, t2, t3, material, {0, 0, 0}, {1, 0, 0}, {0, 1, 0}} {
 

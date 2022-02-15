@@ -10,9 +10,9 @@
 
 class Objects : public Surface {
 private:
-    std::vector<Surface*> surfaces;
+    std::vector<std::unique_ptr<Surface>> surfaces;
 public:
-    Objects (const std::vector<Surface*>& surfaces);
+    Objects (std::vector<std::unique_ptr<Surface>> surfaces);
 
 public:
 //    MyVector3 getBumpAt (const MyVector3& position) const override;

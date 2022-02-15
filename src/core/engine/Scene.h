@@ -47,11 +47,6 @@ public:
 
 };
 
-namespace Scenes {
-    Scene getSceneOne (int viewport_side_length);
-
-    Scene getSceneTwo (int viewport_side_length);
-}
 
 
 //std::ostream& operator<< (std::ostream& os, const Scene& scene) {
