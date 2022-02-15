@@ -24,7 +24,7 @@ double Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurfac
 }
 
 Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, Material material) {
-    auto normal = (t1 - t2).cross(t1 - t3);
+    auto normal = (t1 - t2).cross(t1 - t3).normalize();
     auto intersect = -normal * t1;
 
     return {normal, intersect, material};
