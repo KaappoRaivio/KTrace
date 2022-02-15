@@ -167,7 +167,7 @@ Scene Scenes::getSceneThree(int viewport_side_length) {
 
     TextureManager textureManager;
 
-    auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
+    auto planeTexture = textureManager.getImageTexture("../res/texture3.png");
 
     Material planeMaterial{planeTexture};
     Material mirror{&SolidTextures::WHITE, 0, 0.5};
