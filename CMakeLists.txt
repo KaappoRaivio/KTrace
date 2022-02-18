@@ -2,11 +2,17 @@ cmake_minimum_required(VERSION 3.20)
 project(raytracercpp)
 
 set(CMAKE_CXX_STANDARD 23)
-
 SET(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}} /home/kaappo/git/raytracercpp/lib/cmake/modules)
 #set(SDL2_PATH "/usr/lib/SDL2-2.0.16")
 find_package(SDL2 REQUIRED SDL2)
-find_package(glm REQUIRED GLM)
+find_package(GLM REQUIRED)
+if (GLM_FOUND)
+    message("moi")
+    include_directories(${GLM_INCLUDE_DIRS})
+else()
+    message("hei")
+endif(GLM_FOUND)
 #include_directories( ${SDL2_INCLUDE_DIR} )
 
 
@@ -20,7 +26,7 @@ target_link_libraries(Main
         PRIVATE SDL2
         )
 
-target_link_libraries(Main PRIVATE GLM)
+#target_link_libraries(Main PRIVATE glm)
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 --std=c++2a")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 --std=c++2a")

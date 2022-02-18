@@ -12,52 +12,53 @@
 
 class MyVector3 {
 private:
-    double i, j, k;
+//    float i, j, k;
+    glm::vec3 vector;
 
 public:
-    constexpr MyVector3 (double i, double j, double k) : i{i}, j{j}, k{k} {
-
-    };
+//    constexpr MyVector3 (float i, float j, float k) : vector{i, j, k} {};
+    constexpr MyVector3 (double i, double j, double k) : vector{i, j, k} {}
+    constexpr MyVector3 (const glm::vec3& vector) : vector{vector} {}
 
     MyVector3 operator+ (const MyVector3& other) const;
     MyVector3 operator|| (const MyVector3& other) const;
     MyVector3 operator- () const;
     MyVector3 operator- (const MyVector3& other) const;
-    MyVector3 operator* (double other) const;
-    double operator* (const MyVector3& other) const;
-    MyVector3 operator/ (double other) const;
+    MyVector3 operator* (float other) const;
+    float operator* (const MyVector3& other) const;
+    MyVector3 operator/ (float other) const;
     explicit operator bool () const;
-    double operator [] (int index) const;
+    float operator [] (int index) const;
 
     bool operator== (const MyVector3& rhs) const;
 
     bool operator!= (const MyVector3& rhs) const;
 
-    MyVector3 rotateInsideCone (double radius) const;
+    MyVector3 rotateInsideCone (float radius) const;
     MyVector3 reflection (const MyVector3& axis) const;
     MyVector3 inTermsOfComponents (const MyVector3& i, const MyVector3& j, const MyVector3& k) const;
 
-    MyVector3 rotate (double yaw, double pitch) const;
+    MyVector3 rotate (float yaw, float pitch) const;
     MyVector3 cross (const MyVector3& other) const;
-    double length () const;
+    float length () const;
 
-    double squared () const;
+    float squared () const;
     MyVector3 normalize () const;
 
-    double atan2 () const;
+    float atan2 () const;
 
-    double asin () const;
+    float asin () const;
 
     friend std::ostream& operator<< (std::ostream& os, const MyVector3& vector3);
 
-    double getI () const;
-    double getJ () const;
-    double getK () const;
+    float getI () const;
+    float getJ () const;
+    float getK () const;
 
     static MyVector3 randomInsideUnitSphere ();
 
 
-    double dot (const MyVector3& vector3) const;
+    float dot (const MyVector3& vector3) const;
 };
 
 namespace MyVector3s {
