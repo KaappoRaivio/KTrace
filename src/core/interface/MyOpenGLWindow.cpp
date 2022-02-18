@@ -4,8 +4,9 @@
 
 #include <iostream>
 #include "MyOpenGLWindow.h"
+#include "../geometry/Ray.h"
 
-MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale} { // NOLINT(cppcoreguidelines-pro-type-member-init)
+MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, const Camera& camera) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale}, camera(camera) { // NOLINT(cppcoreguidelines-pro-type-member-init)
     std::cout << "creating window" << std::endl;
     if (!MyOpenGLWindow::initialized) {
         SDL_Init(SDL_INIT_VIDEO);
@@ -84,7 +85,8 @@ void MyOpenGLWindow::delay (int millis) {
 //                SDL_Delay();
                 break;
             case SDL_MOUSEBUTTONUP:
-                std::cout<<  "(" << x << ", " << y << ")" << std::endl;
+                std::cout << "(" << x / scale << ", " << y / scale << "), corresponds to" << Ray{camera.getOrigin(), camera.get_viewplane(1)[y][x]} << std::endl;
+
                 break;
         }
     }
@@ -99,8 +101,8 @@ MyOpenGLWindow::~MyOpenGLWindow () {
 void MyOpenGLWindow::paint (std::vector<std::vector<Intensity>> pixels) const {
     SDL_RenderClear(renderer);
     SDL_PumpEvents();
-    for (int y = 0; y < pixels.size(); ++y) {
-        for (int x = 0; x < pixels[y].size(); ++x) {
+    for (int y = 0 ; y < pixels.size() ; ++y) {
+        for (int x = 0 ; x < pixels[y].size() ; ++x) {
             set_pixel(x, y, pixels[y][x]);
 
         }

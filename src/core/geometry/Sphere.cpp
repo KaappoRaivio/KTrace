@@ -48,12 +48,16 @@ MyVector3 Sphere::refract (const MyVector3& position, const MyVector3& direction
     const MyVector3& normal = getNormalAt(position);
     bool inwards = normal * direction < 0;
 //
-    double n;
-    if (inwards) {
-        n = 1.33;
-    } else {
-        n = 1 / 1.33;
-    }
+    double n = opticalDensities.top() / getMaterial()->opticalDensity;
+    opticalDensities.push(getMaterial()->opticalDensity);
+
+//    double n;
+//    if (false) {
+////    if (inwards) {
+//        n = 1.33;
+//    } else {
+//        n = 1 / 1.33;
+//    }
 
 //    double n1;
 //    double n2;
@@ -72,13 +76,25 @@ MyVector3 Sphere::refract (const MyVector3& position, const MyVector3& direction
 //    double normal = n1 / n2;
 //    const double cosI = -dot(normal, direction);
 
-    double cosI = -normal * direction;
+    double cosI = -normal * direction.normalize();
+    if (cosI < 0) {
+        n = 1 / n;
+        cosI *= -1;
+//        opticalDensities.pop();
+        opticalDensities.pop();
+    }
+//    double cosI = std::abs(-normal * direction.normalize());
     double sinT2 = n * n * (1.0 - cosI * cosI);
     if (sinT2 > 1.0) {
+        std::cout << "mosi" << std::endl;
         return direction.reflection(normal);
     }
+    if (sinT2 < 0)
+        std::cout << sinT2 << std::endl;
 
     double cosT = sqrt(1.0 - sinT2);
+//    if (!inwards)
+//    std::cout << direction * n + normal * (n * cosI - cosT) << std::endl;
     return direction * n + normal * (n * cosI - cosT);
 
 //    V_refraction = r*V_incedence + (rc - sqrt(1-Math.pow(r,2)(1-Math.pow(c,2))))normal

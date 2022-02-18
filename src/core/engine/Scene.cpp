@@ -18,12 +18,12 @@
 //#include <numbers>
 constexpr double PI = 3.1415926;
 
-Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int raysPerPixel, int antialiasingScaler, TextureManager textureManager)
-        : objects{std::move(objects)}, camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)} {}
+Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, TextureManager textureManager)
+        : objects{std::move(objects)}, camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)}, maxBounces(maxBounces) {}
 
 #pragma clang diagnostic push
 
-std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
+std::vector<std::vector<Intensity>> Scene::trace () const {
     auto viewplane = camera.get_viewplane(antialiasingScaler);
 
     unsigned viewport_height = viewplane.size() / antialiasingScaler;
@@ -31,10 +31,10 @@ std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
 
     std::vector<std::vector<Intensity>> pixels;
     pixels.reserve(viewport_height);
-    for (int y = 0; y < viewport_height; ++y) {
+    for (int y = 0 ; y < viewport_height ; ++y) {
         std::vector<Intensity> row;
         row.reserve(viewport_width);
-        for (int x = 0; x < viewport_width; ++x) {
+        for (int x = 0 ; x < viewport_width ; ++x) {
             row.emplace_back(0, 0, 0);
         }
         pixels.push_back(row);
@@ -43,22 +43,24 @@ std::vector<std::vector<Intensity>> Scene::trace (int bounces) const {
 
 #pragma omp parallel for collapse(2)
 //#pragma omp target teams distribute parallel for  collapse(2)
-    for (int y = 0; y < viewport_height; ++y) {
-        for (int x = 0; x < viewport_width; ++x) {
+    for (int y = 0 ; y < viewport_height ; ++y) {
+        for (int x = 0 ; x < viewport_width ; ++x) {
 
             IntensityBlend pixelValue;
 
-            for (int dy = 0; dy < antialiasingScaler; ++dy) {
-                for (int dx = 0; dx < antialiasingScaler; ++dx) {
+            for (int dy = 0 ; dy < antialiasingScaler ; ++dy) {
+                for (int dx = 0 ; dx < antialiasingScaler ; ++dx) {
                     const auto& pixel = viewplane[y * antialiasingScaler + dy][x * antialiasingScaler + dx];
                     const Ray ray = {camera.getOrigin(), pixel};
 
-                    if (x == 885 and y == 362)
+                    if (x == 1226 and y == 685)
                         std::cout << "Debug!" << std::endl;
 
                     std::stack<double> densities;
                     densities.push(1);
-                    pixelValue += calculate_color(ray, x + dx, y + dy, bounces, densities);
+                    pixelValue += calculate_color(ray, x + dx, y + dy, maxBounces, densities);
+//                    if (DEBUG)
+//                        if (densities.size() > 1) std::cout << densities.size() << std::endl;
 //                    densities.
 
                 }
@@ -102,11 +104,16 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
         const MyVector3& face_normal = surface->getBumpedNormalAt(closest.position);
         const MyVector3& N = face_normal;
 
+//        if (N * ray.getDirection() >= 0) {
+//            return calculate_color({closest.position, ray.getDirection()}, x, y, bounces_left, opticalDensities);
+//        }
+
+
         const MyVector3& d = closest.ray.getDirection();
         const MyVector3& R = d.reflection(face_normal).normalize();
 
-        for (int i = 0; i < raysPerPixel; ++i) {
-            for (const auto& lightSource: lightSources) {
+        for (int i = 0 ; i < raysPerPixel ; ++i) {
+            for (const auto& lightSource : lightSources) {
                 const MyVector3& vector_to_light = (lightSource.position - closest.position).rotateInsideCone(lightSource.radius);
                 const MyVector3& V = vector_to_light.normalize();
 
@@ -133,9 +140,9 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 
         Intensity underlying{0, 0, 0};
         if (material->alpha < 1 and bounces_left > 0) {
-            MyVector3 refracted = surface->refract(closest.position, d, opticalDensities);
+            MyVector3 refracted = surface->refract(closest.position, d.normalize(), opticalDensities).normalize();
 //            std::cout << refracted << std::endl;
-            underlying = calculate_color({closest.position, refracted}, x, y, bounces_left - 1, opticalDensities);
+            underlying = calculate_color({closest.position + refracted * 0.01, refracted}, x, y, bounces_left - 1, opticalDensities);
 //            std::cout << underlying << std::endl;
         }
 
@@ -143,7 +150,7 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
         const Intensity& diffuse_intensity = diffuse_light.commitSum();
 
         return albedo * material->alpha * (specular_intensity * material->glossiness + diffuse_intensity * (1 - material->glossiness))
-        + underlying * (1 - material->alpha);
+               + underlying * (1 - material->alpha);
     }
 
 }
@@ -167,12 +174,25 @@ double Scene::orenNayarDiffuseReflection (const MyVector3& face_normal, const My
 }
 
 
-double Scene::lambertianDiffuseReflection (const MyVector3& face_normal, const MyVector3& vector_to_light, const MyVector3& ray_direction) {
-    double dot1 = -ray_direction * face_normal;
-    double dot2 = vector_to_light * face_normal;
+double Scene::lambertianDiffuseReflection (const MyVector3& N, const MyVector3& L, const MyVector3& d) {
+    double dot1 = -d * N;
+    double dot2 = L * N;
+
+    if (dot2 > 0 and dot1 > 0) {
+        return dot2;
+    } else {
+        return 0;
+    }
+
+
+
+
+
+
+//    return std::max(0.0, N * L);
 
     if ((dot2 < 0) == (dot1 < 0)) {
-        return std::abs(face_normal * vector_to_light);
+        return std::abs(N * L);
     } else {
         return 0;
     }
@@ -182,7 +202,7 @@ double Scene::lambertianDiffuseReflection (const MyVector3& face_normal, const M
 std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, double max_distance) const {
     std::vector<Intersection> intersections;
 
-    for (const auto& object: objects) {
+    for (const auto& object : objects) {
 //        std::cout << *object << std::endl;
         const std::optional<Intersection> possibleIntersection = object->getIntersection(ray);
         if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
@@ -236,13 +256,13 @@ double Scene::calculate_beckmann_distribution (const MyVector3& R, const MyVecto
 
 std::ostream& operator<< (std::ostream& os, const Scene& scene) {
     os << "objects: {";
-    for (const auto& i : scene.objects ) {
+    for (const auto& i : scene.objects) {
         os << i << ", ";
     }
     os << "}";
 
     os << "lightSources: {";
-    for (const auto& i : scene.lightSources ) {
+    for (const auto& i : scene.lightSources) {
         os << i << ", ";
     }
     os << "}";

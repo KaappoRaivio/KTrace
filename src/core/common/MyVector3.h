@@ -8,6 +8,7 @@
 #include <ostream>
 #include <iostream>
 #include "../../../lib/Eigen/Dense"
+#include <glm/glm.hpp>
 
 class MyVector3 {
 private:

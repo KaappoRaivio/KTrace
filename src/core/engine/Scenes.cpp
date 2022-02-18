@@ -51,7 +51,7 @@ Scene Scenes::getDebug (int viewportSideLength) {
 //    std::exit(0);
 
 
-    return {std::move(objects), lights, camera, 1, 1, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 5, 1, 1, std::move(textureManager)};
 }
 
 Scene Scenes::getSceneOne (int viewport_side_length) {
@@ -80,14 +80,14 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
             &triangleMaterial
     );
 
-    std::unique_ptr <Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr <Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
-    std::unique_ptr <Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
-    std::unique_ptr <Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
+    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
+    std::unique_ptr<Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
 
 //    std::vector<std::unique_ptr<Surface>> polygons;
 
-    std::vector <std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
     std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
 //
     for (auto& pointer : polygons2) {
@@ -98,20 +98,20 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
     polygons.push_back(std::move(earth));
     polygons.push_back(std::move(test));
 
-    std::unique_ptr <Surface> bvh = std::make_unique<BVH>(std::move(polygons));
+    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
 
-    std::vector <std::unique_ptr<Surface>> objects;
+    std::vector<std::unique_ptr<Surface>> objects;
 
     objects.push_back(std::move(plane));
     objects.push_back(std::move(bvh));
 
     double radius = 0;
-    std::vector <LightSource> lights = {
+    std::vector<LightSource> lights = {
             {{-2, 1,   3},  Intensity{1, 1, 1} * 21,  radius},
             {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
     };
 
-    return {std::move(objects), lights, camera, 1, 1, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 5, 1, 1, std::move(textureManager)};
 }
 
 Scene Scenes::getSceneTwo (int viewport_side_length) {
@@ -130,13 +130,13 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
     Material earthSurface{earthTexture, 0.4, earthBump};
     Material testSurface{triangleTexture, 0.2, &SolidTextures::BUMP_UP};
 
-    std::unique_ptr <Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr <Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
-    std::unique_ptr <Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
-    std::unique_ptr <Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
+    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
+    std::unique_ptr<Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
 
-    std::vector <std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
-    std::vector <std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
+    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
 //
 //    for (auto& pointer : polygons2) {
 //        polygons.push_back(std::move(pointer));
@@ -146,23 +146,23 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
     polygons.push_back(std::move(earth));
     polygons.push_back(std::move(test));
 
-    std::unique_ptr <Surface> bvh = std::make_unique<BVH>(std::move(polygons));
+    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
 
-    std::vector <std::unique_ptr<Surface>> objects;
+    std::vector<std::unique_ptr<Surface>> objects;
 
     objects.push_back(std::move(plane));
     objects.push_back(std::move(bvh));
 
     double radius = 0;
-    std::vector <LightSource> lights = {
+    std::vector<LightSource> lights = {
             {{-2, 1,   3},  Intensity{1, 1, 1} * 21,  radius},
             {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
     };
 
-    return {std::move(objects), lights, camera, 1, 2, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 5, 1, 2, std::move(textureManager)};
 }
 
-Scene Scenes::getSceneThree(int viewport_side_length) {
+Scene Scenes::getSceneThree (int viewport_side_length) {
     Camera camera = {{0, -5, 7}, {0.175, 0.7}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
@@ -170,46 +170,69 @@ Scene Scenes::getSceneThree(int viewport_side_length) {
     auto planeTexture = textureManager.getImageTexture("../res/texture3.png");
 
     Material planeMaterial{planeTexture};
-    Material mirror{&SolidTextures::WHITE, 0, 0.5};
-    mirror.opticalDensity = 1.33;
+    Material mirror{&SolidTextures::WHITE, 1, 0.2};
+    mirror.opticalDensity = 1.04;
 
-    std::unique_ptr <Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr <Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
-
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 1, 5}, 2, mirror);
 
 
     std::stack<double> a;
     a.push(1);
-    auto ray = Ray{{0, -5, 7}, {0.07, 0.98, -0.13}};
+    auto ray = Ray{{0,    -5,   7},
+                   {0.28, 0.85, -0.43}};
     const std::optional<Intersection>& intersection = mirrorSphere->getIntersection(ray);
+
     std::cout << intersection->distance << std::endl;
     std::cout << intersection->position << std::endl;
-    
     std::cout << mirrorSphere->refract(intersection.value().position, ray.getDirection(), a) << std::endl;
-    
-    
+
+
 //    std::exit(0);
 
 
     std::vector<std::unique_ptr<Surface>> polygons;
     polygons.push_back(std::move(mirrorSphere));
-    std::unique_ptr <Surface> bvh = std::make_unique<BVH>(std::move(polygons));
+    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
 
-    std::vector <std::unique_ptr<Surface>> objects;
+    std::vector<std::unique_ptr<Surface>> objects;
 
     objects.push_back(std::move(plane));
     objects.push_back(std::move(bvh));
 
     double radius = 0;
-    std::vector <LightSource> lights = {
-            {{-2, 1,   3},  Intensity{1, 1, 1} * 21,  radius},
+    std::vector<LightSource> lights = {
+            {{-2, 20,  3},  Intensity{1, 1, 1} * 210, radius},
             {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
     };
 
 
+    return {std::move(objects), lights, camera, 4, 1, 4, std::move(textureManager)};
+}
 
+Scene Scenes::getSceneFour (int viewport_side_length) {
+    Camera camera = {{0, -5, 7}, {0.4, 0.5}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
+    TextureManager textureManager;
 
+    auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
 
-    return {std::move(objects), lights, camera, 1, 1, std::move(textureManager)};
+    Material planeMaterial{planeTexture, 0.0, 1.0};
+
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE);
+    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
+
+    std::vector<std::unique_ptr<Surface>> objects;
+    objects.push_back(std::move(plane));
+    objects.push_back(std::move(bvh));
+
+    double radius = 1;
+    std::vector<LightSource> lights = {
+            {{-2, 1,   3},  Intensity{1, 1, 1} * 21,  radius},
+            {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
+    };
+
+    return {std::move(objects), lights, camera, 5, 8, 1, std::move(textureManager)};
 }

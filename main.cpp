@@ -26,17 +26,17 @@ int main () {
     constexpr int window_side_length = 2000;
     constexpr int viewport_side_length = 2000;
 
-    const Scene& scene = Scenes::getScene<3>(viewport_side_length);
+    const Scene& scene = Scenes::getScene<4>(viewport_side_length);
 
 
-    MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length};
+    MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length, scene.camera};
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (true) {
         std::cout << "starting tracing!" << std::endl;
         auto start = std::chrono::system_clock::now();
-        auto pixels = scene.trace(5);
+        auto pixels = scene.trace();
 
         auto end = std::chrono::system_clock::now();
         std::cout << "traced" << std::endl;

@@ -30,7 +30,7 @@ Triangle::Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t
 double Triangle::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
 //    std::cout << "Raydestroyed: " << ray << std::endl;
     auto possible_intersection = plane.getIntersectionDistance(ray, hitSurface, hitMaterial);
-    if (possible_intersection == 0) {
+    if (possible_intersection == 0 or ray.getDirection() * plane.getNormal() >= 0) {
 //        std::cout << "Early return" << std::endl;
         return 0.0;
     }

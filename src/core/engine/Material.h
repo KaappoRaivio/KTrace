@@ -33,6 +33,7 @@ public:
 namespace Materials {
     constexpr Material WHITE_GLOSSY{&SolidTextures::WHITE, 0.8, 1};
     constexpr Material BLUE_GLOSSY{&SolidTextures::BLUE, 0.8, 1};
+    constexpr Material BLUE{&SolidTextures::BLUE, 0, 1};
     constexpr Material RED_GLOSSY{&SolidTextures::RED, 0.6, 1};
 //    constexpr Material BLUE_GLOSSY{&SolidTextures::BLUE, 0.8};
     constexpr Material YELLOW_GLOSSY{&SolidTextures::YELLOW, 0.8, 1};

@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "../light/Intensity.h"
+#include "../engine/Camera.h"
 
 class MyOpenGLWindow {
 private:
@@ -15,12 +16,12 @@ private:
     int m_height;
     double m_gamma;
     int scale;
+    const Camera& camera;
 
     SDL_Window* window;
     SDL_Renderer* renderer;
 public:
-    MyOpenGLWindow (int width, int height, double gamma, int scale);
-
+    MyOpenGLWindow (int width, int height, double gamma, int scale, const Camera& camera);
     ~MyOpenGLWindow ();
 
     void set_pixel (int x, int y, const Intensity& color) const;

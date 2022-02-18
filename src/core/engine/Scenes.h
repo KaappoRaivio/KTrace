@@ -13,6 +13,7 @@ namespace Scenes {
     Scene getSceneTwo (int viewport_side_length);
     Scene getSceneThree (int viewport_side_length);
     Scene getDebug (int viewportSideLength);
+    Scene getSceneFour (int viewport_side_length);
 
     template <int INDEX>
     Scene getScene (int viewportSideLength) {
@@ -25,6 +26,8 @@ namespace Scenes {
                 return getSceneTwo(viewportSideLength);
             case 3:
                 return getSceneThree(viewportSideLength);
+            case 4:
+                return getSceneFour(viewportSideLength);
         }
     }
 

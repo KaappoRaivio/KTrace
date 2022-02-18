@@ -51,7 +51,7 @@ MyVector3 Plane::getUVAt (const MyVector3& position) const {
     const MyVector3& tangent = normal.cross(MyVector3s::UP) || normal.cross(MyVector3s::OUT) || normal.cross(MyVector3s::SIDE);
     const MyVector3& bitangent = normal.cross(tangent);
 
-    const MyVector3& components = position.inTermsOfComponents(tangent, bitangent, normal);
+    const MyVector3& components = position.inTermsOfComponents(tangent * 50, bitangent * 50, normal);
 
     return components;
 }
