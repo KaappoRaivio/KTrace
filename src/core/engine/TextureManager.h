@@ -6,6 +6,7 @@
 
 
 #include <memory>
+#include <vector>
 #include "Texture.h"
 
 class TextureManager {

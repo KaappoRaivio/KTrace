@@ -5,11 +5,11 @@
 #include "Objects.h"
 #include "../common/mytypes.h"
 
-MyVector3 Objects::getNormalAt (const MyVector3& position) const {
+glm::vec3 Objects::getNormalAt (const glm::vec3& position) const {
     throw std::runtime_error("Normal generation not implemented!");
 }
 
-MyVector3 Objects::getUVAt (const MyVector3& position) const {
+glm::vec3 Objects::getUVAt (const glm::vec3& position) const {
     throw std::runtime_error("UV mapping not implemented!");
 }
 
@@ -21,7 +21,7 @@ Objects::Objects (std::vector<std::unique_ptr<Surface>> surfaces) : surfaces{std
 
 }
 
-double Objects::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+float Objects::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
     const Surface* tempHitSurface = nullptr;
     const Material* tempHitMaterial = nullptr;
 

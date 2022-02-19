@@ -5,6 +5,6 @@
 #include "SolidTexture.h"
 
 
-Intensity SolidTexture::getPixelAt (const MyVector3& uv) const {
+Intensity SolidTexture::getPixelAt (const glm::vec3& uv) const {
     return intensity;
 }

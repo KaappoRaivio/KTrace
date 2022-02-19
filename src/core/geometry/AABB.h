@@ -6,16 +6,16 @@
 
 
 #include <ostream>
-#include "../common/MyVector3.h"
+#include <glm/glm.hpp>
 #include "Hittable.h"
 #include "Ray.h"
 
 class AABB {
 private:
-    MyVector3 minimum, maximum;
+    glm::vec3 minimum, maximum;
 
 public:
-    AABB (const MyVector3& minimum, const MyVector3& maximum);
+    AABB (const glm::vec3& minimum, const glm::vec3& maximum);
     constexpr AABB (bool invalid) : maximum{0, 0, 0}, minimum{0, 0, 0} {
 
     }
@@ -30,8 +30,8 @@ public:
 
     AABB expand (const AABB& aabb);
 
-    MyVector3 getMinimum () const;
-    MyVector3 getMaximum () const;
+    glm::vec3 getMinimum () const;
+    glm::vec3 getMaximum () const;
 
     double intersects (const Ray& ray) const;
 };

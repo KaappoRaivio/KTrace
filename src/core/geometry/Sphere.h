@@ -10,25 +10,25 @@
 
 class Sphere : public Surface {
 private:
-    MyVector3 center;
-    double radius;
+    glm::vec3 center;
+    float radius;
     Material material;
 
-    bool includes (const MyVector3& point) const;
+    bool includes (const glm::vec3& point) const;
 
 public:
-    Sphere (MyVector3 center, double radius, Material material);
+    Sphere (glm::vec3 center, float radius, Material material);
 
-    double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
 
-    MyVector3 getNormalAt (const MyVector3& position) const override;
-    MyVector3 getUVAt (const MyVector3& position) const override;
+    glm::vec3 getNormalAt (const glm::vec3& position) const override;
+    glm::vec3 getUVAt (const glm::vec3& position) const override;
 
     AABB getBoundingBox () const override;
 
     const Material* getMaterial () const override;
 
-    MyVector3 refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const override;
+    glm::vec3 refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const override;
 };
 
 

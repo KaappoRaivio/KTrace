@@ -6,12 +6,12 @@
 
 ImageTexture::ImageTexture (const std::string& path) : image{path} {}
 
-Intensity ImageTexture::getPixelAt (const MyVector3& uv) const {
+Intensity ImageTexture::getPixelAt (const glm::vec3& uv) const {
 //    std::cout << "uv " << uv << std::endl;
 
-    double u = (uv.getI() - std::floor(uv.getI())) * image.getWidth();
-    double v = (uv.getJ() - std::floor(uv.getJ())) * image.getHeight();
+    double u = (uv.x - std::floor(uv.x)) * image.getWidth();
+    double v = (uv.y - std::floor(uv.y)) * image.getHeight();
 
     return image.get_pixel_at(u, v);
-//    return image.getPixelAt(image.getWidth() - 1 - std::floor(uv.getI() * image.getWidth() - 1e-9), image.getHeight() - 1 - std::floor(uv.getJ() * image.getHeight() - 1e-9));
+//    return image.getPixelAt(image.getWidth() - 1 - std::floor(uv.x * image.getWidth() - 1e-9), image.getHeight() - 1 - std::floor(uv.y * image.getHeight() - 1e-9));
 }

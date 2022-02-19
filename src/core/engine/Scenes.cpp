@@ -9,13 +9,13 @@
 #include "../common/mytypes.h"
 
 Scene Scenes::getDebug (int viewportSideLength) {
-    Camera camera = {{0, -5, 7}, {0.175, 0.4}, 1, {1, 1,}, {viewportSideLength, viewportSideLength}};
+    Camera camera = {{0.0f, -5.0f, 7.0f}, {0, 4, 2}, 1.0f, {1.0f, 1.0f,}, {viewportSideLength, viewportSideLength}};
     TextureManager textureManager;
 
     auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
     Material planeMaterial{planeTexture};
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
 
 //    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
     std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
@@ -30,7 +30,7 @@ Scene Scenes::getDebug (int viewportSideLength) {
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
     std::cout << *bvh << std::endl;
 
-    std::cout << (std::abs(bvh->getIntersection({{0, -5, 7}, MyVector3{0.3657, 0.816, -0.5} / 1.04})->distance) >= PRECISION_LIMIT) << std::endl;
+    std::cout << (std::abs(bvh->getIntersection({{0, -5, 7}, glm::vec3{0.3657, 0.816, -0.5}})->distance) >= PRECISION_LIMIT) << std::endl;
 
 
     std::unique_ptr<Surface> obje = std::make_unique<Objects>(std::move(polygons2));
@@ -55,7 +55,7 @@ Scene Scenes::getDebug (int viewportSideLength) {
 }
 
 Scene Scenes::getSceneOne (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {0.175, 0.4}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {1, 4, 2}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
 
     TextureManager textureManager;
@@ -74,16 +74,16 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
     Material testSurface{triangleTexture, 0.2, &SolidTextures::BUMP_UP};
 
     auto triangle = std::make_unique<Triangle>(
-            MyVector3{-5, 6, 3},
-            MyVector3{0, 0, 3},
-            MyVector3{5, 4, 4},
+            glm::vec3{-5, 6, 3},
+            glm::vec3{0, 0, 3},
+            glm::vec3{5, 4, 4},
             &triangleMaterial
     );
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
-    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
-    std::unique_ptr<Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(glm::vec3{1, 6, 5}, 2, mirror);
+    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(glm::vec3{1.5, 1, 1}, 1.5, earthSurface);
+    std::unique_ptr<Surface> test = std::make_unique<Sphere>(glm::vec3{-2, 0.5, 1}, 1.5, testSurface);
 
 //    std::vector<std::unique_ptr<Surface>> polygons;
 
@@ -115,7 +115,7 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
 }
 
 Scene Scenes::getSceneTwo (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {0.175, 0.7}, 10, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {1, 4, 2}, 10, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
@@ -130,10 +130,10 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
     Material earthSurface{earthTexture, 0.4, earthBump};
     Material testSurface{triangleTexture, 0.2, &SolidTextures::BUMP_UP};
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 6, 5}, 2, mirror);
-    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(MyVector3{1.5, 1, 1}, 1.5, earthSurface);
-    std::unique_ptr<Surface> test = std::make_unique<Sphere>(MyVector3{-2, 0.5, 1}, 1.5, testSurface);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(glm::vec3{1, 6, 5}, 2, mirror);
+    std::unique_ptr<Surface> earth = std::make_unique<Sphere>(glm::vec3{1.5, 1, 1}, 1.5, earthSurface);
+    std::unique_ptr<Surface> test = std::make_unique<Sphere>(glm::vec3{-2, 0.5, 1}, 1.5, testSurface);
 
     std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
     std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {-2, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
@@ -163,7 +163,7 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
 }
 
 Scene Scenes::getSceneThree (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {0.175, 0.7}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {1, 1, 5}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
@@ -173,8 +173,8 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     Material mirror{&SolidTextures::WHITE, 1, 0.2};
     mirror.opticalDensity = 1.04;
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(MyVector3{1, 1, 5}, 2, mirror);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(glm::vec3{1, 1, 5}, 2, mirror);
 
 
     std::stack<double> a;
@@ -183,9 +183,9 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
                    {0.28, 0.85, -0.43}};
     const std::optional<Intersection>& intersection = mirrorSphere->getIntersection(ray);
 
-    std::cout << intersection->distance << std::endl;
-    std::cout << intersection->position << std::endl;
-    std::cout << mirrorSphere->refract(intersection.value().position, ray.getDirection(), a) << std::endl;
+//    std::cout << intersection->distance << std::endl;
+//    std::cout << intersection->position << std::endl;
+//    std::cout << mirrorSphere->refract(intersection.value().position, ray.getDirection(), a) << std::endl;
 
 
 //    std::exit(0);
@@ -207,11 +207,11 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     };
 
 
-    return {std::move(objects), lights, camera, 4, 1, 4, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 4, 1, 1, std::move(textureManager)};
 }
 
 Scene Scenes::getSceneFour (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {0.4, 0.5}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {3, 3, 2}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
@@ -219,7 +219,7 @@ Scene Scenes::getSceneFour (int viewport_side_length) {
 
     Material planeMaterial{planeTexture, 0.0, 1.0};
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(MyVector3{0, 0, 1}, 0, planeMaterial);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
 
     std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/uvmaptest.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE);
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));

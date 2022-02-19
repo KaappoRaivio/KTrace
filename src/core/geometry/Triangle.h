@@ -7,33 +7,33 @@
 #include <optional>
 #include <ostream>
 
-#include "../common/MyVector3.h"
+#include <glm/glm.hpp>
 #include "Plane.h"
 #include "Surface.h"
 
 class Triangle : public Surface {
 private:
-    MyVector3 t1, t2, t3;
-    MyVector3 tu, tv, tw;
+    glm::vec3 t1, t2, t3;
+    glm::vec3 tu, tv, tw;
 
-    double d00;
-    double d01;
-    double d11;
-    double invDenom;
+    float d00;
+    float d01;
+    float d11;
+    float invDenom;
 
-    MyVector3 v0, v1;
+    glm::vec3 v0, v1;
 
     Plane plane;
 
-    bool includes (const MyVector3& vector) const;
-    bool check_bounds (const MyVector3& P) const;
+    bool includes (const glm::vec3& vector) const;
+    bool check_bounds (const glm::vec3& P) const;
 public:
-    Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material, const MyVector3& texture1, const MyVector3& texture2, const MyVector3& texture3);
-    Triangle (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, const Material* material);
-    double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3);
+    Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material);
+    float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
 
-    MyVector3 getNormalAt (const MyVector3& position) const override;
-    MyVector3 getUVAt (const MyVector3& P) const override;
+    glm::vec3 getNormalAt (const glm::vec3& position) const override;
+    glm::vec3 getUVAt (const glm::vec3& P) const override;
 
     AABB getBoundingBox () const override;
 
@@ -46,10 +46,10 @@ public:
 };
 
 
-//extern const double PRECISION_LIMIT = 0.001;
+//extern const float PRECISION_LIMIT = 0.001;
 //
 //int main () {
-//    Triangle triangle = {MyVector3{-5, 6, 5}, {0, 0, 3}, {5, 6, 3}};
+//    Triangle triangle = {glm::vec3{-5, 6, 5}, {0, 0, 3}, {5, 6, 3}};
 //    std::cout << triangle.getUVAt({4.01, 5.46, 3.11}) << std::endl;
 //    std::cout << triangle.getUVAt({-1.95, 2.72, 3.84}) << std::endl;
 ////    std::cout << "done" << std::endl;

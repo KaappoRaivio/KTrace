@@ -2,27 +2,28 @@
 // Created by kaappo on 11.9.2021.
 //
 
+#include <glm/gtx/string_cast.hpp>
 #include "Ray.h"
 
-Ray::Ray (const MyVector3& origin, const MyVector3& direction) : origin(origin), direction(direction.normalize()), inverse_direction{1.0 / direction.normalize().getI(), 1.0 / direction.normalize().getJ(), 1.0 / direction.normalize().getK()} {}
+Ray::Ray (const glm::vec3& origin, const glm::vec3& direction) : origin(origin), direction(glm::normalize(direction)), inverse_direction{1.0 / glm::normalize(direction).x, 1.0 / glm::normalize(direction).y, 1.0 / glm::normalize(direction).z} {}
 
-const MyVector3& Ray::getOrigin () const {
+const glm::vec3& Ray::getOrigin () const {
     return origin;
 }
 
-const MyVector3& Ray::getDirection () const {
+const glm::vec3& Ray::getDirection () const {
     return direction;
 }
 
-MyVector3 Ray::apply (double lambda) const {
+glm::vec3 Ray::apply (float lambda) const {
     return origin + direction * lambda;
 }
 
 std::ostream& operator<< (std::ostream& os, const Ray& ray) {
-    os << "origin: " << ray.origin << " direction: " << ray.direction;
+    os << "origin: " << glm::to_string(ray.origin) << " direction: " << glm::to_string(ray.direction);
     return os;
 }
 
-const MyVector3& Ray::getInverseDirection () const {
+const glm::vec3& Ray::getInverseDirection () const {
     return inverse_direction;
 }

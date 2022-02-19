@@ -10,11 +10,11 @@
 
 class SmoothLightSource {
 private:
-    const double radius;
+    const float radius;
     const int amountOfLightSources;
     const LightSource& masterLightSource;
 public:
-    SmoothLightSource (double radius, int amountOfLightSources, const LightSource& masterLightSource);
+    SmoothLightSource (float radius, int amountOfLightSources, const LightSource& masterLightSource);
 
     std::vector<LightSource> approximate () const;
 };

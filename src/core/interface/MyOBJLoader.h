@@ -4,21 +4,22 @@
 
 #include "../../../lib/obj-loader/OBJ_Loader.h"
 #include "../engine/Scene.h"
-#include "../common/MyVector3.h"
+#include <glm/glm.hpp>
 #include "../engine/SolidTexture.h"
 #include "../geometry/BVH.h"
 #include "../geometry/Objects.h"
+#include "../common/MyVector3.h"
 
 namespace MyOBJLoader {
-    MyVector3 toMyVector3 (const objl::Vector3& shittyvector) {
+    glm::vec3 tovec3 (const objl::Vector3& shittyvector) {
         return {shittyvector.X, shittyvector.Y, shittyvector.Z};
     }
 
-    MyVector3 toMyVector3 (const objl::Vector2& shittyvector) {
+    glm::vec3 tovec3 (const objl::Vector2& shittyvector) {
         return {shittyvector.X, shittyvector.Y, 0};
     }
 
-    std::vector<std::unique_ptr<Surface>> readOBJ (const std::string& path, MyVector3 positionOffset, double scale, std::pair<double, double> rotationOffset, const Material* material) {
+    std::vector<std::unique_ptr<Surface>> readOBJ (const std::string& path, glm::vec3 positionOffset, float scale, std::pair<float, float> rotationOffset, const Material* material) {
         objl::Loader loader;
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
@@ -29,7 +30,7 @@ namespace MyOBJLoader {
             std::vector<std::unique_ptr<Surface>> objects;
 
             for (int j = 0 ; j < curMesh.Indices.size() ; j += 3) {
-//                auto minimum = toMyVector3()
+//                auto minimum = tovec3()
 
                 int index1 = curMesh.Indices[j + 0];
                 int index2 = curMesh.Indices[j + 1];
@@ -41,12 +42,13 @@ namespace MyOBJLoader {
 
 
                 std::cout << "vertex" << j << ": " << std::endl;
-                std::cout << toMyVector3(vertex1.Position) << "\t" << toMyVector3(vertex2.Position) << "\t" << toMyVector3(vertex3.Position) << std::endl;
-                std::cout << toMyVector3(vertex1.TextureCoordinate) << "\t" << toMyVector3(vertex2.TextureCoordinate) << "\t" << toMyVector3(vertex3.TextureCoordinate) << std::endl;
+                std::cout << glm::to_string(tovec3(vertex1.Position)) << "\t" << glm::to_string(tovec3(vertex2.Position)) << "\t" << glm::to_string(tovec3(vertex3.Position)) << std::endl;
+                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex2.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex3.TextureCoordinate)) << std::endl;
+//                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate) << "\t" << tovec3(vertex2.TextureCoordinate) << "\t" << tovec3(vertex3.TextureCoordinate)) << std::endl;
 
-                Triangle t{toMyVector3(vertex1.Position).rotate(rotationOffset.first, rotationOffset.second) * scale + positionOffset, toMyVector3(vertex2.Position).rotate(rotationOffset.first, rotationOffset.second) * scale + positionOffset,
-                           toMyVector3(vertex3.Position).rotate(rotationOffset.first, rotationOffset.second) * scale + positionOffset, material,
-                           toMyVector3(vertex1.TextureCoordinate), toMyVector3(vertex2.TextureCoordinate), toMyVector3(vertex3.TextureCoordinate)};
+                Triangle t{VectorOperations::rotate(tovec3(vertex1.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, VectorOperations::rotate(tovec3(vertex2.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
+                           VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, material,
+                           tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate)};
 
                 objects.push_back(std::make_unique<Triangle>(t));
             }

@@ -6,33 +6,33 @@
 
 
 #include <optional>
-#include "../common/MyVector3.h"
+#include <glm/glm.hpp>
 #include "Ray.h"
 #include "Surface.h"
 #include "../engine/Material.h"
 
 class Plane : public Surface {
 private:
-    MyVector3 normal;
+    glm::vec3 normal;
     double intersect;
 
     Material material;
 public:
-    Plane (MyVector3 normal, double intersect, Material material);
+    Plane (glm::vec3 normal, double intersect, Material material);
 
-    static Plane from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, Material material);
+    static Plane from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material);
 
-    bool includes (const MyVector3& vector) const;
+    bool includes (const glm::vec3& vector) const;
 
-    double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
 
 
-    MyVector3 getNormalAt (const MyVector3& position) const override;
-    MyVector3 getUVAt (const MyVector3& position) const override;
+    glm::vec3 getNormalAt (const glm::vec3& position) const override;
+    glm::vec3 getUVAt (const glm::vec3& position) const override;
 
     AABB getBoundingBox () const override;
 
-    const MyVector3& getNormal () const;
+    const glm::vec3& getNormal () const;
 
     double getIntersect () const;
 

@@ -14,7 +14,7 @@ public:
     constexpr explicit SolidTexture (const Intensity& intensity) : intensity{intensity} {};
 
 public:
-    Intensity getPixelAt (const MyVector3& uv) const override;
+    Intensity getPixelAt (const glm::vec3& uv) const override;
 };
 
 namespace SolidTextures {

@@ -6,25 +6,25 @@
 
 
 #include <ostream>
-#include "../common/MyVector3.h"
+#include <glm/glm.hpp>
 
 class Ray {
 public:
-    Ray (const MyVector3& origin, const MyVector3& direction);
+    Ray (const glm::vec3& origin, const glm::vec3& direction);
 
 private:
-    MyVector3 origin;
-    MyVector3 direction;
-    MyVector3 inverse_direction;
+    glm::vec3 origin;
+    glm::vec3 direction;
+    glm::vec3 inverse_direction;
 public:
-    const MyVector3& getInverseDirection () const;
+    const glm::vec3& getInverseDirection () const;
 
 public:
-    const MyVector3& getOrigin () const;
+    const glm::vec3& getOrigin () const;
 
-    const MyVector3& getDirection () const;
+    const glm::vec3& getDirection () const;
 
-    MyVector3 apply (double lambda) const;
+    glm::vec3 apply (float lambda) const;
 
     friend std::ostream& operator<< (std::ostream& os, const Ray& ray);
 };

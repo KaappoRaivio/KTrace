@@ -4,7 +4,7 @@
 
 #include "Material.h"
 
-Intensity Material::getAlbedoAt (const MyVector3& uv) const {
+Intensity Material::getAlbedoAt (const glm::vec3& uv) const {
 //    return (*albedo).getPixelAt(uv);
     return albedo->getPixelAt(uv);
 }
@@ -14,14 +14,15 @@ std::ostream& operator<< (std::ostream& os, const Material& material) {
     return os;
 }
 
-MyVector3 Material::getBumpAt (const MyVector3& uv, const MyVector3& normal) const {
+glm::vec3 Material::getBumpAt (const glm::vec3& uv, const glm::vec3& normal) const {
     const Intensity& intensity = bump->getPixelAt(uv);
 
-    MyVector3 originBump {intensity.r() - 0.5, intensity.g() - 0.5, intensity.b()};
+    glm::vec3 originBump {intensity.r() - 0.5, intensity.g() - 0.5, intensity.b()};
 
-    const auto& newSide = -normal.cross(MyVector3s::UP);
-    const auto& newOut = newSide.cross(normal);
+//    const auto& newSide = -normal.cross(glm::vec3s::UP);
+    const auto& newSide = -glm::cross(normal, {0, 0, 1});
+    const auto& newOut = glm::cross(newSide, normal);
     const auto& newUp = normal;
 
-    return newSide * originBump.getI() * 1 + newOut * originBump.getJ() * 1 + newUp * originBump.getK();
+    return newSide * (originBump.x * 1.0f) + newOut * (originBump.y * 1.0f) + newUp * originBump.z;
 }

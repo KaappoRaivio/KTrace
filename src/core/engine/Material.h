@@ -6,7 +6,7 @@
 
 #include <memory>
 #include <ostream>
-#include "../common/MyVector3.h"
+#include <glm/glm.hpp>
 #include "../light/Intensity.h"
 #include "Texture.h"
 #include "SolidTexture.h"
@@ -23,8 +23,8 @@ struct Material {
     explicit Material (const Texture* const albedo) : albedo{albedo}, glossiness{0}, alpha{1}, bump{&SolidTextures::BUMP_UP} {}
 
 public:
-    Intensity getAlbedoAt (const MyVector3& uv) const;
-    MyVector3 getBumpAt (const MyVector3& uv, const MyVector3& normal) const;
+    Intensity getAlbedoAt (const glm::vec3& uv) const;
+    glm::vec3 getBumpAt (const glm::vec3& uv, const glm::vec3& normal) const;
 
     friend std::ostream& operator<< (std::ostream& os, const Material& material);
 };

@@ -17,9 +17,9 @@
 class Surface : public Hittable {
 public:
 
-    virtual MyVector3 getUVAt (const MyVector3& position) const = 0;
-    virtual MyVector3 refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const;
-    virtual MyVector3 getNormalAt (const MyVector3& position) const = 0;
+    virtual glm::vec3 getUVAt (const glm::vec3& position) const = 0;
+    virtual glm::vec3 refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const;
+    virtual glm::vec3 getNormalAt (const glm::vec3& position) const = 0;
     virtual AABB getBoundingBox () const = 0;
 
     virtual const Material* getMaterial () const = 0;
@@ -28,7 +28,7 @@ public:
 
     std::optional<Intersection> getIntersection (const Ray& ray);
 
-    MyVector3 getBumpedNormalAt (const MyVector3& position) const;
+    glm::vec3 getBumpedNormalAt (const glm::vec3& position) const;
     friend std::ostream& operator<< (std::ostream& os, const Surface& surface);
 
 };
