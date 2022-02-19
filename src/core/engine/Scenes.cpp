@@ -215,7 +215,8 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 }
 
 Scene Scenes::getSceneFour (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {3, 3, 2}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+
+    Camera camera = {{0, -5, 7}, {0.341747, -5+0.808307, 7-0.479426}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
