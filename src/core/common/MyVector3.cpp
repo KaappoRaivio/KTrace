@@ -61,7 +61,10 @@ MyVector3 MyVector3::rotate (float yaw, float pitch) const {
 }
 
 MyVector3 MyVector3::reflection (const MyVector3& axis) const {
-    return *this - axis * (2 * (*this * axis) / squared());
+
+    return glm::reflect(vector, axis.vector);
+
+//    return *this - axis * (2 * (*this * axis) / squared());
 }
 
 MyVector3 MyVector3::randomInsideUnitSphere () {
@@ -96,6 +99,13 @@ MyVector3 MyVector3::inTermsOfComponents (const MyVector3& i, const MyVector3& j
     return {x[0], x[1], x[2]};
 }
 
+const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+std::default_random_engine generator{seed};
+
+std::normal_distribution<float> normalDistribution(0, 1);
+std::uniform_real_distribution<float> uniformRealDistribution(0, 1);
+std::uniform_real_distribution<float> angleDistribution(0, 2 * M_PI);
+
 MyVector3 MyVector3::rotateInsideCone (float radius) const {
     if (radius == 0) {
         return *this;
@@ -103,13 +113,6 @@ MyVector3 MyVector3::rotateInsideCone (float radius) const {
 
     const MyVector3& tangent = cross(MyVector3s::UP).normalize();
     const MyVector3& bitangent = cross(tangent).normalize();
-
-    const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine generator{seed};
-
-    std::normal_distribution<float> normalDistribution(0, 1);
-    std::uniform_real_distribution<float> uniformRealDistribution(0, 1);
-    std::uniform_real_distribution<float> angleDistribution(0, 2 * M_PI);
 
     float scatterRadius = std::pow(angleDistribution(generator), 1 / 2.0) * radius;
 
