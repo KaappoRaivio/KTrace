@@ -25,7 +25,7 @@ float Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface
 }
 
 Plane Plane::from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material) {
-    glm::vec3 normal = glm::normalize(glm::cross((t1 - t2),(t1 - t3)));
+    glm::vec3 normal = glm::normalize(glm::cross((t1 - t2), (t1 - t3)));
     float intersect = -glm::dot(normal, t1);
 
     return {normal, intersect, material};
@@ -50,7 +50,12 @@ glm::vec3 Plane::getNormalAt (const glm::vec3& position) const {
 
 glm::vec3 Plane::getUVAt (const glm::vec3& position) const {
 //    const glm::vec3& tangent = normal.cross(glm::vec3s::UP) || normal.cross(glm::vec3s::OUT) || normal.cross(glm::vec3s::SIDE);
-    const glm::vec3& tangent = glm::cross(normal, {0, 0, 1}) /*|| glm::cross(normal, {0, 1, 0}) || glm::cross(normal, {1, 0, 0})*/;
+
+
+
+    const glm::vec3& tangent = glm::dot(normal, {0, 0, 1}) != 1 ? glm::cross(normal, {0, 0, 1})
+                                                                : glm::dot(normal, {0, 1, 0}) != 1 ? glm::cross(normal, {0, 1, 0})
+                                                                                                   : glm::cross(normal, {1, 0, 0})/*|| glm::cross(normal, {0, 1, 0}) || glm::cross(normal, {1, 0, 0})*/;
     const glm::vec3& bitangent = glm::cross(normal, tangent);
 
     const glm::vec3& components = VectorOperations::changeComponents(position, tangent * 50.0f, bitangent * 50.0f, normal);

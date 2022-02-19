@@ -173,9 +173,13 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     Material mirror{&SolidTextures::WHITE, 1, 0.2};
     mirror.opticalDensity = 1.04;
 
+
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
     std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(glm::vec3{1, 1, 5}, 2, mirror);
 
+    std::cout << glm::to_string(plane->getUVAt({0, 1, 0})) << std::endl;
+//    std::cout << mirrorSphere->refract()
+//    std::exit(0);
 
     std::stack<double> a;
     a.push(1);

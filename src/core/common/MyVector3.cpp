@@ -5,6 +5,7 @@
 #include <cmath>
 #include <chrono>
 #include <cstdlib>
+#include <glm/gtx/string_cast.hpp>
 
 #include "MyVector3.h"
 
@@ -195,8 +196,11 @@
 //}
 glm::vec3 VectorOperations::changeComponents (const glm::vec3& B, const glm::vec3& newX, const glm::vec3& newY, const glm::vec3& newZ) {
     glm::mat3x3 A{newX.x, newX.y, newX.z, newY.x, newY.y, newY.z, newZ.x, newZ.y, newZ.z};
+    A = glm::transpose(A);
 
-    return B * glm::inverse(A);
+//    std::cout << glm::to_string(A) << std::endl;
+//    std::cout << glm::to_string(glm::inverse(A)) << std::endl;
+    return glm::inverse(A) * B;
 
 //    Eigen::Matrix3d A;
 //    A << newX.x, newX.y, newX.z, newY.x, newY.y, newY.z, newZ.x, newZ.y, newZ.z;
