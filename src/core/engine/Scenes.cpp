@@ -164,20 +164,23 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
 }
 
 Scene Scenes::getSceneThree (int viewport_side_length) {
-    Camera camera = {{0, -10, 3}, {0, 5, 3}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{-10, -10, 3}, {0, 5, 3}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
     auto planeTexture = textureManager.getImageTexture("../res/texture3.png");
 
     Material planeMaterial{planeTexture};
-    Material transparent{&SolidTextures::WHITE, 0, 0.f};
-    transparent.opticalDensity = 2.4;
+    Material transparent{&SolidTextures::WHITE, 0, 0.2f};
+    transparent.opticalDensity = 1.05;
 
+    Material transparent2{&SolidTextures::WHITE, 0, 0.2f};
+    transparent2.opticalDensity = 1000;
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, -1, 0}, 10, planeMaterial);
     std::unique_ptr<Surface> plane2 = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, Materials::WHITE);
-    std::unique_ptr<Surface> transparentSphere = std::make_unique<Sphere>(glm::vec3{0, -1, 3}, 2, transparent);
+    std::unique_ptr<Surface> transparentSphere = std::make_unique<Sphere>(glm::vec3{0, 3, 3}, 2, transparent);
+    std::unique_ptr<Surface> transparentSphere2 = std::make_unique<Sphere>(glm::vec3{0, 6, 3}, 1, transparent2);
     std::unique_ptr<Surface> transparentTriangle = std::make_unique<Triangle>(glm::vec3{-4, 1, 7}, glm::vec3{-4, 1, 3},glm::vec3{4, 1, 7},  transparent);
     std::unique_ptr<Surface> transparentTriangle2 = std::make_unique<Triangle>(glm::vec3{-4, 1, 3}, glm::vec3{4, 1, 3},glm::vec3{4, 1, 7},  transparent);
 
@@ -201,6 +204,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 
     std::vector<std::unique_ptr<Surface>> polygons;
     polygons.push_back(std::move(transparentSphere));
+    polygons.push_back(std::move(transparentSphere2));
     auto teapot = MyOBJLoader::readOBJ("../res/uvmaptest.obj", glm::vec3{1.f, 9.f, 3.f}, 0.15, {0, -M_PI / 2}, &Materials::WHITE);
     for (auto& face : teapot) {
 //        polygons.push_back(std::move(face));
@@ -223,7 +227,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     };
 
 
-    return {std::move(objects), lights, camera, 4, 1, 1, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 4, 1, 2, std::move(textureManager)};
 }
 
 Scene Scenes::getSceneFour (int viewport_side_length) {

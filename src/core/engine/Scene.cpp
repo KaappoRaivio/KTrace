@@ -62,8 +62,9 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
                     std::stack<float> densities;
                     densities.push(1);
                     pixelValue += calculate_color(ray, x + dx, y + dy, maxBounces, densities);
+
 //                    if (DEBUG)
-//                        if (densities.size() > 1) std::cout << densities.size() << std::endl;
+//                        std::cout << densities.size() << std::endl;
 //                    densities.
 
                 }
