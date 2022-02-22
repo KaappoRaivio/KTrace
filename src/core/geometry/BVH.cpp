@@ -3,6 +3,7 @@
 //
 
 #include <stack>
+#include <sstream>
 #include "BVH.h"
 #include "../common/mytypes.h"
 
@@ -10,7 +11,7 @@ int prunes = 0;
 
 //#define BVHSTACKSIZE 32
 
-double BVHNode::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+float BVHNode::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
     std::stack<const BVHNode*> to_intersect;
 //    to_intersect[head++] = this;
     to_intersect.push(this);
@@ -81,7 +82,7 @@ std::ostream& operator<< (std::ostream& os, const BVHNode& node) {
     return os;
 }
 
-double BVH::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+float BVH::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
     return root->getIntersectionDistance(ray, hitSurface, hitMaterial);
 }
 
@@ -89,11 +90,11 @@ AABB BVH::getBoundingBox () const {
     return root->getBoundingBox();
 }
 
-MyVector3 BVH::getNormalAt (const MyVector3& position) const {
+glm::vec3 BVH::getNormalAt (const glm::vec3& position) const {
     return root->getNormalAt(position);
 }
 
-MyVector3 BVH::getUVAt (const MyVector3& position) const {
+glm::vec3 BVH::getUVAt (const glm::vec3& position) const {
     return root->getUVAt(position);
 }
 
@@ -180,11 +181,11 @@ AABB BVHNode::getBoundingBox () const {
     return box;
 }
 
-MyVector3 BVHNode::getNormalAt (const MyVector3& position) const {
+glm::vec3 BVHNode::getNormalAt (const glm::vec3& position) const {
     throw std::runtime_error("getBumpAt not implemented for BVHNode!");
 }
 
-MyVector3 BVHNode::getUVAt (const MyVector3& position) const {
+glm::vec3 BVHNode::getUVAt (const glm::vec3& position) const {
     throw std::runtime_error("getUVAt not implemented for BVHNode!");
 }
 

@@ -11,12 +11,15 @@
 #include "../geometry/Sphere.h"
 //#include "../interface/MyOBJLoader.h"
 #include "TextureManager.h"
+#include "../common/MyVector3.h"
+#include <glm/gtx/norm.hpp>
 
 #include <utility>
 #include <cmath>
+#include <iostream>
 
 //#include <numbers>
-constexpr double PI = 3.1415926;
+constexpr float PI = 3.1415926;
 
 Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, TextureManager textureManager)
         : objects{std::move(objects)}, camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)}, maxBounces(maxBounces) {}
@@ -53,10 +56,10 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
                     const auto& pixel = viewplane[y * antialiasingScaler + dy][x * antialiasingScaler + dx];
                     const Ray ray = {camera.getOrigin(), pixel};
 
-                    if (x == 1226 and y == 685)
+                    if (x == 2 and y == 2)
                         std::cout << "Debug!" << std::endl;
 
-                    std::stack<double> densities;
+                    std::stack<float> densities;
                     densities.push(1);
                     pixelValue += calculate_color(ray, x + dx, y + dy, maxBounces, densities);
 //                    if (DEBUG)
@@ -75,7 +78,7 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 
 #pragma clang diagnostic pop
 
-Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left, std::stack<double>& opticalDensities) const {
+Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const {
     const auto& intersection = get_closest_intersection(ray, 0);
 //    std::cout << intersection.value() << std::endl;
     if (DEBUG) {
@@ -101,32 +104,32 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 //        Intensity diffuse_light = {0, 0, 0};
         IntensityBlend diffuse_light;
         IntensityBlend specular_light;
-        const MyVector3& face_normal = surface->getBumpedNormalAt(closest.position);
-        const MyVector3& N = face_normal;
+        const glm::vec3& face_normal = surface->getBumpedNormalAt(closest.position);
+        const glm::vec3& N = face_normal;
 
 //        if (N * ray.getDirection() >= 0) {
 //            return calculate_color({closest.position, ray.getDirection()}, x, y, bounces_left, opticalDensities);
 //        }
 
 
-        const MyVector3& d = closest.ray.getDirection();
-        const MyVector3& R = d.reflection(face_normal).normalize();
+        const glm::vec3& d = closest.ray.getDirection();
+        const glm::vec3& R = glm::normalize(glm::reflect(d, face_normal));
 
         for (int i = 0 ; i < raysPerPixel ; ++i) {
             for (const auto& lightSource : lightSources) {
-                const MyVector3& vector_to_light = (lightSource.position - closest.position).rotateInsideCone(lightSource.radius);
-                const MyVector3& V = vector_to_light.normalize();
+                const glm::vec3& vector_to_light = VectorOperations::rotateInsideCone(lightSource.position - closest.position, lightSource.radius);
+                const glm::vec3& V = glm::normalize(vector_to_light);
 
                 const auto& any_hits = get_closest_intersection({closest.position, V}, vector_to_light.length());
 
                 if (!any_hits) {
-                    double distance_coefficient = 1.0 / vector_to_light.squared();
+                    float distance_coefficient = 1.0 / glm::length2(vector_to_light);
 
-                    double diffuse_direction_coefficient = lambertianDiffuseReflection(N, V, d);
-//                    double diffuse_direction_coefficient = orenNayarDiffuseReflection(N, V, R, 1 - material.glossiness);
-//                    double diffuse_direction_coefficient = 0;
+                    float diffuse_direction_coefficient = lambertianDiffuseReflection(N, V, d);
+//                    float diffuse_direction_coefficient = orenNayarDiffuseReflection(N, V, R, 1 - material.glossiness);
+//                    float diffuse_direction_coefficient = 0;
 
-                    double specular_direction_coefficient = calculate_beckmann_distribution(R, V, material->glossiness);
+                    float specular_direction_coefficient = calculate_beckmann_distribution(R, V, material->glossiness);
                     diffuse_light += lightSource.intensity / raysPerPixel * distance_coefficient * diffuse_direction_coefficient;
                     specular_light += lightSource.intensity / raysPerPixel * distance_coefficient * specular_direction_coefficient;
                 }
@@ -140,9 +143,9 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 
         Intensity underlying{0, 0, 0};
         if (material->alpha < 1 and bounces_left > 0) {
-            MyVector3 refracted = surface->refract(closest.position, d.normalize(), opticalDensities).normalize();
+            glm::vec3 refracted = glm::normalize(surface->refract(closest.position, d, opticalDensities));
 //            std::cout << refracted << std::endl;
-            underlying = calculate_color({closest.position + refracted * 0.01, refracted}, x, y, bounces_left - 1, opticalDensities);
+            underlying = calculate_color({closest.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities);
 //            std::cout << underlying << std::endl;
         }
 
@@ -155,28 +158,28 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
 
 }
 
-double Scene::orenNayarDiffuseReflection (const MyVector3& face_normal, const MyVector3& vector_to_light, const MyVector3& vector_from_camera, double roughness) {
-    const auto& n = face_normal.normalize();
-    const auto& v = vector_to_light.normalize();
-    const auto& d = vector_from_camera.normalize();
-    double sigma = roughness;
-    double variance = std::pow(sigma, 2);
+float Scene::orenNayarDiffuseReflection (const glm::vec3& face_normal, const glm::vec3& vector_to_light, const glm::vec3& vector_from_camera, float roughness) {
+    const auto& n = glm::normalize(face_normal);
+    const auto& v = glm::normalize(vector_to_light);
+    const auto& d = glm::normalize(vector_from_camera);
+    float sigma = roughness;
+    float variance = std::pow(sigma, 2);
 
-    double s = (n * v) * (d * n) - v * d;
-    double t = s > 0 ? std::max(n * v, -n * d) : 1;
+    float s = glm::dot(n, v) * glm::dot(d, n) - glm::dot(v, d);
+    float t = s > 0 ? std::max(glm::dot(n, v), -glm::dot(n, d)) : 1;
 
-    double A = 1 / M_PI * (1 - 0.5 * variance / (variance + 0.17) * variance / (variance + 0.13));
-    double B = 1 / M_PI * (0.45 * variance / (variance + 0.09));
+    float A = 1 / M_PI * (1 - 0.5 * variance / (variance + 0.17) * variance / (variance + 0.13));
+    float B = 1 / M_PI * (0.45 * variance / (variance + 0.09));
 
-    double d1 = d * n * (A + B * s / t);
+    float d1 = glm::dot(d, n) * (A + B * s / t);
 //    std::cout << d1 << std::endl;
-    return std::clamp(d1, 0.0, 1.0);
+    return std::clamp(d1, 0.0f, 1.0f);
 }
 
 
-double Scene::lambertianDiffuseReflection (const MyVector3& N, const MyVector3& L, const MyVector3& d) {
-    double dot1 = -d * N;
-    double dot2 = L * N;
+float Scene::lambertianDiffuseReflection (const glm::vec3& N, const glm::vec3& L, const glm::vec3& d) {
+    float dot1 = -glm::dot(d, N);
+    float dot2 = glm::dot(L, N);
 
     if (dot2 > 0 and dot1 > 0) {
         return dot2;
@@ -192,14 +195,14 @@ double Scene::lambertianDiffuseReflection (const MyVector3& N, const MyVector3& 
 //    return std::max(0.0, N * L);
 
     if ((dot2 < 0) == (dot1 < 0)) {
-        return std::abs(N * L);
+        return std::abs(glm::dot(N, L));
     } else {
         return 0;
     }
 
 }
 
-std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, double max_distance) const {
+std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, float max_distance) const {
     std::vector<Intersection> intersections;
 
     for (const auto& object : objects) {
@@ -220,7 +223,7 @@ std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, dou
     }
 //
 //
-//    double closest_distance = 1e308;
+//    float closest_distance = 1e308;
 //    Intersection* closest = nullptr;
 //
 //    for (const auto& object: objects) {
@@ -239,17 +242,17 @@ std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, dou
 //    }
 }
 
-double Scene::calculate_beckmann_distribution (const MyVector3& R, const MyVector3& V, double glossiness) {
-    double roughness = 1 - glossiness;
+float Scene::calculate_beckmann_distribution (const glm::vec3& R, const glm::vec3& V, float glossiness) {
+    float roughness = 1 - glossiness;
     if (roughness == 0) {
         return 0;
     }
 
-    double cosine = R * V;
+    float cosine = glm::dot(R, V);
 
 
     return std::exp(-(1 - std::pow(cosine, 2)) / (std::pow(cosine * roughness, 2))) / (PI * std::pow(roughness, 2) * std::pow(cosine, 4));
-//    / (std::numbers::pi_v<double> * std::pow(roughness, 2) * std::pow(cosine, 4));
+//    / (std::numbers::pi_v<float> * std::pow(roughness, 2) * std::pow(cosine, 4));
 
 
 }

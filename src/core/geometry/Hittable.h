@@ -11,5 +11,5 @@ class Surface;
 
 class Hittable {
 public:
-    virtual double getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const = 0;
+    virtual float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const = 0;
 };

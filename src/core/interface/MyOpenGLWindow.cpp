@@ -85,7 +85,7 @@ void MyOpenGLWindow::delay (int millis) {
 //                SDL_Delay();
                 break;
             case SDL_MOUSEBUTTONUP:
-                std::cout << "(" << x / scale << ", " << y / scale << "), corresponds to" << Ray{camera.getOrigin(), camera.get_viewplane(1)[y][x]} << std::endl;
+                std::cout << "(" << x / scale << ", " << y / scale << "), corresponds to" << Ray{camera.getOrigin(), camera.get_viewplane(1)[y / scale][x / scale]} << std::endl;
 
                 break;
         }

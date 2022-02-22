@@ -6,11 +6,11 @@
 
 
 #include "../light/Intensity.h"
-#include "../common/MyVector3.h"
+#include <glm/glm.hpp>
 
 class Texture {
 public:
-    virtual Intensity getPixelAt (const MyVector3& uv) const = 0;
+    virtual Intensity getPixelAt (const glm::vec3& uv) const = 0;
 };
 
 

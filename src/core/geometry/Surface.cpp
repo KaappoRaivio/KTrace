@@ -30,7 +30,7 @@ std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
     }
 }
 
-MyVector3 Surface::refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const {
+glm::vec3 Surface::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
     return direction;
 }
 
@@ -39,7 +39,7 @@ std::ostream& operator<< (std::ostream& os, const Surface& surface) {
     return os;
 }
 
-MyVector3 Surface::getBumpedNormalAt (const MyVector3& position) const {
+glm::vec3 Surface::getBumpedNormalAt (const glm::vec3& position) const {
     return getMaterial()->getBumpAt(getUVAt(position), getNormalAt(position));
 }
 

@@ -3,13 +3,16 @@
 #include "Sphere.h"
 #include <cmath>
 #include <utility>
+#include <iostream>
+#include <glm/gtx/norm.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "../common/mytypes.h"
 
 //
 // Created by kaappo on 14.9.2021.
-Sphere::Sphere (MyVector3 center, double radius, Material material) : center{std::move(center)}, radius{radius}, material(material) {}
+Sphere::Sphere (glm::vec3 center, float radius, Material material) : center{std::move(center)}, radius{radius}, material(material) {}
 
-double Sphere::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+float Sphere::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
 //    if (includes(ray.getOrigin())) {
 //        return 0.0;
 //    }
@@ -19,20 +22,20 @@ double Sphere::getIntersectionDistance (const Ray& ray, const Surface*& hitSurfa
     const auto& r = radius;
     const auto& P = center;
 
-    const auto discriminant = std::pow(d * (C - P), 2) - ((C - P).squared() - std::pow(r, 2));
+    const auto discriminant = std::pow(glm::dot(d, C - P), 2) - (glm::length2(C - P) - std::pow(r, 2));
     if (discriminant < 0) {
         return 0.0;
     }
 
-    const auto base = (-d * (C - P));
+    const auto base = -glm::dot(d, (C - P));
     hitSurface = this;
     hitMaterial = getMaterial();
     if (discriminant == 0) {
         if (base < PRECISION_LIMIT) return 0.0;
         else return base;
     } else {
-        const double root1 = base - std::sqrt(discriminant);
-        const double root2 = base + std::sqrt(discriminant);
+        const float root1 = base - std::sqrt(discriminant);
+        const float root2 = base + std::sqrt(discriminant);
 
         if (root1 < PRECISION_LIMIT) return root2;
         else if (root2 < PRECISION_LIMIT) return 0.0;
@@ -40,27 +43,28 @@ double Sphere::getIntersectionDistance (const Ray& ray, const Surface*& hitSurfa
     }
 }
 
-MyVector3 Sphere::getNormalAt (const MyVector3& position) const {
-    return (position - center).normalize();
+glm::vec3 Sphere::getNormalAt (const glm::vec3& position) const {
+    return glm::normalize(position - center);
 }
 
-MyVector3 Sphere::refract (const MyVector3& position, const MyVector3& direction, std::stack<double>& opticalDensities) const {
-    const MyVector3& normal = getNormalAt(position);
-    bool inwards = normal * direction < 0;
+glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
+    glm::vec3 normal = getNormalAt(position);
+    bool inwards = glm::dot(normal, direction) < 0;
 //
-    double n = opticalDensities.top() / getMaterial()->opticalDensity;
+
+    float n = opticalDensities.top() / getMaterial()->opticalDensity;
     opticalDensities.push(getMaterial()->opticalDensity);
 
-//    double n;
+//    float n;
 //    if (false) {
-////    if (inwards) {
-//        n = 1.33;
+//    if (inwards) {
+//        float n = 1.33;
 //    } else {
 //        n = 1 / 1.33;
 //    }
 
-//    double n1;
-//    double n2;
+//    float n1;
+//    float n2;
 //    if (inwards) {
 //        n1 = opticalDensities.top();
 //        n2 = material.opticalDensity;
@@ -72,51 +76,60 @@ MyVector3 Sphere::refract (const MyVector3& position, const MyVector3& direction
 //    }
 //
 //
-//    double r = n1 / n2;
-//    double normal = n1 / n2;
-//    const double cosI = -dot(normal, direction);
+//    float r = n1 / n2;
+//    float normal = n1 / n2;
+//    const float cosI = -dot(normal, direction);
+//    return glm::refract(direction, normal, n);
+//    float eta = n;
+//    float k = 1.0 - eta * eta * (1.0 - glm::dot(normal, direction) * dot(normal, direction));
+//    if (k < 0.0)
+//        return glm::reflect(direction, normal);
+//    else {
+////        std::cout << "moi" << std::endl;
+////        std::cout << glm::to_string(eta * direction - (eta * glm::dot(normal, direction) + std::sqrt(k)) * normal) << std::endl;
+//        return eta * direction - (eta * glm::dot(normal, direction) + std::sqrt(k)) * normal;
+//    }
 
-    double cosI = -normal * direction.normalize();
+
+    float cosI = -glm::dot(normal, glm::normalize(direction));
     if (cosI < 0) {
-        n = 1 / n;
         cosI *= -1;
+        n = 1 / n;
+//        normal = -normal;
 //        opticalDensities.pop();
-        opticalDensities.pop();
+//        opticalDensities.pop();
     }
-//    double cosI = std::abs(-normal * direction.normalize());
-    double sinT2 = n * n * (1.0 - cosI * cosI);
+//    float cosI = std::abs(-normal * direction.normalize());
+    float sinT2 = n * n * (1.0 - cosI * cosI);
     if (sinT2 > 1.0) {
-        std::cout << "mosi" << std::endl;
-        return direction.reflection(normal);
+//        std::cout << "mosi" << std::endl;
+        return glm::reflect(direction, normal);
     }
     if (sinT2 < 0)
         std::cout << sinT2 << std::endl;
 
-    double cosT = sqrt(1.0 - sinT2);
-//    if (!inwards)
-//    std::cout << direction * n + normal * (n * cosI - cosT) << std::endl;
+//    return glm::refract(direction, normal, n);
+
+    float cosT = sqrt(1.0 - sinT2);
     return direction * n + normal * (n * cosI - cosT);
-
-//    V_refraction = r*V_incedence + (rc - sqrt(1-Math.pow(r,2)(1-Math.pow(c,2))))normal
-//    where r = n1/n2 and c = -normal dot V_incedence.
-//    return direction * r + normal * (r * c - std::sqrt(1 - std::pow(r, 2) * (1 - std::pow (c, 1))));
 }
 
-bool Sphere::includes (const MyVector3& point) const {
-    return std::abs((center - point).squared() - std::pow(radius, 2)) < PRECISION_LIMIT;
+bool Sphere::includes (const glm::vec3& point) const {
+//    return glm::intersectLineSphere()
+    return std::abs(glm::length2(center - point) - std::pow(radius, 2)) < PRECISION_LIMIT;
 }
 
-MyVector3 Sphere::getUVAt (const MyVector3& position) const {
-    const auto& d = (center - position).normalize();
+glm::vec3 Sphere::getUVAt (const glm::vec3& position) const {
+    const auto& d = glm::normalize(center - position);
 
-    double u = 0.5 - d.atan2() / (2 * M_PI);
-    double v = 0.5 + d.asin() / M_PI;
+    float u = 0.5 - glm::atan(d.y, d.x) / (2 * M_PI);
+    float v = 0.5 + glm::asin(d.z) / M_PI;
 
     return {u + 0.2, v, 0};
 }
 
 AABB Sphere::getBoundingBox () const {
-    auto corner = MyVector3{radius, radius, radius};
+    auto corner = glm::vec3{radius, radius, radius};
     return AABB{center - corner, center + corner};
 }
 

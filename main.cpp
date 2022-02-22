@@ -4,7 +4,7 @@
 
 #include "src/core/interface/MyOpenGLWindow.h"
 #include "src/core/light/Intensity.h"
-#include "src/core/common/MyVector3.h"
+//#include "src/core/common/glm::vec3.h"
 #include "src/core/geometry/Plane.h"
 #include "src/core/geometry/Triangle.h"
 #include "src/core/engine/Camera.h"
@@ -26,7 +26,7 @@ int main () {
     constexpr int window_side_length = 2000;
     constexpr int viewport_side_length = 2000;
 
-    const Scene& scene = Scenes::getScene<4>(viewport_side_length);
+    const Scene& scene = Scenes::getScene<3>(viewport_side_length);
 
 
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length, scene.camera};

@@ -2,6 +2,7 @@
 // Created by kaappo on 28.1.2022.
 //
 
+#include <glm/gtx/string_cast.hpp>
 #include "AABB.h"
 #include "Surface.h"
 
@@ -12,31 +13,31 @@ double AABB::getIntersectionDistance (const Ray& ray) const {
 }
 
 double AABB::intersects (const Ray& ray) const {
-//    auto d_inv = MyVector3{1 / ray.getDirection().getI(), 1 / ray.getDirection().getJ(), 1 / ray.getDirection().getK()};
+//    auto d_inv = glm::vec3{1 / ray.getDirection().x, 1 / ray.getDirection().y, 1 / ray.getDirection().z};
     const auto& d_inv = ray.getInverseDirection();
 
-    double tx1 = (minimum.getI() - ray.getOrigin().getI()) * d_inv.getI();
-    double tx2 = (maximum.getI() - ray.getOrigin().getI()) * d_inv.getI();
+    double tx1 = (minimum.x - ray.getOrigin().x) * d_inv.x;
+    double tx2 = (maximum.x - ray.getOrigin().x) * d_inv.x;
 
     double tmin = std::min(tx1, tx2);
     double tmax = std::max(tx1, tx2);
 
-    double ty1 = (minimum.getJ() - ray.getOrigin().getJ()) * d_inv.getJ();
-    double ty2 = (maximum.getJ() - ray.getOrigin().getJ()) * d_inv.getJ();
+    double ty1 = (minimum.y - ray.getOrigin().y) * d_inv.y;
+    double ty2 = (maximum.y - ray.getOrigin().y) * d_inv.y;
 
     tmin = std::max(tmin, std::min(ty1, ty2));
     tmax = std::min(tmax, std::max(ty1, ty2));
 
-    double tz1 = (minimum.getK() - ray.getOrigin().getK()) * d_inv.getK();
-    double tz2 = (maximum.getK() - ray.getOrigin().getK()) * d_inv.getK();
+    double tz1 = (minimum.z - ray.getOrigin().z) * d_inv.z;
+    double tz2 = (maximum.z - ray.getOrigin().z) * d_inv.z;
 
     tmin = std::max(tmin, std::min(tz1, tz2));
     tmax = std::min(tmax, std::max(tz1, tz2));
 
     return tmax >= std::max(0.0, tmin);
-//    auto invD = 1.0f / ray.getDirection().getI();
-//    auto t0 = (minimum.getI() - ray.getOrigin().getI()) * invD;
-//    auto t1 = (maximum.getI() - ray.getOrigin().getI()) * invD;
+//    auto invD = 1.0f / ray.getDirection().x;
+//    auto t0 = (minimum.x - ray.getOrigin().x) * invD;
+//    auto t1 = (maximum.x - ray.getOrigin().x) * invD;
 //    if (invD < 0.0f)
 //        std::swap(t0, t1);
 //
@@ -44,9 +45,9 @@ double AABB::intersects (const Ray& ray) const {
 //        return false;
 //
 //
-//    invD = 1.0f / ray.getDirection().getJ();
-//    t0 = (minimum.getJ() - ray.getOrigin().getJ()) * invD;
-//    t1 = (maximum.getJ() - ray.getOrigin().getJ()) * invD;
+//    invD = 1.0f / ray.getDirection().y;
+//    t0 = (minimum.y - ray.getOrigin().y) * invD;
+//    t1 = (maximum.y - ray.getOrigin().y) * invD;
 //    if (invD < 0.0f)
 //        std::swap(t0, t1);
 //
@@ -54,9 +55,9 @@ double AABB::intersects (const Ray& ray) const {
 //        return false;
 //
 //
-//    invD = 1.0f / ray.getDirection().getK();
-//    t0 = (minimum.getK() - ray.getOrigin().getK()) * invD;
-//    t1 = (maximum.getK() - ray.getOrigin().getK()) * invD;
+//    invD = 1.0f / ray.getDirection().z;
+//    t0 = (minimum.z - ray.getOrigin().z) * invD;
+//    t1 = (maximum.z - ray.getOrigin().z) * invD;
 //    if (invD < 0.0f)
 //        std::swap(t0, t1);
 //
@@ -66,7 +67,7 @@ double AABB::intersects (const Ray& ray) const {
 //    return t0;
 }
 
-AABB::AABB (const MyVector3& minimum, const MyVector3& maximum) : minimum(minimum), maximum(maximum) {}
+AABB::AABB (const glm::vec3& minimum, const glm::vec3& maximum) : minimum(minimum), maximum(maximum) {}
 
 bool AABB::operator== (const AABB& rhs) const {
     return minimum == rhs.minimum &&
@@ -78,27 +79,27 @@ bool AABB::operator!= (const AABB& rhs) const {
 }
 
 AABB AABB::expand (const AABB& aabb) {
-    MyVector3 newMinimum{std::min(minimum.getI(), aabb.minimum.getI()),
-                         std::min(minimum.getJ(), aabb.minimum.getJ()),
-                         std::min(minimum.getK(), aabb.minimum.getK())};
+    glm::vec3 newMinimum{std::min(minimum.x, aabb.minimum.x),
+                         std::min(minimum.y, aabb.minimum.y),
+                         std::min(minimum.z, aabb.minimum.z)};
 
-    MyVector3 newMaximum{std::max(maximum.getI(), aabb.maximum.getI()),
-                         std::max(maximum.getJ(), aabb.maximum.getJ()),
-                         std::max(maximum.getK(), aabb.maximum.getK())};
+    glm::vec3 newMaximum{std::max(maximum.x, aabb.maximum.x),
+                         std::max(maximum.y, aabb.maximum.y),
+                         std::max(maximum.z, aabb.maximum.z)};
 
     return {newMinimum, newMaximum};
 
 }
 
-MyVector3 AABB::getMinimum () const {
+glm::vec3 AABB::getMinimum () const {
     return minimum;
 }
 
-MyVector3 AABB::getMaximum () const {
+glm::vec3 AABB::getMaximum () const {
     return maximum;
 }
 
 std::ostream& operator<< (std::ostream& os, const AABB& aabb) {
-    os << "AABB{" << aabb.minimum << ", size " << aabb.maximum - aabb.minimum << "}";
+    os << "AABB{" << glm::to_string(aabb.minimum) << ", size " << glm::to_string(aabb.maximum - aabb.minimum) << "}";
     return os;
 }

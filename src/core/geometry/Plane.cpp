@@ -7,34 +7,35 @@
 
 #include "Plane.h"
 #include "../common/mytypes.h"
+#include "../common/MyVector3.h"
 
-Plane::Plane (MyVector3 normal, double intersect, Material material) : normal{std::move(normal.normalize())}, intersect{intersect}, material(material) {}
+Plane::Plane (glm::vec3 normal, double intersect, Material material) : normal{std::move(glm::normalize(normal))}, intersect{intersect}, material(material) {}
 
-double Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+float Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
     hitMaterial = getMaterial();
 
-    if (normal * ray.getDirection() == 0) {
+    if (glm::dot(normal, ray.getDirection()) == 0) {
         return 0.0;
     } else {
         hitSurface = this;
         hitMaterial = getMaterial();
 //        std::cout << "mossi" << std::endl;
-        return -(normal * ray.getOrigin() + intersect) / (normal * ray.getDirection());
+        return -(glm::dot(normal, ray.getOrigin()) + intersect) / glm::dot(normal, ray.getDirection());
     }
 }
 
-Plane Plane::from_three_points (const MyVector3& t1, const MyVector3& t2, const MyVector3& t3, Material material) {
-    auto normal = (t1 - t2).cross(t1 - t3).normalize();
-    auto intersect = -normal * t1;
+Plane Plane::from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material) {
+    glm::vec3 normal = glm::normalize(glm::cross((t1 - t2), (t1 - t3)));
+    float intersect = -glm::dot(normal, t1);
 
     return {normal, intersect, material};
 }
 
-bool Plane::includes (const MyVector3& vector) const {
-    return std::abs(normal * vector + intersect) <= PRECISION_LIMIT;
+bool Plane::includes (const glm::vec3& vector) const {
+    return std::abs(glm::dot(normal, vector) + intersect) <= PRECISION_LIMIT;
 }
 
-const MyVector3& Plane::getNormal () const {
+const glm::vec3& Plane::getNormal () const {
     return normal;
 }
 
@@ -43,15 +44,21 @@ double Plane::getIntersect () const {
 }
 
 
-MyVector3 Plane::getNormalAt (const MyVector3& position) const {
+glm::vec3 Plane::getNormalAt (const glm::vec3& position) const {
     return normal;
 }
 
-MyVector3 Plane::getUVAt (const MyVector3& position) const {
-    const MyVector3& tangent = normal.cross(MyVector3s::UP) || normal.cross(MyVector3s::OUT) || normal.cross(MyVector3s::SIDE);
-    const MyVector3& bitangent = normal.cross(tangent);
+glm::vec3 Plane::getUVAt (const glm::vec3& position) const {
+//    const glm::vec3& tangent = normal.cross(glm::vec3s::UP) || normal.cross(glm::vec3s::OUT) || normal.cross(glm::vec3s::SIDE);
 
-    const MyVector3& components = position.inTermsOfComponents(tangent * 50, bitangent * 50, normal);
+
+
+    const glm::vec3& tangent = glm::dot(normal, {0, 0, 1}) != 1 ? glm::cross(normal, {0, 0, 1})
+                                                                : glm::dot(normal, {0, 1, 0}) != 1 ? glm::cross(normal, {0, 1, 0})
+                                                                                                   : glm::cross(normal, {1, 0, 0})/*|| glm::cross(normal, {0, 1, 0}) || glm::cross(normal, {1, 0, 0})*/;
+    const glm::vec3& bitangent = glm::cross(normal, tangent);
+
+    const glm::vec3& components = VectorOperations::changeComponents(position, tangent * 100.0f, bitangent * 100.0f, normal);
 
     return components;
 }
