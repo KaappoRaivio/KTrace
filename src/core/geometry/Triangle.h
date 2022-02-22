@@ -28,8 +28,8 @@ private:
     bool includes (const glm::vec3& vector) const;
     bool check_bounds (const glm::vec3& P) const;
 public:
-    Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3);
-    Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material);
+    Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3);
+    Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material);
     float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
 
     glm::vec3 getNormalAt (const glm::vec3& position) const override;
@@ -42,6 +42,8 @@ public:
     friend std::ostream& operator<< (std::ostream& os, const Triangle& triangle);
 
     std::ostream& print (std::ostream& os) const override;
+
+    glm::vec3 refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const override;
 
 };
 

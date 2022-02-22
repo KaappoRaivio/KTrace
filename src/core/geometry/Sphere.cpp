@@ -5,6 +5,7 @@
 #include <utility>
 #include <iostream>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "../common/mytypes.h"
 
 //
@@ -47,16 +48,17 @@ glm::vec3 Sphere::getNormalAt (const glm::vec3& position) const {
 }
 
 glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
-    const glm::vec3& normal = getNormalAt(position);
+    glm::vec3 normal = getNormalAt(position);
     bool inwards = glm::dot(normal, direction) < 0;
 //
+
     float n = opticalDensities.top() / getMaterial()->opticalDensity;
     opticalDensities.push(getMaterial()->opticalDensity);
 
 //    float n;
 //    if (false) {
-////    if (inwards) {
-//        n = 1.33;
+//    if (inwards) {
+//        float n = 1.33;
 //    } else {
 //        n = 1 / 1.33;
 //    }
@@ -77,23 +79,36 @@ glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction
 //    float r = n1 / n2;
 //    float normal = n1 / n2;
 //    const float cosI = -dot(normal, direction);
-    return glm::refract(direction, normal, n);
+//    return glm::refract(direction, normal, n);
+//    float eta = n;
+//    float k = 1.0 - eta * eta * (1.0 - glm::dot(normal, direction) * dot(normal, direction));
+//    if (k < 0.0)
+//        return glm::reflect(direction, normal);
+//    else {
+////        std::cout << "moi" << std::endl;
+////        std::cout << glm::to_string(eta * direction - (eta * glm::dot(normal, direction) + std::sqrt(k)) * normal) << std::endl;
+//        return eta * direction - (eta * glm::dot(normal, direction) + std::sqrt(k)) * normal;
+//    }
+
 
     float cosI = -glm::dot(normal, glm::normalize(direction));
     if (cosI < 0) {
-        n = 1 / n;
         cosI *= -1;
+        n = 1 / n;
+//        normal = -normal;
 //        opticalDensities.pop();
-        opticalDensities.pop();
+//        opticalDensities.pop();
     }
 //    float cosI = std::abs(-normal * direction.normalize());
     float sinT2 = n * n * (1.0 - cosI * cosI);
     if (sinT2 > 1.0) {
-        std::cout << "mosi" << std::endl;
+//        std::cout << "mosi" << std::endl;
         return glm::reflect(direction, normal);
     }
     if (sinT2 < 0)
         std::cout << sinT2 << std::endl;
+
+//    return glm::refract(direction, normal, n);
 
     float cosT = sqrt(1.0 - sinT2);
     return direction * n + normal * (n * cosI - cosT);

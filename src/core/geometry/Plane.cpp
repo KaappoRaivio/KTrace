@@ -58,7 +58,7 @@ glm::vec3 Plane::getUVAt (const glm::vec3& position) const {
                                                                                                    : glm::cross(normal, {1, 0, 0})/*|| glm::cross(normal, {0, 1, 0}) || glm::cross(normal, {1, 0, 0})*/;
     const glm::vec3& bitangent = glm::cross(normal, tangent);
 
-    const glm::vec3& components = VectorOperations::changeComponents(position, tangent * 50.0f, bitangent * 50.0f, normal);
+    const glm::vec3& components = VectorOperations::changeComponents(position, tangent * 100.0f, bitangent * 100.0f, normal);
 
     return components;
 }

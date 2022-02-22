@@ -47,7 +47,7 @@ namespace MyOBJLoader {
 //                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate) << "\t" << tovec3(vertex2.TextureCoordinate) << "\t" << tovec3(vertex3.TextureCoordinate)) << std::endl;
 
                 Triangle t{VectorOperations::rotate(tovec3(vertex1.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, VectorOperations::rotate(tovec3(vertex2.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
-                           VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, material,
+                           VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, *material,
                            tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate)};
 
                 objects.push_back(std::make_unique<Triangle>(t));

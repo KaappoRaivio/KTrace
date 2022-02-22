@@ -56,7 +56,7 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
                     const auto& pixel = viewplane[y * antialiasingScaler + dy][x * antialiasingScaler + dx];
                     const Ray ray = {camera.getOrigin(), pixel};
 
-                    if (x == 1226 / 2 and y == 685 / 2)
+                    if (x == 2 and y == 2)
                         std::cout << "Debug!" << std::endl;
 
                     std::stack<float> densities;

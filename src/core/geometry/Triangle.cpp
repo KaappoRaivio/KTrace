@@ -7,8 +7,8 @@
 #include "glm/gtx/string_cast.hpp"
 
 
-Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
-        : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3, *material)}, tu{texture1}, tv{texture2}, tw{texture3}, v0{t2 - t1}, v1{t3 - t1} {
+Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
+        : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3, material)}, tu{texture1}, tv{texture2}, tw{texture3}, v0{t2 - t1}, v1{t3 - t1} {
 
 //    v0 = t2 - t1;
 //    v1 = t3 - t1;
@@ -23,7 +23,7 @@ std::ostream& Triangle::print (std::ostream& os) const {
 }
 
 
-Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material) : Triangle{t1, t2, t3, material, {0, 0, 0}, {1, 0, 0}, {0, 1, 0}} {
+Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material) : Triangle{t1, t2, t3, material, {0, 0, 0}, {1, 0, 0}, {0, 1, 0}} {
 
 }
 
@@ -78,6 +78,30 @@ glm::vec3 Triangle::getUVAt (const glm::vec3& P) const {
 
     return tu * u + tv * v + tw * w;
 
+}
+
+glm::vec3 Triangle::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
+    const glm::vec3& normal = getNormalAt(position);
+    bool inwards = glm::dot(normal, direction) < 0;
+//
+    float n = opticalDensities.top() / getMaterial()->opticalDensity;
+    opticalDensities.push(getMaterial()->opticalDensity);
+
+    float cosI = -glm::dot(normal, glm::normalize(direction));
+    if (cosI < 0) {
+        n = 1 / n;
+        cosI *= -1;
+    }
+
+    float sinT2 = n * n * (1.0 - cosI * cosI);
+    if (sinT2 > 1.0) {
+        return glm::reflect(direction, normal);
+    }
+
+    return glm::refract(direction, normal, n);
+
+    float cosT = sqrt(1.0 - sinT2);
+    return direction * n + normal * (n * cosI - cosT);
 }
 
 std::ostream& operator<< (std::ostream& os, const Triangle& triangle) {

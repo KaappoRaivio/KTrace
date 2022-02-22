@@ -77,7 +77,7 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
             glm::vec3{-5, 6, 3},
             glm::vec3{0, 0, 3},
             glm::vec3{5, 4, 4},
-            &triangleMaterial
+            triangleMaterial
     );
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
@@ -163,40 +163,44 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
 }
 
 Scene Scenes::getSceneThree (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {1, 1, 5}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {0, 1, 7}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
     auto planeTexture = textureManager.getImageTexture("../res/texture3.png");
 
     Material planeMaterial{planeTexture};
-    Material mirror{&SolidTextures::WHITE, 1, 0.2};
-    mirror.opticalDensity = 1.04;
+    Material transparent{&SolidTextures::WHITE, 0, 0.f};
+    transparent.opticalDensity = 1.1;
 
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr<Surface> mirrorSphere = std::make_unique<Sphere>(glm::vec3{1, 1, 5}, 2, mirror);
+    std::unique_ptr<Surface> transparentSphere = std::make_unique<Sphere>(glm::vec3{1, 1, 7}, 2, transparent);
+    std::unique_ptr<Surface> transparentTriangle = std::make_unique<Triangle>(glm::vec3{-4, 1, 7}, glm::vec3{-4, 1, 3},glm::vec3{4, 1, 7},  transparent);
+    std::unique_ptr<Surface> transparentTriangle2 = std::make_unique<Triangle>(glm::vec3{-4, 1, 3}, glm::vec3{4, 1, 3},glm::vec3{4, 1, 7},  transparent);
 
     std::cout << glm::to_string(plane->getUVAt({0, 1, 0})) << std::endl;
-//    std::cout << mirrorSphere->refract()
+//    std::cout << transparentSphere->refract()
 //    std::exit(0);
 
     std::stack<double> a;
     a.push(1);
     auto ray = Ray{{0,    -5,   7},
                    {0.28, 0.85, -0.43}};
-    const std::optional<Intersection>& intersection = mirrorSphere->getIntersection(ray);
+    const std::optional<Intersection>& intersection = transparentSphere->getIntersection(ray);
 
 //    std::cout << intersection->distance << std::endl;
 //    std::cout << intersection->position << std::endl;
-//    std::cout << mirrorSphere->refract(intersection.value().position, ray.getDirection(), a) << std::endl;
+//    std::cout << transparentSphere->refract(intersection.value().position, ray.getDirection(), a) << std::endl;
 
 
 //    std::exit(0);
 
 
     std::vector<std::unique_ptr<Surface>> polygons;
-    polygons.push_back(std::move(mirrorSphere));
+    polygons.push_back(std::move(transparentSphere));
+//    polygons.push_back(std::move(transparentTriangle));
+//    polygons.push_back(std::move(transparentTriangle2));
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
 
     std::vector<std::unique_ptr<Surface>> objects;
@@ -207,7 +211,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     double radius = 0;
     std::vector<LightSource> lights = {
             {{-2, 20,  3},  Intensity{1, 1, 1} * 210, radius},
-            {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
+            {{10, -40, 100}, Intensity{1, 1, 1} * 3000, radius * 50},
     };
 
 
