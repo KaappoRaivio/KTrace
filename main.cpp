@@ -26,7 +26,7 @@ int main () {
     constexpr int window_side_length = 2000;
     constexpr int viewport_side_length = 2000;
 
-    const Scene& scene = Scenes::getScene<4>(viewport_side_length);
+    Scene scene = Scenes::getScene<3>(viewport_side_length);
 //    std::stack<float> a;
 //    std::cout << scene.calculate_color({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
 //    std::exit(0);
@@ -52,8 +52,9 @@ int main () {
 
         window.paint(pixels);
         std::cout << "moi " << std::endl;
+        scene.camera.origin = scene.camera.origin + glm::vec3(0, 0.1, 0);
         window.delay(50);
-        break;
+//        break;
     }
 #pragma clang diagnostic pop
 //    while (true);

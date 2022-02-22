@@ -164,7 +164,7 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
 }
 
 Scene Scenes::getSceneThree (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {0, 1, 7}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -10, 3}, {0, 5, 3}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
@@ -172,11 +172,12 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 
     Material planeMaterial{planeTexture};
     Material transparent{&SolidTextures::WHITE, 0, 0.f};
-    transparent.opticalDensity = 1.1;
+    transparent.opticalDensity = 2.4;
 
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
-    std::unique_ptr<Surface> transparentSphere = std::make_unique<Sphere>(glm::vec3{1, 1, 7}, 2, transparent);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, -1, 0}, 10, planeMaterial);
+    std::unique_ptr<Surface> plane2 = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, Materials::WHITE);
+    std::unique_ptr<Surface> transparentSphere = std::make_unique<Sphere>(glm::vec3{0, -1, 3}, 2, transparent);
     std::unique_ptr<Surface> transparentTriangle = std::make_unique<Triangle>(glm::vec3{-4, 1, 7}, glm::vec3{-4, 1, 3},glm::vec3{4, 1, 7},  transparent);
     std::unique_ptr<Surface> transparentTriangle2 = std::make_unique<Triangle>(glm::vec3{-4, 1, 3}, glm::vec3{4, 1, 3},glm::vec3{4, 1, 7},  transparent);
 
@@ -200,6 +201,11 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 
     std::vector<std::unique_ptr<Surface>> polygons;
     polygons.push_back(std::move(transparentSphere));
+    auto teapot = MyOBJLoader::readOBJ("../res/uvmaptest.obj", glm::vec3{1.f, 9.f, 3.f}, 0.15, {0, -M_PI / 2}, &Materials::WHITE);
+    for (auto& face : teapot) {
+//        polygons.push_back(std::move(face));
+    }
+//    polygons.push_back();
 //    polygons.push_back(std::move(transparentTriangle));
 //    polygons.push_back(std::move(transparentTriangle2));
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
@@ -207,6 +213,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     std::vector<std::unique_ptr<Surface>> objects;
 
     objects.push_back(std::move(plane));
+    objects.push_back(std::move(plane2));
     objects.push_back(std::move(bvh));
 
     double radius = 0;

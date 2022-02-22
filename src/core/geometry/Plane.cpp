@@ -64,14 +64,15 @@ glm::vec3 Plane::getUVAt (const glm::vec3& position) const {
 
 
 
-    const glm::vec3& tangent = glm::dot(normal, {0, 0, 1}) != 1 ? glm::cross(normal, {0, 0, 1})
-                                                                : glm::dot(normal, {0, 1, 0}) != 1 ? glm::cross(normal, {0, 1, 0})
+    const glm::vec3& tangent = std::abs(glm::dot(normal, {0, 0, 1})) != 1 ? glm::cross(normal, {0, 0, 1})
+                                                                : std::abs(glm::dot(normal, {0, 1, 0})) != 1 ? glm::cross(normal, {0, 1, 0})
                                                                                                    : glm::cross(normal, {1, 0, 0})/*|| glm::cross(normal, {0, 1, 0}) || glm::cross(normal, {1, 0, 0})*/;
     const glm::vec3& bitangent = glm::cross(normal, tangent);
 
-    const glm::vec3& components = VectorOperations::changeComponents(position, tangent * 100.0f, bitangent * 100.0f, normal);
+    float scale = 20.0f;
+    const glm::vec3& components = VectorOperations::changeComponents(position, -tangent * scale, bitangent * scale, scale * normal);
 
-    return components;
+    return components + glm::vec3{0.5f, 0.f, 0};
 }
 
 AABB Plane::getBoundingBox () const {

@@ -5,6 +5,7 @@
 #include <iostream>
 #include "MyOpenGLWindow.h"
 #include "../geometry/Ray.h"
+#include "SDL2/SDL.h"
 
 MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, const Camera& camera) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale}, camera(camera) { // NOLINT(cppcoreguidelines-pro-type-member-init)
     std::cout << "creating window" << std::endl;

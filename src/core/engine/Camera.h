@@ -10,8 +10,9 @@
 #include <ostream>
 #include <glm/glm.hpp>
 
-class Camera {
-private:
+struct Camera {
+//private:
+//public:
     inline static const glm::vec3 DIRECTION_REFERENCE = {0, 1, 0};
 
     glm::vec3 origin;
@@ -22,7 +23,6 @@ private:
 
     glm::vec3 direction;
 
-public:
     Camera (glm::vec3 origin, glm::vec3 lookingAt, float viewplane_distance = 2, std::pair<float, float> viewplane_size = {1, 1}, std::pair<int, int> viewport_size = {80, 80});
     std::vector<std::vector<glm::vec3>> get_viewplane (const int i) const;
     const glm::vec3& getOrigin () const;
