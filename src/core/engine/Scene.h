@@ -39,9 +39,7 @@ public:
     std::optional<Intersection> get_closest_intersection (const Ray& ray, float max_distance = 0) const;
 
     static float calculate_beckmann_distribution (const glm::vec3& R, const glm::vec3& V, float glossiness);
-
     static float lambertianDiffuseReflection (const glm::vec3& N, const glm::vec3& L, const glm::vec3& d);
-
     static float orenNayarDiffuseReflection (const glm::vec3& face_normal, const glm::vec3& vector_to_light, const glm::vec3& vector_from_camera, float roughness);
 
     friend std::ostream& operator<< (std::ostream& os, const Scene& scene);

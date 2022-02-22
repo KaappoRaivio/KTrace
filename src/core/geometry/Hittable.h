@@ -6,10 +6,11 @@
 
 #include "Ray.h"
 #include "../engine/Material.h"
+#include "../common/Intersection.h"
 
 class Surface;
 
 class Hittable {
 public:
-    virtual float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const = 0;
+    virtual bool getIntersectionDistance (const Ray& ray, Intersection& out) const = 0;
 };

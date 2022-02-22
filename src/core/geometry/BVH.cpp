@@ -11,26 +11,35 @@ int prunes = 0;
 
 //#define BVHSTACKSIZE 32
 
-float BVHNode::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+bool BVHNode::getIntersectionDistance (const Ray& ray, Intersection& out) const {
     std::stack<const BVHNode*> to_intersect;
 //    to_intersect[head++] = this;
     to_intersect.push(this);
 
     double smallestDistance = 1e9;
+    Intersection tempIntersection;
 
     while (not to_intersect.empty()) {
         const BVHNode* current = to_intersect.top();
         to_intersect.pop();
 
         if (current->isLeaf()) {
-            const Surface* tempHitSurface = nullptr;
-            const Material* tempHitMaterial = nullptr;
-            double candidate = current->payload->getIntersectionDistance(ray, tempHitSurface, tempHitMaterial);
-            if (std::abs(candidate) > PRECISION_LIMIT && candidate < smallestDistance) {
+//            const Surface* tempHitSurface = nullptr;
+//            const Material* tempHitMaterial = nullptr;
+            bool hit = current->payload->getIntersectionDistance(ray, tempIntersection);
+            if (hit) {
+                float candidate = tempIntersection.distance;
+                if (candidate < smallestDistance) {
+                    out = tempIntersection;
+//                    out.distance = smallestDistance;
+                    smallestDistance = candidate;
+//                    return true;
+
+                }
 //                std::cout << "HIT!" << std::endl;
-                hitSurface = tempHitSurface;
-                hitMaterial = tempHitMaterial;
-                smallestDistance = candidate;
+//                out = tempHitSurface;
+//                hitMaterial = tempHitMaterial;
+//                smallestDistance = candidate;
 //                return smallestDistance;
             }
         } else {
@@ -48,13 +57,19 @@ float BVHNode::getIntersectionDistance (const Ray& ray, const Surface*& hitSurfa
                     to_intersect.push(current->right.get());
                 }
             } else {
-               if (t_left) to_intersect.push(current->left.get());
-               if (t_right) to_intersect.push(current->right.get());
+                if (t_left) to_intersect.push(current->left.get());
+                if (t_right) to_intersect.push(current->right.get());
             }
         }
     }
 //    std::cout << "smallest distance: " << smallestDistance << std::endl;
-    return smallestDistance == 1e9 ? 0 : smallestDistance;
+    if (smallestDistance != 1e9) {
+//        out = tempIntersection;
+        return true;
+    } else {
+        return false;
+    }
+//    return smallestDistance != 1e9;
 }
 
 std::ostream& operator<< (std::ostream& os, const BVHNode& node) {
@@ -82,8 +97,8 @@ std::ostream& operator<< (std::ostream& os, const BVHNode& node) {
     return os;
 }
 
-float BVH::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
-    return root->getIntersectionDistance(ray, hitSurface, hitMaterial);
+bool BVH::getIntersectionDistance (const Ray& ray, Intersection& out) const {
+    return root->getIntersectionDistance(ray, out);
 }
 
 AABB BVH::getBoundingBox () const {
@@ -158,7 +173,7 @@ BVHNode::BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, si
     if (objectSpan == 1) {
         payload = src_surfaces[start];
         box = payload->getBoundingBox();
-    }    else {
+    } else {
         std::sort(src_surfaces.begin() + start, src_surfaces.begin() + end, comparator);
         size_t mid = start + objectSpan / 2;
 

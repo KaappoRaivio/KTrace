@@ -27,6 +27,9 @@ int main () {
     constexpr int viewport_side_length = 2000;
 
     const Scene& scene = Scenes::getScene<3>(viewport_side_length);
+//    std::stack<float> a;
+//    std::cout << scene.calculate_color({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
+//    std::exit(0);
 
 
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length, scene.camera};

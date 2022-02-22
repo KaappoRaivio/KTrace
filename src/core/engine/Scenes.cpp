@@ -37,7 +37,8 @@ Scene Scenes::getDebug (int viewportSideLength) {
 //    std::unique_ptr<Surface> object = std::make_unique<Objects>(std::move(polygones));
     std::vector<std::unique_ptr<Surface>> objects;
 
-    objects.push_back(std::move(bvh));
+//    objects.push_back(std::move(bvh));
+    objects.push_back(std::move(plane));
 //    std::cout << bvh.get() << std::endl;
 //    objects.push_back(std::move(obje));
 //    objects.push_back(std::move(plane));
@@ -115,7 +116,7 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
 }
 
 Scene Scenes::getSceneTwo (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {1, 4, 2}, 10, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {1, 4, 2}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 

@@ -24,7 +24,7 @@ public:
 
     bool includes (const glm::vec3& vector) const;
 
-    float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    bool getIntersectionDistance (const Ray& ray, Intersection& out) const override;
 
 
     glm::vec3 getNormalAt (const glm::vec3& position) const override;
@@ -37,6 +37,8 @@ public:
     double getIntersect () const;
 
     const Material* getMaterial () const override;
+
+    std::ostream& print (std::ostream& os) const override;
 };
 
 

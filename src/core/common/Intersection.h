@@ -6,22 +6,26 @@
 #include <utility>
 
 #include <glm/glm.hpp>
-#include "../geometry/Surface.h"
-#include "../engine/SingleSceneObject.h"
-//#include "Surface.h"
+#include <glm/gtx/string_cast.hpp>
+#include <ostream>
+#include "../engine/Material.h"
+#include "../geometry/Ray.h"
 
-class SingleSceneObject;
-
+class Surface;
 struct Intersection {
+    Intersection () : distance{0}, position{0, 0, 0}, hitSurface{nullptr}, material{nullptr}, ray{{0, 0, 0}, {0, 0, 1}} {}
 //    Intersection (double distance, glm::vec3 position, const SingleSceneObject& surface, Ray ray) : distance(distance), position(std::move(position)), sceneObject{surface}, ray(std::move(ray)) {}
 
 //    Intersection (const Intersection& other) = default;
 
 
-    const double distance;
-    const glm::vec3 position;
+    float distance;
+    glm::vec3 position;
 //    const SingleSceneObject sceneObject;
     const Surface* hitSurface;
     const Material* material;
-    const Ray ray;
+    Ray ray;
+
+    friend std::ostream& operator<< (std::ostream& os, const Intersection& intersection);
 };
+

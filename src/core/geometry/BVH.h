@@ -18,7 +18,7 @@ public:
     BVHNode (std::vector<Surface*> surfaces);
     BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, size_t end);
 
-    float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    bool getIntersectionDistance (const Ray& ray, Intersection& out) const override;
     AABB getBoundingBox () const override;
     glm::vec3 getNormalAt (const glm::vec3& position) const override;
     glm::vec3 getUVAt (const glm::vec3& position) const override;
@@ -47,7 +47,7 @@ private:
 public:
     BVH (std::vector<std::unique_ptr<Surface>> objects);
 
-    float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    bool getIntersectionDistance (const Ray& ray, Intersection& out) const override;
     AABB getBoundingBox () const override;
     glm::vec3 getNormalAt (const glm::vec3& position) const override;
     glm::vec3 getUVAt (const glm::vec3& position) const override;

@@ -27,21 +27,24 @@ Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t
 
 }
 
-float Triangle::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+bool Triangle::getIntersectionDistance (const Ray& ray, Intersection& out) const {
 //    std::cout << "Raydestroyed: " << glm::to_string(ra)y << std::endl;
-    auto possible_intersection = plane.getIntersectionDistance(ray, hitSurface, hitMaterial);
-    if (possible_intersection == 0 or glm::dot(ray.getDirection(), plane.getNormal()) >= 0) {
+    Intersection temp;
+    bool intersects = plane.getIntersectionDistance(ray, temp);
+    if (not intersects or -glm::dot(ray.getDirection(), plane.getNormal()) < 0) {
 //        std::cout << "Early return" << std::endl;
-        return 0.0;
+        return false;
     }
 
-    auto position = ray.apply(possible_intersection);
+    auto position = ray.apply(temp.distance);
     if (includes(position)) {
-        hitSurface = this;
-        hitMaterial = getMaterial();
-        return possible_intersection;
+        out = temp;
+        return true;
+//        out = this;
+//        hitMaterial = getMaterial();
+//        return possible_intersection;
     } else {
-        return 0.0;
+        return false;
     }
 }
 

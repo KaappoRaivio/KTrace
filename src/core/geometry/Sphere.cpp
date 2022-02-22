@@ -12,7 +12,7 @@
 // Created by kaappo on 14.9.2021.
 Sphere::Sphere (glm::vec3 center, float radius, Material material) : center{std::move(center)}, radius{radius}, material(material) {}
 
-float Sphere::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
+bool Sphere::getIntersectionDistance (const Ray& ray, Intersection& out) const {
 //    if (includes(ray.getOrigin())) {
 //        return 0.0;
 //    }
@@ -24,18 +24,38 @@ float Sphere::getIntersectionDistance (const Ray& ray, const Surface*& hitSurfac
 
     const auto discriminant = std::pow(glm::dot(d, C - P), 2) - (glm::length2(C - P) - std::pow(r, 2));
     if (discriminant < 0) {
-        return 0.0;
+        return false;
     }
 
     const auto base = -glm::dot(d, (C - P));
-    hitSurface = this;
-    hitMaterial = getMaterial();
+
+
+
+//    out = this;
+//    hitMaterial = getMaterial();
     if (discriminant == 0) {
-        if (base < PRECISION_LIMIT) return 0.0;
-        else return base;
+        if (base < PRECISION_LIMIT) return false;
+        else {
+            out.hitSurface = this;
+            out.material = getMaterial();
+            out.distance = base;
+            return true;
+        }
     } else {
         const float root1 = base - std::sqrt(discriminant);
         const float root2 = base + std::sqrt(discriminant);
+
+        if (root1 < PRECISION_LIMIT and root2 < PRECISION_LIMIT) {
+            return false;
+        } else {
+            out.hitSurface = this;
+            out.material = getMaterial();
+            if (root1 < PRECISION_LIMIT) out.distance = root2;
+            else out.distance = std::min(root1, root2);
+
+            return true;
+        }
+
 
         if (root1 < PRECISION_LIMIT) return root2;
         else if (root2 < PRECISION_LIMIT) return 0.0;

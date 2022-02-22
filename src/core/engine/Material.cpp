@@ -10,7 +10,7 @@ Intensity Material::getAlbedoAt (const glm::vec3& uv) const {
 }
 
 std::ostream& operator<< (std::ostream& os, const Material& material) {
-    os << "albedo: " << material.albedo << " glossiness: " << material.glossiness;
+    os << "Material{albedo: " << material.albedo << " glossiness: " << material.glossiness << "}";
     return os;
 }
 

@@ -11,17 +11,24 @@
 
 Plane::Plane (glm::vec3 normal, double intersect, Material material) : normal{std::move(glm::normalize(normal))}, intersect{intersect}, material(material) {}
 
-float Plane::getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const {
-    hitMaterial = getMaterial();
+bool Plane::getIntersectionDistance (const Ray& ray, Intersection& out) const {
+//    hitMaterial = getMaterial();
 
     if (glm::dot(normal, ray.getDirection()) == 0) {
-        return 0.0;
-    } else {
-        hitSurface = this;
-        hitMaterial = getMaterial();
-//        std::cout << "mossi" << std::endl;
-        return -(glm::dot(normal, ray.getOrigin()) + intersect) / glm::dot(normal, ray.getDirection());
+        return false;
     }
+    float distance = -(glm::dot(normal, ray.getOrigin()) + intersect) / glm::dot(normal, ray.getDirection());
+
+    if (distance < PRECISION_LIMIT) return false;
+
+    out.material = &material;
+    out.hitSurface = this;
+    out.distance = distance;
+//        hitMaterial = getMaterial();
+//        std::cout << "mossi" << std::endl;
+//        return -(glm::dot(normal, ray.getOrigin()) + intersect) / glm::dot(normal, ray.getDirection());
+    return true;
+
 }
 
 Plane Plane::from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material) {
@@ -33,6 +40,10 @@ Plane Plane::from_three_points (const glm::vec3& t1, const glm::vec3& t2, const 
 
 bool Plane::includes (const glm::vec3& vector) const {
     return std::abs(glm::dot(normal, vector) + intersect) <= PRECISION_LIMIT;
+}
+
+std::ostream& Plane::print (std::ostream& os) const {
+    return os << "Plane{normal: " << glm::to_string(normal) << ", intersect: " << intersect << "}";
 }
 
 const glm::vec3& Plane::getNormal () const {

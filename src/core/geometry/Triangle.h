@@ -30,7 +30,7 @@ private:
 public:
     Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3);
     Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material);
-    float getIntersectionDistance (const Ray& ray, const Surface*& hitSurface, const Material*& hitMaterial) const override;
+    bool getIntersectionDistance (const Ray& ray, Intersection& out) const override;
 
     glm::vec3 getNormalAt (const glm::vec3& position) const override;
     glm::vec3 getUVAt (const glm::vec3& P) const override;
