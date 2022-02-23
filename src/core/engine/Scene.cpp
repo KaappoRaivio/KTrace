@@ -22,7 +22,7 @@
 constexpr float PI = 3.1415926;
 
 Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, TextureManager textureManager)
-        : objects{std::move(objects)}, camera(camera), lightSources(std::move(lightSources)), raysPerPixel{raysPerPixel}, antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)}, maxBounces(maxBounces) {}
+        : objects{std::move(objects)}, lightSources(std::move(lightSources)), camera(camera), raysPerPixel{raysPerPixel}, maxBounces(maxBounces), antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)} {}
 
 #pragma clang diagnostic push
 
@@ -34,10 +34,10 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 
     std::vector<std::vector<Intensity>> pixels;
     pixels.reserve(viewport_height);
-    for (int y = 0 ; y < viewport_height ; ++y) {
+    for (size_t y = 0 ; y < viewport_height ; ++y) {
         std::vector<Intensity> row;
         row.reserve(viewport_width);
-        for (int x = 0 ; x < viewport_width ; ++x) {
+        for (size_t x = 0 ; x < viewport_width ; ++x) {
             row.emplace_back(0, 0, 0);
         }
         pixels.push_back(row);
@@ -46,8 +46,8 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 
 #pragma omp parallel for collapse(2)
 //#pragma omp target teams distribute parallel for  collapse(2)
-    for (int y = 0 ; y < viewport_height ; ++y) {
-        for (int x = 0 ; x < viewport_width ; ++x) {
+    for (size_t y = 0 ; y < viewport_height ; ++y) {
+        for (size_t x = 0 ; x < viewport_width ; ++x) {
 
             IntensityBlend pixelValue;
 
@@ -61,7 +61,7 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 
                     std::stack<float> densities;
                     densities.push(1);
-                    pixelValue += calculate_color(ray, x + dx, y + dy, maxBounces, densities);
+                    pixelValue += calculateColor(ray, x + dx, y + dy, maxBounces, densities);
 
 //                    if (DEBUG)
 //                        std::cout << densities.size() << std::endl;
@@ -79,8 +79,9 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 
 #pragma clang diagnostic pop
 
-Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const {
-    const auto& intersection = get_closest_intersection(ray, 0);
+Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const {
+    Intersection intersection;
+    bool intersects = getClosestIntersection(ray, 0, intersection);
 //    std::cout << intersection.value() << std::endl;
     if (DEBUG) {
         if (y % 100 == 0 && x == 0) {
@@ -89,41 +90,41 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
     }
 
 
-    if (!intersection) {
+    if (not intersects) {
         return Intensity{0, 0, 0};
     } else {
 #ifdef DEBUG
         std::cout << "hit!" << std::endl;
 #endif
-        const auto closest = *intersection;
-//        std::cout << closest.position << std::endl;
-        const Material* material = closest.material;
-        const auto* const surface = closest.hitSurface;
+        //        std::cout << closest.position << std::endl;
+        const Material* material = intersection.material;
+        const auto* const surface = intersection.hitSurface;
 
-        const Intensity& albedo = material->getAlbedoAt(surface->getUVAt(closest.position));
+        const Intensity& albedo = material->getAlbedoAt(surface->getUVAt(intersection.position));
 
 //        Intensity diffuse_light = {0, 0, 0};
         IntensityBlend diffuse_light;
         IntensityBlend specular_light;
-        const glm::vec3& face_normal = surface->getBumpedNormalAt(closest.position);
+        const glm::vec3& face_normal = surface->getBumpedNormalAt(intersection.position);
         const glm::vec3& N = face_normal;
 
 //        if (N * ray.getDirection() >= 0) {
-//            return calculate_color({closest.position, ray.getDirection()}, x, y, bounces_left, opticalDensities);
+//            return calculateColor({closest.position, ray.getDirection()}, x, y, bounces_left, opticalDensities);
 //        }
 
 
-        const glm::vec3& d = closest.ray.getDirection();
+        const glm::vec3& d = intersection.ray.getDirection();
         const glm::vec3& R = glm::normalize(glm::reflect(d, face_normal));
 
         for (int i = 0 ; i < raysPerPixel ; ++i) {
             for (const auto& lightSource : lightSources) {
-                const glm::vec3& vector_to_light = VectorOperations::rotateInsideCone(lightSource.position - closest.position, lightSource.radius);
+                const glm::vec3& vector_to_light = VectorOperations::rotateInsideCone(lightSource.position - intersection.position, lightSource.radius);
                 const glm::vec3& V = glm::normalize(vector_to_light);
 
-                const auto& any_hits = get_closest_intersection({closest.position, V}, vector_to_light.length());
+                Intersection _;
+                bool anyHits = getClosestIntersection({intersection.position, V}, vector_to_light.length(), _);
 
-                if (!any_hits) {
+                if (!anyHits) {
                     float distance_coefficient = 1.0 / glm::length2(vector_to_light);
 
                     float diffuse_direction_coefficient = lambertianDiffuseReflection(N, V, d);
@@ -138,15 +139,15 @@ Intensity Scene::calculate_color (const Ray& ray, int x, int y, int bounces_left
         }
 
         if (material->glossiness > 0 && bounces_left > 0) {
-            specular_light += calculate_color({closest.position, R}, x, y, bounces_left - 1, opticalDensities);
+            specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities);
         }
 
 
         Intensity underlying{0, 0, 0};
         if (material->alpha < 1 and bounces_left > 0) {
-            glm::vec3 refracted = glm::normalize(surface->refract(closest.position, d, opticalDensities));
+            glm::vec3 refracted = glm::normalize(surface->refract(intersection.position, d, opticalDensities));
 //            std::cout << refracted << std::endl;
-            underlying = calculate_color({closest.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities);
+            underlying = calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities);
 //            std::cout << underlying << std::endl;
         }
 
@@ -203,24 +204,26 @@ float Scene::lambertianDiffuseReflection (const glm::vec3& N, const glm::vec3& L
 
 }
 
-std::optional<Intersection> Scene::get_closest_intersection (const Ray& ray, float max_distance) const {
+bool Scene::getClosestIntersection (const Ray& ray, float max_distance, Intersection& out) const {
     std::vector<Intersection> intersections;
 
     for (const auto& object : objects) {
 //        std::cout << *object << std::endl;
-        const std::optional<Intersection> possibleIntersection = object->getIntersection(ray);
-        if (possibleIntersection && (max_distance == 0 || possibleIntersection->distance < max_distance)) {
-            intersections.push_back(possibleIntersection.value());
+        Intersection temp;
+        bool intersects = object->getIntersection(ray, temp);
+        if (intersects && (max_distance == 0 || temp.distance < max_distance)) {
+            intersections.push_back(temp);
         }
     }
 
-    if (intersections.empty()) { return std::nullopt; }
+    if (intersections.empty()) { return false; }
     else {
         Intersection intersection = *std::min_element(intersections.begin(), intersections.end(), [] (const Intersection& a, const Intersection& b) {
             return a.distance < b.distance;
         });
 
-        return intersection;
+        out = intersection;
+        return true;
     }
 //
 //

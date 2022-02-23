@@ -30,7 +30,7 @@ Scene Scenes::getDebug (int viewportSideLength) {
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
     std::cout << *bvh << std::endl;
 
-    std::cout << (std::abs(bvh->getIntersection({{0, -5, 7}, glm::vec3{0.3657, 0.816, -0.5}})->distance) >= PRECISION_LIMIT) << std::endl;
+//    std::cout << (std::abs(bvh->getIntersection({{0, -5, 7}, glm::vec3{0.3657, 0.816, -0.5}}, <#initializer#>)->distance) >= PRECISION_LIMIT) << std::endl;
 
 
     std::unique_ptr<Surface> obje = std::make_unique<Objects>(std::move(polygons2));
@@ -190,9 +190,9 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 
     std::stack<double> a;
     a.push(1);
-    auto ray = Ray{{0,    -5,   7},
-                   {0.28, 0.85, -0.43}};
-    const std::optional<Intersection>& intersection = transparentSphere->getIntersection(ray);
+//    auto ray = Ray{{0,    -5,   7},
+//                   {0.28, 0.85, -0.43}};
+//    const std::optional<Intersection>& intersection = transparentSphere->getIntersection(ray, <#initializer#>);
 
 //    std::cout << intersection->distance << std::endl;
 //    std::cout << intersection->position << std::endl;
@@ -207,7 +207,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     polygons.push_back(std::move(transparentSphere2));
     auto teapot = MyOBJLoader::readOBJ("../res/uvmaptest.obj", glm::vec3{1.f, 9.f, 3.f}, 0.15, {0, -M_PI / 2}, &Materials::WHITE);
     for (auto& face : teapot) {
-//        polygons.push_back(std::move(face));
+        polygons.push_back(std::move(face));
     }
 //    polygons.push_back();
 //    polygons.push_back(std::move(transparentTriangle));

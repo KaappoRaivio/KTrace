@@ -21,9 +21,9 @@ private:
     float d11;
     float invDenom;
 
-    glm::vec3 v0, v1;
 
     Plane plane;
+    glm::vec3 v0, v1;
 
     bool includes (const glm::vec3& vector) const;
     bool check_bounds (const glm::vec3& P) const;

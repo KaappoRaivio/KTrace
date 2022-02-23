@@ -76,7 +76,7 @@ void MyOpenGLWindow::delay (int millis) {
 
     SDL_Event event;
 
-    double x, y;
+    double x = 0, y = 0;
 
     while (SDL_WaitEvent(&event)) {
         switch (event.type) {
@@ -102,8 +102,8 @@ MyOpenGLWindow::~MyOpenGLWindow () {
 void MyOpenGLWindow::paint (std::vector<std::vector<Intensity>> pixels) const {
     SDL_RenderClear(renderer);
     SDL_PumpEvents();
-    for (int y = 0 ; y < pixels.size() ; ++y) {
-        for (int x = 0 ; x < pixels[y].size() ; ++x) {
+    for (size_t y = 0 ; y < pixels.size() ; ++y) {
+        for (size_t x = 0 ; x < pixels[y].size() ; ++x) {
             set_pixel(x, y, pixels[y][x]);
 
         }

@@ -22,9 +22,6 @@ Objects::Objects (std::vector<std::unique_ptr<Surface>> surfaces) : surfaces{std
 }
 
 bool Objects::getIntersectionDistance (const Ray& ray, Intersection& out) const {
-    const Surface* tempHitSurface = nullptr;
-    const Material* tempHitMaterial = nullptr;
-
     float closest_hit = 1e9;
 //    Intersection intersection;
 
@@ -35,14 +32,6 @@ bool Objects::getIntersectionDistance (const Ray& ray, Intersection& out) const 
         if (std::abs(candidate) > PRECISION_LIMIT && candidate < closest_hit) {
             closest_hit = candidate;
             out = tempIntersection;
-//            out = tempHitSurface;
-//            hitMaterial = tempHitMaterial;
-//            if (hitSurface == nullptr) {
-//                std::cout << "Problem!" << std::endl;
-//            } else {
-//                std::cout << *hitSurface << std::endl;
-//
-//            }
         }
     }
 

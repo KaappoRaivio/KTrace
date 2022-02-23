@@ -6,17 +6,18 @@
 #include "../common/mytypes.h"
 
 
-std::optional<Intersection> Surface::getIntersection (const Ray& ray) {
+bool Surface::getIntersection (const Ray& ray, Intersection& out) {
 //    const Material& material = getMaterial();
-    const Surface* hitSurface = nullptr;
-    const Material* hitMaterial = nullptr;
     Intersection intersection;
     if (getIntersectionDistance(ray, intersection)) {
         intersection.ray = ray;
         intersection.position = ray.apply(intersection.distance);
-        return intersection;
+//        return intersection;
+        out = intersection;
+        return true;
     } else {
-        return std::nullopt;
+//        return std::nullopt;
+        return false;
     }
 //    std::cout <<" moi" << (hitSurface == nullptr) << std::endl;
 

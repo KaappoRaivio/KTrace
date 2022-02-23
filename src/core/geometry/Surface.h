@@ -26,7 +26,7 @@ public:
 
     virtual std::ostream& print (std::ostream& os) const;
 
-    std::optional<Intersection> getIntersection (const Ray& ray);
+    bool getIntersection (const Ray& ray, Intersection& out);
 
     glm::vec3 getBumpedNormalAt (const glm::vec3& position) const;
     friend std::ostream& operator<< (std::ostream& os, const Surface& surface);

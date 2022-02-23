@@ -16,9 +16,7 @@ private:
 
 public:
     AABB (const glm::vec3& minimum, const glm::vec3& maximum);
-    constexpr AABB (bool invalid) : maximum{0, 0, 0}, minimum{0, 0, 0} {
-
-    }
+    constexpr AABB (bool invalid) : minimum{0, 0, 0}, maximum{0, 0, 0} {}
 
     bool operator== (const AABB& rhs) const;
 

@@ -8,7 +8,7 @@
 
 
 Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
-        : t1{t1}, t2{t2}, t3{t3}, plane{Plane::from_three_points(t1, t2, t3, material)}, tu{texture1}, tv{texture2}, tw{texture3}, v0{t2 - t1}, v1{t3 - t1} {
+        : t1{t1}, t2{t2}, t3{t3}, tu{texture1}, tv{texture2}, tw{texture3}, plane{Plane::from_three_points(t1, t2, t3, material)}, v0{t2 - t1}, v1{t3 - t1} {
 
 //    v0 = t2 - t1;
 //    v1 = t3 - t1;
@@ -84,16 +84,16 @@ glm::vec3 Triangle::getUVAt (const glm::vec3& P) const {
 }
 
 glm::vec3 Triangle::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
-    const glm::vec3& normal = getNormalAt(position);
-    bool inwards = glm::dot(normal, direction) < 0;
+    glm::vec3 normal = getNormalAt(position);
+//    bool inwards = glm::dot(normal, direction) < 0;
 //
     float n = opticalDensities.top() / getMaterial()->opticalDensity;
     opticalDensities.push(getMaterial()->opticalDensity);
 
     float cosI = -glm::dot(normal, glm::normalize(direction));
     if (cosI < 0) {
-        n = 1 / n;
         cosI *= -1;
+        normal = -normal;
     }
 
     float sinT2 = n * n * (1.0 - cosI * cosI);

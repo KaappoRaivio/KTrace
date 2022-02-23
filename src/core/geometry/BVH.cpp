@@ -24,29 +24,17 @@ bool BVHNode::getIntersectionDistance (const Ray& ray, Intersection& out) const 
         to_intersect.pop();
 
         if (current->isLeaf()) {
-//            const Surface* tempHitSurface = nullptr;
-//            const Material* tempHitMaterial = nullptr;
             bool hit = current->payload->getIntersectionDistance(ray, tempIntersection);
             if (hit) {
                 float candidate = tempIntersection.distance;
                 if (candidate < smallestDistance) {
                     out = tempIntersection;
-//                    out.distance = smallestDistance;
                     smallestDistance = candidate;
-//                    return true;
-
                 }
-//                std::cout << "HIT!" << std::endl;
-//                out = tempHitSurface;
-//                hitMaterial = tempHitMaterial;
-//                smallestDistance = candidate;
-//                return smallestDistance;
             }
         } else {
             double t_left = std::max(current->left->getBoundingBox().getIntersectionDistance(ray), 0.0);
             double t_right = std::max(current->right->getBoundingBox().getIntersectionDistance(ray), 0.0);
-
-//            std::cout << t_left << ", "  << t_right << std::endl;
 
             if (t_left and t_right) {
                 if (t_left < t_right) {

@@ -8,12 +8,9 @@
 
 double AABB::getIntersectionDistance (const Ray& ray) const {
     return intersects(ray);
-//    if (!intersects(ray)) return 0;
-//    else return 1;
 }
 
 double AABB::intersects (const Ray& ray) const {
-//    auto d_inv = glm::vec3{1 / ray.getDirection().x, 1 / ray.getDirection().y, 1 / ray.getDirection().z};
     const auto& d_inv = ray.getInverseDirection();
 
     double tx1 = (minimum.x - ray.getOrigin().x) * d_inv.x;
@@ -35,36 +32,6 @@ double AABB::intersects (const Ray& ray) const {
     tmax = std::min(tmax, std::max(tz1, tz2));
 
     return tmax >= std::max(0.0, tmin);
-//    auto invD = 1.0f / ray.getDirection().x;
-//    auto t0 = (minimum.x - ray.getOrigin().x) * invD;
-//    auto t1 = (maximum.x - ray.getOrigin().x) * invD;
-//    if (invD < 0.0f)
-//        std::swap(t0, t1);
-//
-//    if (t1 <= t0)
-//        return false;
-//
-//
-//    invD = 1.0f / ray.getDirection().y;
-//    t0 = (minimum.y - ray.getOrigin().y) * invD;
-//    t1 = (maximum.y - ray.getOrigin().y) * invD;
-//    if (invD < 0.0f)
-//        std::swap(t0, t1);
-//
-//    if (t1 <= t0)
-//        return false;
-//
-//
-//    invD = 1.0f / ray.getDirection().z;
-//    t0 = (minimum.z - ray.getOrigin().z) * invD;
-//    t1 = (maximum.z - ray.getOrigin().z) * invD;
-//    if (invD < 0.0f)
-//        std::swap(t0, t1);
-//
-//    if (t1 <= t0)
-//        return false;
-//
-//    return t0;
 }
 
 AABB::AABB (const glm::vec3& minimum, const glm::vec3& maximum) : minimum(minimum), maximum(maximum) {}

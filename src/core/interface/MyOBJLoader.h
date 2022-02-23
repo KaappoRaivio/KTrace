@@ -24,24 +24,24 @@ namespace MyOBJLoader {
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
 
-        for (int i = 0 ; i < loader.LoadedMeshes.size() ; i++) {
-            objl::Mesh& curMesh = loader.LoadedMeshes[i];
-            std::cout << "Mesh " << i << ": " << curMesh.MeshName << "\n";
+        for (size_t meshIndex = 0 ; meshIndex < loader.LoadedMeshes.size() ; meshIndex++) {
+            objl::Mesh& curMesh = loader.LoadedMeshes[meshIndex];
+            std::cout << "Mesh " << meshIndex << ": " << curMesh.MeshName << "\n";
             std::vector<std::unique_ptr<Surface>> objects;
 
-            for (int j = 0 ; j < curMesh.Indices.size() ; j += 3) {
+            for (size_t vertexIndex = 0 ; vertexIndex < curMesh.Indices.size() ; vertexIndex += 3) {
 //                auto minimum = tovec3()
 
-                int index1 = curMesh.Indices[j + 0];
-                int index2 = curMesh.Indices[j + 1];
-                int index3 = curMesh.Indices[j + 2];
+                int index1 = curMesh.Indices[vertexIndex + 0];
+                int index2 = curMesh.Indices[vertexIndex + 1];
+                int index3 = curMesh.Indices[vertexIndex + 2];
 
                 objl::Vertex& vertex1 = curMesh.Vertices[index1];
                 objl::Vertex& vertex2 = curMesh.Vertices[index2];
                 objl::Vertex& vertex3 = curMesh.Vertices[index3];
 
 
-                std::cout << "vertex" << j << ": " << std::endl;
+                std::cout << "vertex" << vertexIndex << ": " << std::endl;
                 std::cout << glm::to_string(tovec3(vertex1.Position)) << "\t" << glm::to_string(tovec3(vertex2.Position)) << "\t" << glm::to_string(tovec3(vertex3.Position)) << std::endl;
                 std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex2.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex3.TextureCoordinate)) << std::endl;
 //                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate) << "\t" << tovec3(vertex2.TextureCoordinate) << "\t" << tovec3(vertex3.TextureCoordinate)) << std::endl;

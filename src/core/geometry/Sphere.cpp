@@ -69,12 +69,10 @@ glm::vec3 Sphere::getNormalAt (const glm::vec3& position) const {
 
 glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
     glm::vec3 normal = getNormalAt(position);
-    bool inwards = glm::dot(normal, direction) < 0;
 
     float n = opticalDensities.top() / getMaterial()->opticalDensity;
     opticalDensities.push(getMaterial()->opticalDensity);
-//
-//
+
     float cosI = -glm::dot(normal, glm::normalize(direction));
     if (cosI < 0) {
         cosI *= -1;
@@ -85,16 +83,11 @@ glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction
 
     float sinT2 = n * n * (1.0 - cosI * cosI);
     if (sinT2 > 1.0) {
-//        std::cout << "mosi" << std::endl;
         return glm::reflect(direction, normal);
     }
-//    if (sinT2 < 0)
-//        std::cout << sinT2 << std::endl;
-
     return glm::refract(direction, normal, n);
-//    n = 1 / n;
-    float cosT = sqrt(1.0 - sinT2);
-    return direction * n + normal * (n * cosI - cosT);
+//    float cosT = sqrt(1.0 - sinT2);
+//    return direction * n + normal * (n * cosI - cosT);
 }
 
 bool Sphere::includes (const glm::vec3& point) const {

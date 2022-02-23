@@ -18,12 +18,13 @@ struct Material {
     double alpha = 1;
     double opticalDensity = 1;
 
-    constexpr Material (const Texture* const albedo, double glossiness, const Texture* bump) : albedo{albedo}, glossiness{glossiness}, bump{bump} {}
-    constexpr Material (const Texture* const albedo, double glossiness, double alpha) : albedo{albedo}, glossiness{glossiness}, alpha{alpha}, bump{&SolidTextures::BUMP_UP} {}
-    explicit Material (const Texture* const albedo) : albedo{albedo}, glossiness{0}, alpha{1}, bump{&SolidTextures::BUMP_UP} {}
+    constexpr Material (const Texture* const albedo, double glossiness, const Texture* bump) : albedo{albedo}, bump{bump}, glossiness{glossiness} {}
+    constexpr Material (const Texture* const albedo, double glossiness, double alpha) : albedo{albedo}, bump{&SolidTextures::BUMP_UP}, glossiness{glossiness}, alpha{alpha} {}
+    explicit Material (const Texture* const albedo) : albedo{albedo}, bump{&SolidTextures::BUMP_UP}, glossiness{0}, alpha{1} {}
 
 public:
     Intensity getAlbedoAt (const glm::vec3& uv) const;
+
     glm::vec3 getBumpAt (const glm::vec3& uv, const glm::vec3& normal) const;
 
     friend std::ostream& operator<< (std::ostream& os, const Material& material);

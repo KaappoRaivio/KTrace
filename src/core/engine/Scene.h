@@ -32,11 +32,11 @@ public:
 
     std::vector<std::vector<Intensity>> trace () const;
 
-    Intensity calculate_color (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const;
+    Intensity calculateColor (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const;
 
 //    std::vector<Intersection> getIntersections(const Ray &ray);
 
-    std::optional<Intersection> get_closest_intersection (const Ray& ray, float max_distance = 0) const;
+    bool getClosestIntersection (const Ray& ray, float max_distance, Intersection& out) const;
 
     static float calculate_beckmann_distribution (const glm::vec3& R, const glm::vec3& V, float glossiness);
     static float lambertianDiffuseReflection (const glm::vec3& N, const glm::vec3& L, const glm::vec3& d);
