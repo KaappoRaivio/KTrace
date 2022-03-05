@@ -181,8 +181,8 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     std::unique_ptr<Surface> plane2 = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, Materials::WHITE);
     std::unique_ptr<Surface> transparentSphere = std::make_unique<Sphere>(glm::vec3{0, 3, 3}, 2, transparent);
     std::unique_ptr<Surface> transparentSphere2 = std::make_unique<Sphere>(glm::vec3{0, 6, 3}, 1, transparent2);
-    std::unique_ptr<Surface> transparentTriangle = std::make_unique<Triangle>(glm::vec3{-4, 1, 7}, glm::vec3{-4, 1, 3},glm::vec3{4, 1, 7},  transparent);
-    std::unique_ptr<Surface> transparentTriangle2 = std::make_unique<Triangle>(glm::vec3{-4, 1, 3}, glm::vec3{4, 1, 3},glm::vec3{4, 1, 7},  transparent);
+    std::unique_ptr<Surface> transparentTriangle = std::make_unique<Triangle>(glm::vec3{-4, 1, 7}, glm::vec3{-4, 1, 3}, glm::vec3{4, 1, 7}, transparent);
+    std::unique_ptr<Surface> transparentTriangle2 = std::make_unique<Triangle>(glm::vec3{-4, 1, 3}, glm::vec3{4, 1, 3}, glm::vec3{4, 1, 7}, transparent);
 
     std::cout << glm::to_string(plane->getUVAt({0, 1, 0})) << std::endl;
 //    std::cout << transparentSphere->refract()
@@ -222,7 +222,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 
     double radius = 0;
     std::vector<LightSource> lights = {
-            {{-2, 20,  3},  Intensity{1, 1, 1} * 210, radius},
+            {{-2, 20,  3},   Intensity{1, 1, 1} * 210,  radius},
             {{10, -40, 100}, Intensity{1, 1, 1} * 3000, radius * 50},
     };
 
@@ -232,7 +232,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 
 Scene Scenes::getSceneFour (int viewport_side_length) {
 
-    Camera camera = {{0, -5, 7}, {0.341747, -5+0.808307, 7-0.479426}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {0.341747, -5 + 0.808307, 7 - 0.479426}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
 
     TextureManager textureManager;
 
@@ -256,4 +256,34 @@ Scene Scenes::getSceneFour (int viewport_side_length) {
     };
 
     return {std::move(objects), lights, camera, 5, 8, 1, std::move(textureManager)};
+}
+
+Scene Scenes::getRaytracinginaweekendtestscene (int viewportSideLength) {
+    TextureManager manager;
+
+    auto ground = Material{manager.getSolidTexture({1, 0.8, 0.0})};
+    auto center = Material{manager.getSolidTexture({0.7, 0.3, 0.3}), 0.8, 1.0};
+    auto left = Material{manager.getSolidTexture({0.8, 0.8, 0.8}), 1, 0.5};
+    left.opticalDensity = 1.5;
+    auto right = Material{manager.getSolidTexture({0.8, 0.6, 0.2}), 0.8, 0.5};
+
+    std::vector<std::unique_ptr<Surface>> o;
+//    o.push_back(std::make_unique<Sphere>(glm::vec3{0.0, 0.0, -1.0}, 0.5, center));
+    o.push_back(std::make_unique<Sphere>(glm::vec3{-1.0, 5.0, -1.0}, 0.5, left));
+//    o.push_back(std::make_unique<Sphere>(glm::vec3{1.0, 0.0, -1.0}, 0.5, right));
+
+    std::vector<std::unique_ptr<Surface>> objects {};
+    objects.push_back(std::make_unique<BVH>(std::move(o)));
+    objects.push_back(std::make_unique<Plane>(glm::vec3{0, 0, 1}, 1.6, ground));
+
+//    std::cout << *objects[1] << std::endl;
+
+    std::vector<LightSource> lights = {
+            {{100, -40, 40}, Intensity{1, 1, 1} * 10000, 0},
+    };
+
+    Camera camera {{0, 0, -1.4}, {-1, 5, -1}, 3, {1, 1,}, {viewportSideLength, viewportSideLength}};
+
+    return {std::move(objects), lights, camera, 3, 1, 1, std::move(manager)};
+
 }

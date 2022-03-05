@@ -15,6 +15,8 @@ namespace Scenes {
     Scene getDebug (int viewportSideLength);
     Scene getSceneFour (int viewport_side_length);
 
+    Scene getRaytracinginaweekendtestscene (int viewportSideLength);
+
     template <int INDEX>
     Scene getScene (int viewportSideLength) {
         switch (INDEX) {
@@ -28,8 +30,11 @@ namespace Scenes {
                 return getSceneThree(viewportSideLength);
             case 4:
                 return getSceneFour(viewportSideLength);
+            case 5:
+                return getRaytracinginaweekendtestscene(viewportSideLength);
         }
     }
+
 
 }
 

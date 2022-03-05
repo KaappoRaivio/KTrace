@@ -6,6 +6,7 @@
 #include <iostream>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/random.hpp>
 #include "../common/mytypes.h"
 
 //
@@ -67,28 +68,50 @@ glm::vec3 Sphere::getNormalAt (const glm::vec3& position) const {
     return glm::normalize(position - center);
 }
 
+
+glm::vec3 refractAlt (const glm::vec3& uv, const glm::vec3& n, float etai_over_etat) {
+    float cos_theta = glm::min(dot(-uv, n), 1.0f);
+    glm::vec3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
+    glm::vec3 r_out_parallel = (float) -glm::sqrt(glm::abs(1.0 - glm::length2(r_out_perp))) * n;
+    return r_out_perp + r_out_parallel;
+}
+
+
+
 glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
     glm::vec3 normal = getNormalAt(position);
 
     float n = opticalDensities.top() / getMaterial()->opticalDensity;
+//    float n = ;
     opticalDensities.push(getMaterial()->opticalDensity);
 
     float cosI = -glm::dot(normal, glm::normalize(direction));
     if (cosI < 0) {
-        cosI *= -1;
+//        n = 1 / n;
+//        cosI *= -1;
         normal = -normal;
-        opticalDensities.pop();
-        opticalDensities.pop();
+//        opticalDensities.pop();
+        n = 1 / n;
+//        opticalDensities.pop();
+    } else {
     }
 
-    float sinT2 = n * n * (1.0 - cosI * cosI);
-    if (sinT2 > 1.0) {
+    float sinT2 = (1.0 - glm::pow(cosI, 2));
+//    if (sinT2 * glm::pow(n, 2) > 1.0 or reflectance(cosI, n) > glm::linearRand(0, 1)) {
+    if (sinT2 * glm::pow(n, 2) > 1.0) {
+        std::cout << "Reflecting " << glm::to_string(direction) << glm::to_string(normal) << std::endl;
         return glm::reflect(direction, normal);
+    } else {
+        const glm::vec3& vec = glm::refract(direction, normal, n);
+        return vec;
+//        return refractAlt(direction, normal, n);
     }
-    return glm::refract(direction, normal, n);
+//        return glm::refract(direction, normal, n);
 //    float cosT = sqrt(1.0 - sinT2);
 //    return direction * n + normal * (n * cosI - cosT);
 }
+
+
 
 bool Sphere::includes (const glm::vec3& point) const {
 //    return glm::intersectLineSphere()

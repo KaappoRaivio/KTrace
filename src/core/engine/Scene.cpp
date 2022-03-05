@@ -91,7 +91,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
 
 
     if (not intersects) {
-        return Intensity{0, 0, 0};
+        return Intensity{0.5, 0.8, 1.0};
     } else {
 #ifdef DEBUG
         std::cout << "hit!" << std::endl;
@@ -138,18 +138,29 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
             }
         }
 
-        if (material->glossiness > 0 && bounces_left > 0) {
-            specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities);
-        }
-
-
         Intensity underlying{0, 0, 0};
-        if (material->alpha < 1 and bounces_left > 0) {
-            glm::vec3 refracted = glm::normalize(surface->refract(intersection.position, d, opticalDensities));
-//            std::cout << refracted << std::endl;
-            underlying = calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities);
-//            std::cout << underlying << std::endl;
+        if (bounces_left > 0) {
+//            std::cout << opticalDensities.top() / material->opticalDensity << std::endl;
+//            float reflectance = 0.5;
+            float reflectance = getReflectance(glm::abs(glm::dot(N, d)), opticalDensities.top() / material->opticalDensity);
+//            std::cout << glm::abs(glm::dot(N, d)) << ", " << reflectance << std::endl;
+//            std::cout << glm::abs(glm::dot(N, d)) << std::endl;
+            float refractance = 1 - reflectance;
+
+//            std::cout << reflectance << std::endl;
+
+            if (material->glossiness > 0 and reflectance > 0) {
+                specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities) * reflectance;
+            }
+            if (material->alpha < 1 and refractance > 0) {
+                glm::vec3 refracted = glm::normalize(surface->refract(intersection.position, d, opticalDensities));
+//                std::cout << refracted << std::endl;
+//                std::cout << calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities) * refractance * (1 - material->alpha) << std::endl;
+                underlying = calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities) * refractance ;
+                //            std::cout << underlying << std::endl;
+            }
         }
+
 
         const Intensity& specular_intensity = specular_light.commitSum();
         const Intensity& diffuse_intensity = diffuse_light.commitSum();
@@ -261,10 +272,16 @@ float Scene::calculate_beckmann_distribution (const glm::vec3& R, const glm::vec
 
 }
 
+float Scene::getReflectance (float cosine, float refractionRatio) {
+    // Use Schlick's approximation for reflectance.
+    float r0 = glm::pow((1 - refractionRatio) / (1 + refractionRatio), 2);
+    return r0 + (1 - r0) * glm::pow((1 - cosine), 5);
+}
+
 std::ostream& operator<< (std::ostream& os, const Scene& scene) {
     os << "objects: {";
     for (const auto& i : scene.objects) {
-        os << i << ", ";
+        os << *i << ", ";
     }
     os << "}";
 
