@@ -41,6 +41,10 @@ int main () {
         auto start = std::chrono::system_clock::now();
         auto pixels = scene.trace();
 
+        Image rendered = Image{pixels};
+        rendered.save("/home/kaappo/git/raytracercpp/out/test.png");
+
+
         auto end = std::chrono::system_clock::now();
         std::cout << "traced" << std::endl;
 

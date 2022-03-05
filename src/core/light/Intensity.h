@@ -5,6 +5,7 @@
 
 #include <array>
 #include <ostream>
+#include <glm/vec3.hpp>
 #include "Intensity.h"
 #include "Color.h"
 
@@ -38,6 +39,7 @@ public:
     Intensity operator+= (const Intensity& other);
 
     Color applyGamma (double d) const;
+    glm::vec3 asRGB (double gamma) const;
 };
 
 std::ostream& operator<< (const Intensity& color, std::ostream& ostream);

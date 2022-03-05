@@ -112,7 +112,7 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
             {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
     };
 
-    return {std::move(objects), lights, camera, 5, 1, 1, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 5, 1, 4, std::move(textureManager)};
 }
 
 Scene Scenes::getSceneTwo (int viewport_side_length) {
@@ -249,13 +249,13 @@ Scene Scenes::getSceneFour (int viewport_side_length) {
     objects.push_back(std::move(plane));
     objects.push_back(std::move(bvh));
 
-    double radius = 1;
+    double radius = 0;
     std::vector<LightSource> lights = {
             {{-2, 1,   3},  Intensity{1, 1, 1} * 21,  radius},
-            {{10, -40, 40}, Intensity{1, 1, 1} * 300, radius * 50},
+            {{-10, -40, 100}, Intensity{1, 1, 1} * 3000, radius * 25},
     };
 
-    return {std::move(objects), lights, camera, 5, 8, 1, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 3, 1, 1, std::move(textureManager)};
 }
 
 Scene Scenes::getRaytracinginaweekendtestscene (int viewportSideLength) {

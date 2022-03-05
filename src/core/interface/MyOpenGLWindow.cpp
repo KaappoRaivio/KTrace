@@ -31,7 +31,7 @@ MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, 
 //    SDL_Window* window = SDL_CreateWindow("title", x, y, w, h, FLAGS...);
 
 
-    window = SDL_CreateWindow("Raytracer", x, y, width, height, SDL_WINDOW_BORDERLESS);
+    window = SDL_CreateWindow("Raytracer", x, y, width, height, SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP);
     renderer = SDL_CreateRenderer(window, 0, 0);
     SDL_SetWindowTitle(window, "Raytracer");
 
@@ -49,13 +49,9 @@ void MyOpenGLWindow::set_pixel (int x, int y, const Intensity& color) const {
     constexpr auto epsilon = 1e-5;
 
 
-    auto gamma_corrected = color.applyGamma(m_gamma);
+    auto rgb = color.asRGB(m_gamma);
 
-    auto r = std::clamp((gamma_corrected.getR() * 256.0 - epsilon), 0.0, 256.0 - epsilon);
-    auto g = std::clamp((gamma_corrected.getG() * 256.0 - epsilon), 0.0, 256.0 - epsilon);
-    auto b = std::clamp((gamma_corrected.getB() * 256.0 - epsilon), 0.0, 256.0 - epsilon);
-
-    SDL_SetRenderDrawColor(renderer, r, g, b, 1.0);
+    SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, 1.0);
 
     SDL_Rect rect;
     rect.x = x * scale;

@@ -60,3 +60,14 @@ Intensity Intensity::operator/ (double coeff) const {
     return *this * (1 / coeff);
 }
 
+glm::vec3 Intensity::asRGB (double gamma) const {
+    constexpr auto epsilon = 1e-5;
+    auto gamma_corrected = applyGamma(gamma);
+
+    auto r = uint8_t(std::clamp((gamma_corrected.getR() * 256.0 - epsilon), 0.0, 256.0 - epsilon));
+    auto g = uint8_t(std::clamp((gamma_corrected.getG() * 256.0 - epsilon), 0.0, 256.0 - epsilon));
+    auto b = uint8_t(std::clamp((gamma_corrected.getB() * 256.0 - epsilon), 0.0, 256.0 - epsilon));
+
+    return {r, g, b};
+}
+

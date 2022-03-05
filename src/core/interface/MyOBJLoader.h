@@ -46,10 +46,16 @@ namespace MyOBJLoader {
                 std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex2.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex3.TextureCoordinate)) << std::endl;
 //                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate) << "\t" << tovec3(vertex2.TextureCoordinate) << "\t" << tovec3(vertex3.TextureCoordinate)) << std::endl;
 
-                Triangle t{VectorOperations::rotate(tovec3(vertex1.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, VectorOperations::rotate(tovec3(vertex2.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
-                           VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, *material,
-                           tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate),
-                           tovec3(vertex1.Normal), tovec3(vertex2.Normal), tovec3(vertex3.Normal)};
+                Triangle t{
+                        VectorOperations::rotate(tovec3(vertex1.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
+                        VectorOperations::rotate(tovec3(vertex2.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
+                        VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
+                        *material,
+                        tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate),
+                        VectorOperations::rotate(tovec3(vertex1.Normal), rotationOffset.first, rotationOffset.second),
+                        VectorOperations::rotate(tovec3(vertex2.Normal), rotationOffset.first, rotationOffset.second),
+                        VectorOperations::rotate(tovec3(vertex3.Normal), rotationOffset.first, rotationOffset.second),
+                };
 
                 objects.push_back(std::make_unique<Triangle>(t));
             }

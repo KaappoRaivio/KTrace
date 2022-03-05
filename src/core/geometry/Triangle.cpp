@@ -16,6 +16,12 @@ Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t
     d11 = glm::dot(v1, v1);
     invDenom = 1.0 / (d00 * d11 - d01 * d01);
 
+//    if (glm::dot(plane.getNormal(), n1) < 0 and glm::dot(plane.getNormal(), n2) < 0 and glm::dot(plane.getNormal(), n3) < 0) plane
+
+//    if (glm::dot(n1, plane.getNormal()) < 0) n1 *= -1;
+//    if (glm::dot(n2, plane.getNormal()) < 0) n2 *= -1;
+//    if (glm::dot(n3, plane.getNormal()) < 0) n3 *= -1;
+
     if (glm::length(normal1) == 0 or glm::length(normal2) == 0 or glm::length(normal3) == 0) {
         n1 = n2 = n3 = plane.getNormal();
     }
@@ -83,6 +89,7 @@ bool Triangle::check_bounds (const glm::vec3& P) const {
 }
 
 glm::vec3 Triangle::getNormalAt (const glm::vec3& position) const {
+//    return plane.getNormal();
 //    std::cout << "moi <" << std::endl;
     const glm::vec3& uvw = getUVWithoutMapping(position);
 //    std::cout << glm::to_string(uvw) << std::endl;
@@ -90,7 +97,6 @@ glm::vec3 Triangle::getNormalAt (const glm::vec3& position) const {
     return glm::normalize(n1 * uvw.x + n2 * uvw.y + n3 * uvw.z);
 
 //
-    return plane.getNormal();
 }
 
 glm::vec3 Triangle::getUVAt (const glm::vec3& P) const {
