@@ -261,7 +261,7 @@ Scene Scenes::getSceneFour (int viewport_side_length) {
 Scene Scenes::getRaytracinginaweekendtestscene (int viewportSideLength) {
     TextureManager manager;
 
-    auto ground = Material{manager.getSolidTexture({1, 0.8, 0.0})};
+    auto ground = Material{manager.getSolidTexture({1, 0.8, 0.0}), 0, 1.0};
     auto center = Material{manager.getSolidTexture({0.7, 0.3, 0.3}), 0.8, 1.0};
     auto left = Material{manager.getSolidTexture({0.8, 0.8, 0.8}), 1, 0.5};
     left.opticalDensity = 1.5;
@@ -272,7 +272,7 @@ Scene Scenes::getRaytracinginaweekendtestscene (int viewportSideLength) {
     o.push_back(std::make_unique<Sphere>(glm::vec3{-1.0, 5.0, -1.0}, 0.5, left));
 //    o.push_back(std::make_unique<Sphere>(glm::vec3{1.0, 0.0, -1.0}, 0.5, right));
 
-    std::vector<std::unique_ptr<Surface>> objects {};
+    std::vector<std::unique_ptr<Surface>> objects{};
     objects.push_back(std::make_unique<BVH>(std::move(o)));
     objects.push_back(std::make_unique<Plane>(glm::vec3{0, 0, 1}, 1.6, ground));
 
@@ -282,7 +282,7 @@ Scene Scenes::getRaytracinginaweekendtestscene (int viewportSideLength) {
             {{100, -40, 40}, Intensity{1, 1, 1} * 10000, 0},
     };
 
-    Camera camera {{0, 0, -1.4}, {-1, 5, -1}, 3, {1, 1,}, {viewportSideLength, viewportSideLength}};
+    Camera camera{{0, 0, -1.4}, {-1, 5, -1}, 3, {1, 1,}, {viewportSideLength, viewportSideLength}};
 
     return {std::move(objects), lights, camera, 3, 1, 1, std::move(manager)};
 

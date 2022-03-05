@@ -25,6 +25,7 @@ Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<L
         : objects{std::move(objects)}, lightSources(std::move(lightSources)), camera(camera), raysPerPixel{raysPerPixel}, maxBounces(maxBounces), antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)} {}
 
 #pragma clang diagnostic push
+//#pragma omp declare target
 
 std::vector<std::vector<Intensity>> Scene::trace () const {
     auto viewplane = camera.get_viewplane(antialiasingScaler);
@@ -45,7 +46,8 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 
 
 #pragma omp parallel for collapse(2)
-//#pragma omp target teams distribute parallel for  collapse(2)
+//#pragma omp target map(to:viewplane), map(tofrom:pixels)
+//teams distribute parallel for  collapse(2)
     for (size_t y = 0 ; y < viewport_height ; ++y) {
         for (size_t x = 0 ; x < viewport_width ; ++x) {
 
@@ -56,8 +58,8 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
                     const auto& pixel = viewplane[y * antialiasingScaler + dy][x * antialiasingScaler + dx];
                     const Ray ray = {camera.getOrigin(), pixel};
 
-                    if (x == 2 and y == 2)
-                        std::cout << "Debug!" << std::endl;
+//                    if (x == 2 and y == 2)
+//                        std::cout << "Debug!" << std::endl;
 
                     std::stack<float> densities;
                     densities.push(1);
@@ -78,14 +80,13 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 }
 
 #pragma clang diagnostic pop
-
 Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const {
     Intersection intersection;
     bool intersects = getClosestIntersection(ray, 0, intersection);
 //    std::cout << intersection.value() << std::endl;
     if (DEBUG) {
         if (y % 100 == 0 && x == 0) {
-            std::cout << "Row " << y << std::endl;
+//            std::cout << "Row " << y << std::endl;
         }
     }
 
@@ -150,13 +151,13 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
 //            std::cout << reflectance << std::endl;
 
             if (material->glossiness > 0 and reflectance > 0) {
-                specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities) * reflectance;
+                specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities) * reflectance * 2;
             }
             if (material->alpha < 1 and refractance > 0) {
                 glm::vec3 refracted = glm::normalize(surface->refract(intersection.position, d, opticalDensities));
 //                std::cout << refracted << std::endl;
 //                std::cout << calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities) * refractance * (1 - material->alpha) << std::endl;
-                underlying = calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities) * refractance ;
+                underlying = calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities) * refractance * albedo * 2;
                 //            std::cout << underlying << std::endl;
             }
         }
@@ -295,3 +296,4 @@ std::ostream& operator<< (std::ostream& os, const Scene& scene) {
     return os;
 }
 
+//#pragma omp end declare target

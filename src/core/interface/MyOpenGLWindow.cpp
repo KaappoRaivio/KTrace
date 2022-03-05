@@ -14,7 +14,25 @@ MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, 
         MyOpenGLWindow::initialized = true;
     }
 
-    SDL_CreateWindowAndRenderer(m_width, m_height, 0, &window, &renderer);
+    int displays = SDL_GetNumVideoDisplays();
+
+    // get display bounds for all displays
+    std::vector<SDL_Rect> displayBounds;
+    for (int i = 0 ; i < displays ; i++) {
+        displayBounds.push_back(SDL_Rect());
+        SDL_GetDisplayBounds(i, &displayBounds.back());
+    }
+
+// window of dimensions 500 * 500 offset 100 pixels on secondary monitor
+    int x = displayBounds.back().x;
+    int y = displayBounds.back().y;
+
+//// so now x and y are on secondary display
+//    SDL_Window* window = SDL_CreateWindow("title", x, y, w, h, FLAGS...);
+
+
+    window = SDL_CreateWindow("Raytracer", x, y, width, height, SDL_WINDOW_BORDERLESS);
+    renderer = SDL_CreateRenderer(window, 0, 0);
     SDL_SetWindowTitle(window, "Raytracer");
 
     if (window == nullptr || renderer == nullptr) {

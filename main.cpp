@@ -23,8 +23,8 @@
 
 
 int main () {
-    constexpr int window_side_length = 1000;
-    constexpr int viewport_side_length = 1000;
+    constexpr int window_side_length = 1440;
+    constexpr int viewport_side_length = 1440;
 
     Scene scene = Scenes::getScene<5>(viewport_side_length);
 //    std::stack<float> a;
