@@ -9,7 +9,7 @@
 #include "../common/mytypes.h"
 
 Scene Scenes::getDebug (int viewportSideLength) {
-    Camera camera = {{0.0f, -5.0f, 7.0f}, {0, 4, 2}, 1.0f, {1.0f, 1.0f,}, {viewportSideLength, viewportSideLength}};
+    Camera camera = {{0.0f, -5.0f, 7.0f}, {3, 4, 2}, 1.0f, {1.0f, 1.0f,}, {viewportSideLength, viewportSideLength}};
     TextureManager textureManager;
 
     auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
@@ -22,22 +22,22 @@ Scene Scenes::getDebug (int viewportSideLength) {
     std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {2, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, &Materials::RED_GLOSSY);
 //    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
 
-    for (auto& p : polygons) {
-//        polygons.push_back(std::move(p));
-        std::cout << *p << std::endl;
+    for (auto& p : polygons2) {
+//        std::cout << *p << std::endl;
+        polygons.push_back(std::move(p));
     }
 
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
-    std::cout << *bvh << std::endl;
+//    std::cout << *bvh << std::endl;
 
 //    std::cout << (std::abs(bvh->getIntersection({{0, -5, 7}, glm::vec3{0.3657, 0.816, -0.5}}, <#initializer#>)->distance) >= PRECISION_LIMIT) << std::endl;
 
 
-    std::unique_ptr<Surface> obje = std::make_unique<Objects>(std::move(polygons2));
+//    std::unique_ptr<Surface> obje = std::make_unique<Objects>(std::move(polygons2));
 //    std::unique_ptr<Surface> object = std::make_unique<Objects>(std::move(polygones));
     std::vector<std::unique_ptr<Surface>> objects;
 
-//    objects.push_back(std::move(bvh));
+    objects.push_back(std::move(bvh));
     objects.push_back(std::move(plane));
 //    std::cout << bvh.get() << std::endl;
 //    objects.push_back(std::move(obje));

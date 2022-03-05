@@ -86,13 +86,13 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
 //    std::cout << intersection.value() << std::endl;
     if (DEBUG) {
         if (y % 100 == 0 && x == 0) {
-//            std::cout << "Row " << y << std::endl;
+            std::cout << "Row " << y << std::endl;
         }
     }
 
 
     if (not intersects) {
-        return Intensity{0.5, 0.8, 1.0};
+        return Intensity{0, 0, 0};
     } else {
 #ifdef DEBUG
         std::cout << "hit!" << std::endl;

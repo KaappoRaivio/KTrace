@@ -15,6 +15,7 @@ class Triangle : public Surface {
 private:
     glm::vec3 t1, t2, t3;
     glm::vec3 tu, tv, tw;
+    glm::vec3 n1, n2, n3;
 
     float d00;
     float d01;
@@ -28,11 +29,13 @@ private:
     bool includes (const glm::vec3& vector) const;
     bool check_bounds (const glm::vec3& P) const;
 public:
+    Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3, const glm::vec3& normal1, const glm::vec3& normal2, const glm::vec3& normal3);
     Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3);
     Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material);
     bool getIntersectionDistance (const Ray& ray, Intersection& out) const override;
 
     glm::vec3 getNormalAt (const glm::vec3& position) const override;
+    glm::vec3 getUVWithoutMapping (const glm::vec3& P) const;
     glm::vec3 getUVAt (const glm::vec3& P) const override;
 
     AABB getBoundingBox () const override;

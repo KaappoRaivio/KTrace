@@ -26,7 +26,7 @@ int main () {
     constexpr int window_side_length = 1440;
     constexpr int viewport_side_length = 1440;
 
-    Scene scene = Scenes::getScene<5>(viewport_side_length);
+    Scene scene = Scenes::getScene<4>(viewport_side_length);
 //    std::stack<float> a;
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
 //    std::exit(0);

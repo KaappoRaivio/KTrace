@@ -48,7 +48,8 @@ namespace MyOBJLoader {
 
                 Triangle t{VectorOperations::rotate(tovec3(vertex1.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, VectorOperations::rotate(tovec3(vertex2.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
                            VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset, *material,
-                           tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate)};
+                           tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate),
+                           tovec3(vertex1.Normal), tovec3(vertex2.Normal), tovec3(vertex3.Normal)};
 
                 objects.push_back(std::make_unique<Triangle>(t));
             }

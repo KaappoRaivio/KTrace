@@ -2,6 +2,7 @@
 // Created by kaappo on 11.9.2021.
 //
 
+#include <iostream>
 #include "Surface.h"
 #include "../common/mytypes.h"
 
@@ -48,6 +49,7 @@ std::ostream& operator<< (std::ostream& os, const Surface& surface) {
 }
 
 glm::vec3 Surface::getBumpedNormalAt (const glm::vec3& position) const {
+//    std::cout << "hei <" << std::endl;
     return getMaterial()->getBumpAt(getUVAt(position), getNormalAt(position));
 }
 

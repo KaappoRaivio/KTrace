@@ -5,17 +5,32 @@
 #include "Triangle.h"
 #include <glm/ext.hpp>
 #include "glm/gtx/string_cast.hpp"
+#include <iostream>
 
 
-Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
-        : t1{t1}, t2{t2}, t3{t3}, tu{texture1}, tv{texture2}, tw{texture3}, plane{Plane::from_three_points(t1, t2, t3, material)}, v0{t2 - t1}, v1{t3 - t1} {
+//glm::vec3 getUVWithoutMapping (const glm::vec3& P) const;
 
-//    v0 = t2 - t1;
-//    v1 = t3 - t1;
+Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3, const glm::vec3& normal1, const glm::vec3& normal2, const glm::vec3& normal3) : t1{t1}, t2{t2}, t3{t3}, tu{texture1}, tv{texture2}, tw{texture3}, n1{normal1}, n2{normal2}, n3{normal3}, plane{Plane::from_three_points(t1, t2, t3, material)}, v0{t2 - t1}, v1{t3 - t1} {
     d00 = glm::dot(v0, v0);
     d01 = glm::dot(v0 , v1);
     d11 = glm::dot(v1, v1);
     invDenom = 1.0 / (d00 * d11 - d01 * d01);
+
+    if (glm::length(normal1) == 0 or glm::length(normal2) == 0 or glm::length(normal3) == 0) {
+        n1 = n2 = n3 = plane.getNormal();
+    }
+
+}
+
+Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
+        : Triangle(t1, t2, t3, material, texture1, texture2, texture3, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}) {
+
+//    v0 = t2 - t1;
+//    v1 = t3 - t1;
+//    d00 = glm::dot(v0, v0);
+//    d01 = glm::dot(v0 , v1);
+//    d11 = glm::dot(v1, v1);
+//    invDenom = 1.0 / (d00 * d11 - d01 * d01);
 }
 
 std::ostream& Triangle::print (std::ostream& os) const {
@@ -38,7 +53,9 @@ bool Triangle::getIntersectionDistance (const Ray& ray, Intersection& out) const
 
     auto position = ray.apply(temp.distance);
     if (includes(position)) {
+        temp.hitSurface = this;
         out = temp;
+
         return true;
 //        out = this;
 //        hitMaterial = getMaterial();
@@ -66,10 +83,29 @@ bool Triangle::check_bounds (const glm::vec3& P) const {
 }
 
 glm::vec3 Triangle::getNormalAt (const glm::vec3& position) const {
+//    std::cout << "moi <" << std::endl;
+    const glm::vec3& uvw = getUVWithoutMapping(position);
+//    std::cout << glm::to_string(uvw) << std::endl;
+//    return
+    return glm::normalize(n1 * uvw.x + n2 * uvw.y + n3 * uvw.z);
+
+//
     return plane.getNormal();
 }
 
 glm::vec3 Triangle::getUVAt (const glm::vec3& P) const {
+//    glm::vec3 v2 = P - t1;
+//
+//    float d02 = glm::dot(v0, v2);
+//    float d12 = glm::dot(v1, v2);
+    glm::vec3 uvw = getUVWithoutMapping(P);
+
+
+//    return tu * u + tv * v + tw * w;
+    return tu * uvw.x + tv * uvw.y + tw * uvw.z;
+}
+
+glm::vec3 Triangle::getUVWithoutMapping(const glm::vec3& P) const {
     glm::vec3 v2 = P - t1;
 
     float d02 = glm::dot(v0, v2);
@@ -79,8 +115,7 @@ glm::vec3 Triangle::getUVAt (const glm::vec3& P) const {
     float w = (d00 * d12 - d01 * d02) * invDenom;
     float u = 1.0f - v - w;
 
-    return tu * u + tv * v + tw * w;
-
+    return {u, v, w};
 }
 
 glm::vec3 Triangle::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
@@ -129,5 +164,7 @@ AABB Triangle::getBoundingBox () const {
 const Material* Triangle::getMaterial () const {
     return plane.getMaterial();
 }
+
+
 
 

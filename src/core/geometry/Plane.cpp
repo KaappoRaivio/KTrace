@@ -56,6 +56,7 @@ double Plane::getIntersect () const {
 
 
 glm::vec3 Plane::getNormalAt (const glm::vec3& position) const {
+//    std::cout << "moiaasd " << glm::to_string(normal) << std::endl;
     return normal;
 }
 
