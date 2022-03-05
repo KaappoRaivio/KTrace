@@ -41,9 +41,9 @@ namespace MyOBJLoader {
                 objl::Vertex& vertex3 = curMesh.Vertices[index3];
 
 
-                std::cout << "vertex" << vertexIndex << ": " << std::endl;
-                std::cout << glm::to_string(tovec3(vertex1.Position)) << "\t" << glm::to_string(tovec3(vertex2.Position)) << "\t" << glm::to_string(tovec3(vertex3.Position)) << std::endl;
-                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex2.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex3.TextureCoordinate)) << std::endl;
+//                std::cout << "vertex" << vertexIndex << ": " << std::endl;
+//                std::cout << glm::to_string(tovec3(vertex1.Position)) << "\t" << glm::to_string(tovec3(vertex2.Position)) << "\t" << glm::to_string(tovec3(vertex3.Position)) << std::endl;
+//                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex2.TextureCoordinate)) << "\t" << glm::to_string(tovec3(vertex3.TextureCoordinate)) << std::endl;
 //                std::cout << glm::to_string(tovec3(vertex1.TextureCoordinate) << "\t" << tovec3(vertex2.TextureCoordinate) << "\t" << tovec3(vertex3.TextureCoordinate)) << std::endl;
 
                 Triangle t{

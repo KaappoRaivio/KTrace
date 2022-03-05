@@ -9,6 +9,7 @@
       <file path="$PROJECT_DIR$/lib" />
     </libraryRoots>
     <excludeRoots>
+      <file path="$PROJECT_DIR$/cmake-build-debug-coverage" />
       <file path="$PROJECT_DIR$/cmake-build-release" />
       <file path="$PROJECT_DIR$/res" />
     </excludeRoots>

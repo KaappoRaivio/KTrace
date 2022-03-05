@@ -227,7 +227,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     };
 
 
-    return {std::move(objects), lights, camera, 4, 1, 2, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 2, 1, 1, std::move(textureManager)};
 }
 
 Scene Scenes::getSceneFour (int viewport_side_length) {

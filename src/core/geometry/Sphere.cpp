@@ -99,7 +99,7 @@ glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction
     float sinT2 = (1.0 - glm::pow(cosI, 2));
 //    if (sinT2 * glm::pow(n, 2) > 1.0 or reflectance(cosI, n) > glm::linearRand(0, 1)) {
     if (sinT2 * glm::pow(n, 2) > 1.0) {
-        std::cout << "Reflecting " << glm::to_string(direction) << glm::to_string(normal) << std::endl;
+//        std::cout << "Reflecting " << glm::to_string(direction) << glm::to_string(normal) << std::endl;
         return glm::reflect(direction, normal);
     } else {
         const glm::vec3& vec = glm::refract(direction, normal, n);

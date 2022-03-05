@@ -31,8 +31,8 @@ Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t
 Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
         : Triangle(t1, t2, t3, material, texture1, texture2, texture3, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}) {
 
-//    v0 = t2 - t1;
-//    v1 = t3 - t1;
+//    v0 = p2 - p1;
+//    v1 = p3 - p1;
 //    d00 = glm::dot(v0, v0);
 //    d01 = glm::dot(v0 , v1);
 //    d11 = glm::dot(v1, v1);
@@ -100,7 +100,7 @@ glm::vec3 Triangle::getNormalAt (const glm::vec3& position) const {
 }
 
 glm::vec3 Triangle::getUVAt (const glm::vec3& P) const {
-//    glm::vec3 v2 = P - t1;
+//    glm::vec3 v2 = P - p1;
 //
 //    float d02 = glm::dot(v0, v2);
 //    float d12 = glm::dot(v1, v2);
