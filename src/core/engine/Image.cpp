@@ -10,9 +10,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_FAILURE_STRINGS
 
-#include "../../../lib/stb/std_image.h"
+#include "../../../lib/stb/stb_image.h"
 
-Image::Image (const std::string& path) : width{0}, height{0}, bytes_per_pixel{0} {
+#define STBI_MSC_SECURE_CRT
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../../../lib/stb/stb_image_write.h"
+
+Image::Image (const std::string& path) : width{0}, height{0} {
     int amountOfChannels = path.ends_with("jpg") ? 3 : 4;
 
     data = stbi_load(path.c_str(), &width, &height, &bytes_per_pixel, amountOfChannels);
@@ -46,6 +50,27 @@ int Image::getWidth () const {
 
 int Image::getHeight () const {
     return height;
+}
+
+Image::Image (const std::vector<std::vector<Intensity>>& pixels) : width{static_cast<int>(pixels[0].size())}, height{static_cast<int>(pixels.size())} {
+    data = (uint8_t*) malloc(pixels.size() * pixels[0].size() * 4);
+    for (int y = 0; y < pixels.size(); ++y) {
+        for (int x = 0; x < pixels[y].size(); ++x) {
+            int index = (y * pixels.size() + x) * 4;
+
+            auto rgb = pixels[y][x].asRGB(2.0);
+
+            data[index + 0] = rgb.r;
+            data[index + 1] = rgb.g;
+            data[index + 2] = rgb.b;
+            data[index + 3] = 255;
+        }
+    }
+    bytes_per_pixel = 4;
+}
+
+bool Image::save(const std::string& path) {
+    return stbi_write_png(path.c_str(), width, height, bytes_per_pixel, data, 0);
 }
 
 

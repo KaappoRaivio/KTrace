@@ -5,6 +5,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 
 #include "../light/Intensity.h"
@@ -13,9 +14,11 @@
 class Image {
 private:
     int width, height, bytes_per_pixel;
+
     uint8_t* data;
 public:
     explicit Image (const std::string& path);
+    explicit Image (const std::vector<std::vector<Intensity>>& pixels);
 
     Intensity get_pixel_at (int x, int y) const;
 
@@ -24,6 +27,8 @@ public:
     int getWidth () const;
 
     int getHeight () const;
+
+    bool save (const std::string& path);
 };
 
 
