@@ -28,7 +28,7 @@ Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<L
 //#pragma omp declare target
 
 std::vector<std::vector<Intensity>> Scene::trace () const {
-    auto viewplane = camera.get_viewplane(antialiasingScaler);
+    auto viewplane = camera.getViewplane(antialiasingScaler);
 
     unsigned viewport_height = viewplane.size() / antialiasingScaler;
     unsigned viewport_width = viewplane[0].size() / antialiasingScaler;

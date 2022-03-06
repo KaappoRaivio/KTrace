@@ -9,29 +9,32 @@
 namespace Scenes {
 
 
-    Scene getSceneOne (int viewport_side_length);
-    Scene getSceneTwo (int viewport_side_length);
-    Scene getSceneThree (int viewport_side_length);
-    Scene getDebug (int viewportSideLength);
-    Scene getSceneFour (int viewport_side_length);
+    Scene getSceneOne (int windowX, int windowY);
+    Scene getSceneTwo (int windowX, int windowY);
+    Scene getSceneThree (int windowX, int windowY);
+    Scene getDebug (int windowX, int windowY);
+    Scene getSceneFour (int windowX, int windowY);
 
-    Scene getRaytracinginaweekendtestscene (int viewportSideLength);
+    Scene getRaytracinginaweekendtestscene (int windowX, int windowY);
+    Scene getBezierScene (int windowX, int windowY);
 
     template <int INDEX>
-    Scene getScene (int viewportSideLength) {
+    Scene getScene (int windowX, int windowY) {
         switch (INDEX) {
             case 0:
-                return getDebug(viewportSideLength);
+                return getDebug(windowX, windowY);
             case 1:
-                return getSceneOne(viewportSideLength);
+                return getSceneOne(windowX, windowY);
             case 2:
-                return getSceneTwo(viewportSideLength);
+                return getSceneTwo(windowX, windowY);
             case 3:
-                return getSceneThree(viewportSideLength);
+                return getSceneThree(windowX, windowY);
             case 4:
-                return getSceneFour(viewportSideLength);
+                return getSceneFour(windowX, windowY);
             case 5:
-                return getRaytracinginaweekendtestscene(viewportSideLength);
+                return getRaytracinginaweekendtestscene(windowX, windowY);
+            case 6:
+                return getBezierScene(windowX, windowY);
         }
     }
 

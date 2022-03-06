@@ -8,8 +8,8 @@
 #include "../geometry/Sphere.h"
 #include "../common/mytypes.h"
 
-Scene Scenes::getDebug (int viewportSideLength) {
-    Camera camera = {{0.0f, -5.0f, 7.0f}, {3, 4, 2}, 1.0f, {1.0f, 1.0f,}, {viewportSideLength, viewportSideLength}};
+Scene Scenes::getDebug (int windowX, int windowY) {
+    Camera camera = {{0.0f, -5.0f, 7.0f}, {3, 4, 2}, 1.0f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
     TextureManager textureManager;
 
     auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
@@ -55,8 +55,8 @@ Scene Scenes::getDebug (int viewportSideLength) {
     return {std::move(objects), lights, camera, 5, 1, 1, std::move(textureManager)};
 }
 
-Scene Scenes::getSceneOne (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {1, 4, 2}, 0.5, {1, 1,}, {viewport_side_length, viewport_side_length}};
+Scene Scenes::getSceneOne (int windowX, int windowY) {
+    Camera camera = {{0, -5, 7}, {1, 4, 2}, 0.5, {1, (float) windowY / windowX}, {windowX, windowY}};
 
 
     TextureManager textureManager;
@@ -115,8 +115,8 @@ Scene Scenes::getSceneOne (int viewport_side_length) {
     return {std::move(objects), lights, camera, 5, 1, 4, std::move(textureManager)};
 }
 
-Scene Scenes::getSceneTwo (int viewport_side_length) {
-    Camera camera = {{0, -5, 7}, {1, 4, 2}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+Scene Scenes::getSceneTwo (int windowX, int windowY) {
+    Camera camera = {{0, -5, 7}, {1, 4, 2}, 1, {1, (float) windowY / windowX}, {windowX, windowY}};
 
     TextureManager textureManager;
 
@@ -163,8 +163,8 @@ Scene Scenes::getSceneTwo (int viewport_side_length) {
     return {std::move(objects), lights, camera, 5, 1, 2, std::move(textureManager)};
 }
 
-Scene Scenes::getSceneThree (int viewport_side_length) {
-    Camera camera = {{-10, -10, 3}, {0, 5, 3}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+Scene Scenes::getSceneThree (int windowX, int windowY) {
+    Camera camera{{-10, -10, 3}, {0, 5, 3}, 1, {1, (float) windowY / windowX,}, {windowX, windowY}};
 
     TextureManager textureManager;
 
@@ -227,12 +227,12 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
     };
 
 
-    return {std::move(objects), lights, camera, 2, 1, 1, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 2, 1, 4, std::move(textureManager)};
 }
 
-Scene Scenes::getSceneFour (int viewport_side_length) {
+Scene Scenes::getSceneFour (int windowX, int windowY) {
 
-    Camera camera = {{0, -5, 7}, {0.341747, -5 + 0.808307, 7 - 0.479426}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+    Camera camera = {{0, -5, 7}, {0.341747, -5 + 0.808307, 7 - 0.479426}, 1, {1, (float) windowY / windowX}, {windowX, windowY}};
 
     TextureManager textureManager;
 
@@ -251,14 +251,14 @@ Scene Scenes::getSceneFour (int viewport_side_length) {
 
     double radius = 0;
     std::vector<LightSource> lights = {
-            {{-2, 1,   3},  Intensity{1, 1, 1} * 21,  radius},
+            {{-2,  1,   3},   Intensity{1, 1, 1} * 21,   radius},
             {{-10, -40, 100}, Intensity{1, 1, 1} * 3000, radius * 25},
     };
 
     return {std::move(objects), lights, camera, 3, 1, 1, std::move(textureManager)};
 }
 
-Scene Scenes::getRaytracinginaweekendtestscene (int viewportSideLength) {
+Scene Scenes::getRaytracinginaweekendtestscene (int windowX, int windowY) {
     TextureManager manager;
 
     auto ground = Material{manager.getSolidTexture({1, 0.8, 0.0}), 0, 1.0};
@@ -282,8 +282,12 @@ Scene Scenes::getRaytracinginaweekendtestscene (int viewportSideLength) {
             {{100, -40, 40}, Intensity{1, 1, 1} * 10000, 0},
     };
 
-    Camera camera{{0, 0, -1.4}, {-1, 5, -1}, 3, {1, 1,}, {viewportSideLength, viewportSideLength}};
+    Camera camera{{0, 0, -1.4}, {-1, 5, -1}, 3, {1, (float) windowY / windowX}, {windowX, windowY}};
 
     return {std::move(objects), lights, camera, 3, 1, 1, std::move(manager)};
 
 }
+
+//Scene Scenes::getBezierScene (int windowX, int windowY) {
+//
+//}

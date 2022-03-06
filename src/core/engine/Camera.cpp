@@ -13,7 +13,8 @@ Camera::Camera (glm::vec3 origin, glm::vec3 lookingAt, float viewplane_distance,
                                                                                                                                                                  viewplane_size{std::move(viewplane_size)}, viewport_size{std::move(viewport_size)},
                                                                                                                                                                  direction{glm::normalize(lookingAt - origin)} {}
 
-std::vector<std::vector<glm::vec3>> Camera::get_viewplane (const int antialiasingScaler) const {
+std::vector<std::vector<glm::vec3>> Camera::getViewplane (const int antialiasingScaler) const {
+//std::vector<std::vector<glm::vec3>> Camera::get_viewplane (const int antialiasingScaler) const {
     int viewport_size_x_with_antialiasing = viewport_size.first * antialiasingScaler;
     int viewport_size_y_with_antialiasing = viewport_size.second * antialiasingScaler;
 

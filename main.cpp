@@ -27,18 +27,19 @@
 
 
 int main () {
-    constexpr int window_side_length = 1440;
-    constexpr int viewport_side_length = 1440;
+    constexpr int windowWidth = 1440;
+    constexpr int windowX = 1440;
+    constexpr int windowY = 810;
 
-    Scene scene = Scenes::getScene<3>(viewport_side_length);
+    Scene scene = Scenes::getScene<3>(windowX, windowY);
 //    std::stack<float> a;
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
 //    std::exit(0);
-//    Camera camera = {{-10, -10, 3}, {0, 5, 3}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
+//    Camera camera = {{-10, -10, 3}, {0, 5, 3}, 1, {1, 1,}, {windowX, windowX}};
     CubicBezier b{{-10, -10, 3}, {-2.65, -12.27, 3}, {23.57,1.87, 3}, {-7.05,3.36, 3}, 0.79};
 
 
-    MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length, scene.camera};
+    MyOpenGLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, scene.camera};
 
     float t = 0;
 
@@ -76,6 +77,7 @@ int main () {
 
         t += 0.0025;
         if (t >= 1) t -= 1;
+        window.delay(50);
 //        t = t % 1.f;
 //        break;
         std::time_t end_time = std::chrono::system_clock::to_time_t(end);

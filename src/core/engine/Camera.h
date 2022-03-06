@@ -24,7 +24,7 @@ struct Camera {
     glm::vec3 direction;
 
     Camera (glm::vec3 origin, glm::vec3 lookingAt, float viewplane_distance = 2, std::pair<float, float> viewplane_size = {1, 1}, std::pair<int, int> viewport_size = {80, 80});
-    std::vector<std::vector<glm::vec3>> get_viewplane (const int i) const;
+    std::vector<std::vector<glm::vec3>> getViewplane (const int i) const;
     const glm::vec3& getOrigin () const;
     friend std::ostream& operator<< (std::ostream& os, const Camera& camera);
     void setViewplaneDistance (float viewplaneDistance);
