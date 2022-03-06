@@ -11,8 +11,9 @@
 class CubicBezier {
 private:
     glm::vec3 p0, p1, p2, p3;
+    float k;
 public:
-    CubicBezier (const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
+    CubicBezier (const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, float k);
 
     Ray apply (double t);
 };

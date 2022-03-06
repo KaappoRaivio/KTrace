@@ -20,20 +20,22 @@
 #include "src/core/engine/Scenes.h"
 #include "src/core/geometry/CubicBezier.h"
 #include <thread>
+#include <ctime>
+#include <sstream>
 
 #define DEBUG
 
 
 int main () {
     constexpr int window_side_length = 1440;
-    constexpr int viewport_side_length = 144;
+    constexpr int viewport_side_length = 1440;
 
     Scene scene = Scenes::getScene<3>(viewport_side_length);
 //    std::stack<float> a;
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
 //    std::exit(0);
 //    Camera camera = {{-10, -10, 3}, {0, 5, 3}, 1, {1, 1,}, {viewport_side_length, viewport_side_length}};
-    CubicBezier b {{-10, -10, 3}, {-2.65, -12.27, 3}, {14.87, -2.65, 3}, {2.07, -1.15, 3}};
+    CubicBezier b{{-10, -10, 3}, {-2.65, -12.27, 3}, {23.57,1.87, 3}, {-7.05,3.36, 3}, 0.79};
 
 
     MyOpenGLWindow window = {window_side_length, window_side_length, 2, window_side_length / viewport_side_length, scene.camera};
@@ -51,7 +53,9 @@ int main () {
         auto pixels = scene.trace();
 
         Image rendered = Image{pixels};
-        rendered.save("/home/kaappo/git/raytracercpp/out/test.png");
+        uint64_t timeSinceEpochMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        std::stringstream path; path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
+        std::cout << rendered.save(path.str()) << std::endl;
 
 
         auto end = std::chrono::system_clock::now();
@@ -70,7 +74,7 @@ int main () {
 
 //        window.delay(50);
 
-        t += 0.005;
+        t += 0.0025;
         if (t >= 1) t -= 1;
 //        t = t % 1.f;
 //        break;

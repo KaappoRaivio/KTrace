@@ -172,7 +172,7 @@ Scene Scenes::getSceneThree (int viewport_side_length) {
 
     Material planeMaterial{planeTexture};
     Material transparent{&SolidTextures::WHITE, 0, 0.2f};
-    transparent.opticalDensity = 1.05;
+    transparent.opticalDensity = 1.5;
 
     Material transparent2{&SolidTextures::WHITE, 0, 0.2f};
     transparent2.opticalDensity = 1000;
