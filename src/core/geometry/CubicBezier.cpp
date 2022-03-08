@@ -4,25 +4,29 @@
 
 #include "CubicBezier.h"
 
-CubicBezier::CubicBezier (const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, float k) : p0{p0}, p1{p1}, p2{p2}, p3{p3}, k{k} { populateLUT(); }
+CubicBezier::CubicBezier (const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, float k) : p0{p0}, p1{p1}, p2{p2}, p3{p3}, k{k} {
+
+    populateLUT();
+//    this->k = k;
+}
 
 void CubicBezier::populateLUT () {
-    float step = 1.f / CubicBezier::AMOUNT_OF_SAMPLES;
+    float step = 1.f / AMOUNT_OF_SAMPLES;
 
-//    std::array<float, CubicBezier::AMOUNT_OF_SAMPLES> timeLUT;
+//    std::array<float, AMOUNT_OF_SAMPLES> timeLUT;
     lengthLUT[0] = 0;
 
     auto previous = apply(0).getOrigin();
-    for (float t = step; t <= 1; t += step) {
+    for (float t = step ; t < 1 ; t += step) {
         auto point = apply(t).getOrigin();
-        lengthLUT[t * CubicBezier::AMOUNT_OF_SAMPLES] = glm::length(previous - point) + lengthLUT[(t - step) * CubicBezier::AMOUNT_OF_SAMPLES];
+        lengthLUT[t * AMOUNT_OF_SAMPLES] = glm::length(previous - point) + lengthLUT[(t - step) * AMOUNT_OF_SAMPLES];
         previous = point;
     }
 
-    for (int i = 0; i < AMOUNT_OF_SAMPLES; ++i) {
-        std::cout << lengthLUT[i] << ", ";
-    }
-    std::cout << std::endl;
+//    for (int i = 0 ; i < AMOUNT_OF_SAMPLES ; ++i) {
+//        std::cout << lengthLUT[i] << ", ";
+//    }
+//    std::cout << std::endl;
 }
 
 
@@ -51,24 +55,23 @@ Ray CubicBezier::apply (float t) {
 }
 
 Ray CubicBezier::applyDistance (float d) {
+    d = d * length();
     auto index = std::lower_bound(lengthLUT.begin(), lengthLUT.end(), d) - lengthLUT.begin();
 
     float lowerT = (float) index / AMOUNT_OF_SAMPLES;
     float upperT = (float) (index + 1) / AMOUNT_OF_SAMPLES;
 
 
-    std::cout << lowerT << ", " << upperT << std::endl;
+//    std::cout << lowerT << ", " << upperT << std::endl;
 
     float percentage = (d - lengthLUT[index - 1]) / (lengthLUT[index] - lengthLUT[index - 1]);
-    std::cout << percentage << std::endl;
+//    std::cout << percentage << std::endl;
 
 
-    std::cout << lengthLUT[index - 1] << ", " << lengthLUT[index] << std::endl;
+//    std::cout << lengthLUT[index - 1] << ", " << lengthLUT[index] << std::endl;
 
 
-    std::cout << std::lerp(lowerT, upperT, percentage);
-
-    std::exit(0);
+    return apply(std::lerp(lowerT, upperT, percentage));
 }
 
 float CubicBezier::advance (float oldT, float deltaT) {
@@ -95,13 +98,14 @@ std::ostream& operator<< (std::ostream& os, const CubicBezier& bezier) {
 }
 
 
-CubicBezierSequence::CubicBezierSequence (const std::vector<glm::vec3>& originPoints, const std::vector<glm::vec3>& controlPoints, float k) : curves{} {
+CubicBezierSequence::CubicBezierSequence (const std::vector<glm::vec3>& originPoints, const std::vector<glm::vec3>& controlPoints, const float k) : curves{} {
     for (int i = 0 ; i < originPoints.size() - 1 ; ++i) {
-        curves.emplace_back(originPoints[i], originPoints[i] + controlPoints[i], originPoints[i + 1] - controlPoints[i + 1], originPoints[i + 1], k);
-        curves.back().applyDistance(2.f);
-        std::cout << curves.back() << std::endl;
+        curves.push_back({originPoints[i], originPoints[i] + controlPoints[i], originPoints[i + 1] - controlPoints[i + 1], originPoints[i + 1], k});
+//        std::cout << curves.back() << std::endl;
 //        curves.emplace_back(originPoints[i], originPoints[i] + controlPoints[i], originPoints[i + 1], originPoints[i + 1] + controlPoints[i + 1], k);
     }
+
+    populateLenghts();
 
 //    std::exit(0);
 }
@@ -114,6 +118,7 @@ void CubicBezierSequence::populateLenghts () {
         totalLength += curve.length();
     }
 
+    lengths.push_back(0);
     for (const auto& curve : curves) {
         lengths.push_back(curve.length() / totalLength + lengths.back());
     }
@@ -126,12 +131,20 @@ Ray CubicBezierSequence::apply (float t) {
     return curves[static_cast<int>((t - std::numeric_limits<float>::epsilon()) * curves.size())].apply(std::fmod(t, step) / step);
 }
 
-Ray CubicBezierSequence::applyDistance (float d) {
+float CubicBezierSequence::length () {
+    return lengths[AMOUNT_OF_SAMPLES - 1];
+}
 
+Ray CubicBezierSequence::applyDistance (float d) {
+    auto index = std::lower_bound(lengths.begin(), lengths.end(), d) - lengths.begin();
+
+    float actualLength = lengths[index] - lengths[index - 1];
+    return curves[index - 1].applyDistance((d - lengths[index - 1]) / actualLength);
 }
 
 float CubicBezierSequence::advance (float oldT, float deltaT) {
-    auto step = 1.f / curves.size();
-    return curves[static_cast<int>((oldT - std::numeric_limits<float>::epsilon()) * curves.size())].advance(std::fmod(oldT, step) / step, deltaT);
+    return oldT + deltaT;
+//    auto step = 1.f / curves.size();
+//    return curves[static_cast<int>((oldT - std::numeric_limits<float>::epsilon()) * curves.size())].advance(std::fmod(oldT, step) / step, deltaT);
 }
 

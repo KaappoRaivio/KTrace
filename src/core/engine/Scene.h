@@ -35,11 +35,14 @@ public:
     void executeCameraMove (CubicBezierSequence sequence, float deltaT, auto onFrameRendered) {
         for (float t = 0; t < 1; t = sequence.advance(t, deltaT)) {
             if (t >= 1) break;
-            if (sequence.apply(t).getDirection().x > 0)
+
+            Ray currentPose = sequence.applyDistance(t);
+
+            if (currentPose.getDirection().x > 0)
                 std::cout << "moi" << std::endl;
-            std::cout << "t " << t << ", ray " << sequence.apply(t) <<  std::endl;
-            camera.origin = sequence.apply(t).getOrigin();
-            camera.direction = sequence.apply(t).getDirection();
+            std::cout << "t " << t << ", ray " << currentPose <<  std::endl;
+            camera.origin = currentPose.getOrigin();
+            camera.direction = currentPose.getDirection();
             const auto& pixels = trace();
             onFrameRendered(pixels);
         }

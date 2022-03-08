@@ -4,6 +4,7 @@
 
 #include <glm/gtx/string_cast.hpp>
 #include "Ray.h"
+#include "../common/mytypes.h"
 
 Ray::Ray (const glm::vec3& origin, const glm::vec3& direction) : origin(origin), direction(glm::normalize(direction)), inverse_direction{1.0 / glm::normalize(direction).x, 1.0 / glm::normalize(direction).y, 1.0 / glm::normalize(direction).z} {}
 
@@ -20,7 +21,7 @@ glm::vec3 Ray::apply (float lambda) const {
 }
 
 std::ostream& operator<< (std::ostream& os, const Ray& ray) {
-    os << "origin: " << glm::to_string(ray.origin) << " direction: " << glm::to_string(ray.direction);
+    os << "Ray{" << ray.origin << "+" << ray.direction << " * t}";
     return os;
 }
 

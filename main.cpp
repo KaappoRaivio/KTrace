@@ -50,24 +50,28 @@ int main () {
 
 //    system("rm /home/kaappo/git/raytracer/out/*.png");
 //    CubicBezierSequence sequence{{{-10, 0, 1}, {0, 0, 1}, {10, 0, 1}}, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}, 0.9f};
-    CubicBezierSequence sequence{{{0, 0, 1}, {-10, 0, 1}, {-20, 0, 1}}, {{-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}}, 1.f};
+    CubicBezierSequence sequence{{{0, 0, 10}, {10, 0, 5}, {20, 10, 1}, {25, 0, 1}, {20, -10, 1}}, {{1, 0, -2}, {5, 0, -1}, {5, 0, 0}, {0, -5, 0}, {-5, 0, 0}}, 0.9f};
+//    std::cout << (sequence.applyDistance(0.5f)) << std::endl;
+//    std::exit(0);
 
 
-    for (float t = 0; t < 1; t = sequence.advance(t, 0.01f)) {
+    for (float t = 0 ; t < 1 ; t = sequence.advance(t, 0.01f)) {
         std::cout << t << std::endl;
+        std::cout << sequence.applyDistance(t) << std::endl;
     }
 
-    std::exit(0);
+//    std::exit(0);
 
-    std::cout << sequence.apply(0) << std::endl;
+//    std::cout << sequence.apply(0) << std::endl;
 
     auto start = std::chrono::system_clock::now();
 
-    scene.executeCameraMove(sequence, 0.01f, [&](const auto& pixels) {
+    scene.executeCameraMove(sequence, 0.0025f, [&] (const auto& pixels) {
         Image rendered = Image{pixels};
-        std::cout << scene.camera.origin << ", " << scene.camera.direction << std::endl;
+//        std::cout << scene.camera.origin << ", " << scene.camera.direction << std::endl;
         uint64_t timeSinceEpochMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        std::stringstream path; path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
+        std::stringstream path;
+        path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
 //        rendered.save(path.str());
         window.paint(pixels);
 
@@ -76,9 +80,9 @@ int main () {
 
         std::chrono::duration<double> elapsed_seconds = end - start;
         double seconds = elapsed_seconds.count();
-        std::cout << seconds << std::endl;
-        std::cout << "sleeping for " << std::chrono::milliseconds(int((1 / fps - seconds) * 1000 )).count() << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(int((1 / fps - seconds) * 1000 )));
+//        std::cout << seconds << std::endl;
+        std::cout << "sleeping for " << std::chrono::milliseconds(int((1 / fps - seconds) * 1000)).count() << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(int((1 / fps - seconds) * 1000)));
 
         start = std::chrono::system_clock::now();
 //        window.delay(50);

@@ -5,5 +5,5 @@
 #include <iostream>
 
 std::ostream& operator << (std::ostream& cout, glm::vec3 vec) {
-    return cout << glm::to_string(vec);
+    return cout << "[" << vec.x << ", " << vec.y << ", " << vec.z << "]";
 }

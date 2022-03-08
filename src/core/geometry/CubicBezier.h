@@ -13,13 +13,14 @@
 #include "../common/mytypes.h"
 
 
+static constexpr int AMOUNT_OF_SAMPLES = 128;
+
 class CubicBezier {
 private:
-    static constexpr int AMOUNT_OF_SAMPLES = 128;
 
     glm::vec3 p0, p1, p2, p3;
     std::array<float, AMOUNT_OF_SAMPLES> lengthLUT;
-    float k;
+    float k{0.9f};
 public:
     CubicBezier (const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, float k);
     void populateLUT ();
@@ -46,4 +47,6 @@ public:
     float advance (float oldT, float deltaT);
 
     Ray applyDistance (float d);
+
+    float length ();
 };
