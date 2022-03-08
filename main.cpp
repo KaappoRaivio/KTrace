@@ -44,13 +44,14 @@ int main () {
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
+    std::this_thread::sleep_for(std::chrono::milliseconds(4000));
 
     double fps = 60;
 
 
 //    system("rm /home/kaappo/git/raytracer/out/*.png");
-//    CubicBezierSequence sequence{{{-10, 0, 1}, {0, 0, 1}, {10, 0, 1}}, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}, 0.9f};
-    CubicBezierSequence sequence{{{0, 0, 10}, {10, 0, 5}, {20, 10, 1}, {25, 0, 1}, {20, -10, 1}}, {{1, 0, -2}, {5, 0, -1}, {5, 0, 0}, {0, -5, 0}, {-5, 0, 0}}, 0.9f};
+//    CubicBezierSequence sequence{{{-10, 0, 1}, {0, 0, 1}, {10, 0, 1}}, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}, 0.9f}
+    CubicBezierSequence sequence{{{0, 0, 1}, {10, 0, 1}, {20, 10,1}, {25, 0, 1}, {20, -10, 1}}, {{1, 0, 0}, {5, 0, 0}, {5, 0, 0}, {0, -5, 0}, {-5, 0, 0}}, 0.9f};
 //    std::cout << (sequence.applyDistance(0.5f)) << std::endl;
 //    std::exit(0);
 
@@ -72,7 +73,7 @@ int main () {
         uint64_t timeSinceEpochMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         std::stringstream path;
         path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
-//        rendered.save(path.str());
+        rendered.save(path.str());
         window.paint(pixels);
 
 
