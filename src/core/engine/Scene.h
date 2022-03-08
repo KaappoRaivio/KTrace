@@ -14,6 +14,7 @@
 #include "SingleSceneObject.h"
 #include "../common/LightSource.h"
 #include "TextureManager.h"
+#include "../geometry/CubicBezier.h"
 
 class Scene {
 //private:
@@ -31,6 +32,18 @@ public:
     void operator= (const Scene& other) = delete;
 
     std::vector<std::vector<Intensity>> trace () const;
+    void executeCameraMove (CubicBezierSequence sequence, float deltaT, auto onFrameRendered) {
+        for (float t = 0; t < 1; t = sequence.advance(t, deltaT)) {
+            if (t >= 1) break;
+            if (sequence.apply(t).getDirection().x > 0)
+                std::cout << "moi" << std::endl;
+            std::cout << "t " << t << ", ray " << sequence.apply(t) <<  std::endl;
+            camera.origin = sequence.apply(t).getOrigin();
+            camera.direction = sequence.apply(t).getDirection();
+            const auto& pixels = trace();
+            onFrameRendered(pixels);
+        }
+    }
 
     Intensity calculateColor (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const;
 

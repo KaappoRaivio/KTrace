@@ -14,7 +14,9 @@
 
 #define STBI_MSC_SECURE_CRT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+
 #include "../../../lib/stb/stb_image_write.h"
+#include "../common/mytypes.h"
 
 Image::Image (const std::string& path) : width{0}, height{0} {
     int amountOfChannels = path.ends_with("jpg") ? 3 : 4;
@@ -30,7 +32,9 @@ Image::Image (const std::string& path) : width{0}, height{0} {
 }
 
 Image::~Image () {
-    std::cout << "Freed data!" << std::endl;
+    if constexpr(DEBUG) {
+        std::cout << "Freed data!" << std::endl;
+    }
     stbi_image_free(data);
 }
 
@@ -54,8 +58,8 @@ int Image::getHeight () const {
 
 Image::Image (const std::vector<std::vector<Intensity>>& pixels) : width{static_cast<int>(pixels[0].size())}, height{static_cast<int>(pixels.size())} {
     data = (uint8_t*) malloc(pixels.size() * pixels[0].size() * 4);
-    for (int y = 0; y < pixels.size(); ++y) {
-        for (int x = 0; x < pixels[y].size(); ++x) {
+    for (int y = 0 ; y < pixels.size() ; ++y) {
+        for (int x = 0 ; x < pixels[y].size() ; ++x) {
             int index = (y * pixels.size() + x) * 4;
 
             auto rgb = pixels[y][x].asRGB(2.0);
@@ -69,7 +73,7 @@ Image::Image (const std::vector<std::vector<Intensity>>& pixels) : width{static_
     bytes_per_pixel = 4;
 }
 
-bool Image::save(const std::string& path) {
+bool Image::save (const std::string& path) {
     return stbi_write_png(path.c_str(), width, height, bytes_per_pixel, data, 0);
 }
 

@@ -12,7 +12,7 @@ Scene Scenes::getDebug (int windowX, int windowY) {
     Camera camera = {{0.0f, -5.0f, 7.0f}, {3, 4, 2}, 1.0f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
     TextureManager textureManager;
 
-    auto planeTexture = textureManager.getSolidTexture(Intensity{1, 1, 1});
+    auto planeTexture = textureManager.getImageTexture("../res/texture3.png");
     Material planeMaterial{planeTexture};
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
@@ -37,7 +37,7 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 //    std::unique_ptr<Surface> object = std::make_unique<Objects>(std::move(polygones));
     std::vector<std::unique_ptr<Surface>> objects;
 
-    objects.push_back(std::move(bvh));
+//    objects.push_back(std::move(bvh));
     objects.push_back(std::move(plane));
 //    std::cout << bvh.get() << std::endl;
 //    objects.push_back(std::move(obje));
@@ -45,14 +45,14 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 
     double radius = 0;
     std::vector<LightSource> lights = {
-            {{-2, 1, 3}, Intensity{1, 1, 1} * 21, radius},
+            {{-2, 1, 3000}, Intensity{1, 1, 1} * 2100000, radius},
 //            {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
     };
 
 //    std::exit(0);
 
 
-    return {std::move(objects), lights, camera, 5, 1, 1, std::move(textureManager)};
+    return {std::move(objects), lights, camera, 5, 1, 2, std::move(textureManager)};
 }
 
 Scene Scenes::getSceneOne (int windowX, int windowY) {

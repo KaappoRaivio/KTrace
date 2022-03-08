@@ -94,9 +94,11 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     if (not intersects) {
         return Intensity{0, 0, 0};
     } else {
-#ifdef DEBUG
+
+    if constexpr(DEBUG) {
         std::cout << "hit!" << std::endl;
-#endif
+    }
+
         //        std::cout << closest.position << std::endl;
         const Material* material = intersection.material;
         const auto* const surface = intersection.hitSurface;
@@ -295,5 +297,14 @@ std::ostream& operator<< (std::ostream& os, const Scene& scene) {
     os << " camera: " << scene.camera << " raysPerPixel: " << scene.raysPerPixel << " antialiasingScaler: " << scene.antialiasingScaler;
     return os;
 }
+
+//void Scene::executeCameraMove (CubicBezierSequence sequence, float deltaT, auto onFrameRendered) {
+//    for (float t = 0; t < 1; t += deltaT) {
+//        camera.origin = sequence.apply(t).getOrigin();
+//        camera.direction = sequence.apply(t).getDirection();
+//        auto&& pixels = trace();
+//        onFrameRendered(std::move(pixels));
+//    }
+//}
 
 //#pragma omp end declare target

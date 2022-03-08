@@ -3,6 +3,7 @@
 //
 
 #include "Camera.h"
+#include "../common/mytypes.h"
 
 #include <utility>
 #include <glm/gtx/rotate_vector.hpp>
@@ -10,15 +11,18 @@
 #include <glm/gtx/string_cast.hpp>
 
 Camera::Camera (glm::vec3 origin, glm::vec3 lookingAt, float viewplane_distance, std::pair<float, float> viewplane_size, std::pair<int, int> viewport_size) : origin{origin}, viewplane_distance{viewplane_distance},
-                                                                                                                                                                 viewplane_size{std::move(viewplane_size)}, viewport_size{std::move(viewport_size)},
-                                                                                                                                                                 direction{glm::normalize(lookingAt - origin)} {}
+                                                                                                                                                              viewplane_size{std::move(viewplane_size)}, viewport_size{std::move(viewport_size)},
+                                                                                                                                                              direction{glm::normalize(lookingAt - origin)} {}
 
 std::vector<std::vector<glm::vec3>> Camera::getViewplane (const int antialiasingScaler) const {
 //std::vector<std::vector<glm::vec3>> Camera::get_viewplane (const int antialiasingScaler) const {
     int viewport_size_x_with_antialiasing = viewport_size.first * antialiasingScaler;
     int viewport_size_y_with_antialiasing = viewport_size.second * antialiasingScaler;
 
-    std::cout << "Generating viewplane with dimensions (" << viewport_size_x_with_antialiasing << ", " << viewport_size_y_with_antialiasing << ")!" << std::endl;
+    if constexpr(DEBUG) {
+        std::cout << "Generating viewplane with dimensions (" << viewport_size_x_with_antialiasing << ", " << viewport_size_y_with_antialiasing << ")!" << std::endl;
+
+    }
 
 
     auto viewport_to_viewplane_x = viewplane_size.first / viewport_size_x_with_antialiasing;
@@ -32,11 +36,11 @@ std::vector<std::vector<glm::vec3>> Camera::getViewplane (const int antialiasing
     auto side = glm::cross(direction, glm::vec3{0, 0, 1});
     auto up = glm::cross(side, out);
 
-    for (int z = viewport_size_y_with_antialiasing; z > 0; --z) {
+    for (int z = viewport_size_y_with_antialiasing ; z > 0 ; --z) {
         std::vector<glm::vec3> viewplane_matrix_row;
         viewplane_matrix_row.reserve(viewport_size_x_with_antialiasing);
 
-        for (int x = 0; x < viewport_size_x_with_antialiasing; ++x) {
+        for (int x = 0 ; x < viewport_size_x_with_antialiasing ; ++x) {
 
 
 //            auto normalize = glm::vec3{viewport_to_viewplane_x * x - viewplane_size.first / 2, viewplane_distance, viewport_to_viewplane_z * z - viewplane_size.second / 2}.rotate(rotation.first, rotation.second).normalize();
