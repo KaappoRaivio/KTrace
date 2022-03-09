@@ -31,7 +31,11 @@ int main () {
     constexpr int windowX = 144;
     constexpr int windowY = 81;
 
-    Scene scene = Scenes::getScene<0>(windowX, windowY);
+    SplineSequence sequence = SplineSequence::getRandomSequence(5, {0, 0, 0});
+
+
+    Scene scene = Scenes::getBezierScene(windowX, windowY, sequence);
+//    Scene scene = Scenes::getScene<0>(windowX, windowY);
 //    std::stack<float> a;
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
 //    std::exit(0);
@@ -58,7 +62,7 @@ int main () {
 
 
 //    SplineSequence sequence{{{0, 0, 2}, {10, 0, 1}, {20, 10, 1}, {25, 0, 1}, {20, -10, 1}}, {{1, 0, 0}, {10, 0, 0}, {5, 0, 0}, {0, -2.5, 0}, {-5, 0, 0}}, 1.f};
-    SplineSequence sequence = SplineSequence::getRandomSequence(5, {0, 0, 0});
+//    SplineSequence sequence = SplineSequence::getRandomSequence(5, {0, 0, 0});
 //    SplineSequence sequence{{{0, 0, 1}, {5, 0, 1}, {0, 5, 1}, {-2, 10, 1}, {9, -1, 1}}, 1.f};
 
 

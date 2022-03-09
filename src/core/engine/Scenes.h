@@ -16,7 +16,7 @@ namespace Scenes {
     Scene getSceneFour (int windowX, int windowY);
 
     Scene getRaytracinginaweekendtestscene (int windowX, int windowY);
-    Scene getBezierScene (int windowX, int windowY);
+    Scene getBezierScene (int windowX, int windowY, const SplineSequence& sequence);
 
     template <int INDEX>
     Scene getScene (int windowX, int windowY) {
@@ -33,8 +33,8 @@ namespace Scenes {
                 return getSceneFour(windowX, windowY);
             case 5:
                 return getRaytracinginaweekendtestscene(windowX, windowY);
-            case 6:
-                return getBezierScene(windowX, windowY);
+//            case 6:
+//                return getBezierScene(windowX, windowY, SplineSequence(std::vector(), 0));
         }
     }
 

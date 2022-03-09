@@ -142,7 +142,7 @@ void SplineSequence::populateLenghts () {
     }
 }
 
-glm::vec3 SplineSequence::getPoint (float t, bool compensateDistance) {
+glm::vec3 SplineSequence::getPoint (float t, bool compensateDistance) const {
     t = std::clamp(t, 0.f, 1.f - std::numeric_limits<float>::epsilon());
     auto step = 1.f / curves.size();
 
@@ -155,11 +155,11 @@ glm::vec3 SplineSequence::getPoint (float t, bool compensateDistance) {
     }
 }
 
-glm::vec3 SplineSequence::getPoint(float t) {
+glm::vec3 SplineSequence::getPoint (float t) const {
     return getPoint(t, false);
 }
 
-Ray SplineSequence::apply (float t, bool compensateDistance) {
+Ray SplineSequence::apply (float t, bool compensateDistance) const {
     t = std::clamp(t, 0.f, 1.f - std::numeric_limits<float>::epsilon());
     float d = 1.f;
 
@@ -190,7 +190,8 @@ SplineSequence SplineSequence::getRandomSequence (int length, glm::vec3 origin =
     std::default_random_engine generator{seed};
 
     std::uniform_real_distribution<float> d(10, 20);
-    std::uniform_real_distribution<float> angleDistribution(- M_PI / 2, M_PI / 2);
+    std::uniform_real_distribution<float> yawDistribution(-M_PI / 2, M_PI / 2);
+    std::uniform_real_distribution<float> pitchDistribution(-M_PI / 8, M_PI / 8);
 
     std::vector<glm::vec3> originPoints;
     std::vector<glm::vec3> controlPoints;
@@ -203,12 +204,12 @@ SplineSequence SplineSequence::getRandomSequence (int length, glm::vec3 origin =
         const glm::vec3& straightDirection = originPoints[originPoints.size() - 1] - originPoints[originPoints.size() - 2];
         float newLength = d(generator);
 //        originPoints.push_back(originPoints.back() + (glm::normalize(VectorOperations::rotateInsideCone(straightDirection, 0.5f)) * newLength));
-        originPoints.push_back(originPoints.back() + (glm::normalize(VectorOperations::rotate(straightDirection, angleDistribution(generator), 0)) * newLength));
+        originPoints.push_back(originPoints.back() + (glm::normalize(VectorOperations::rotate(straightDirection, yawDistribution(generator), pitchDistribution(generator))) * newLength));
 //        controlPoints.push_back(glm::normalize(VectorOperations::rotateInsideCone((controlPoints[originPoints.size() - 2] - controlPoints[originPoints.size() - 1]), 10)));
     }
 
     for (auto& point : originPoints) {
-        point.z = 1;
+//        point.z = 1;
     }
 
     for (auto& point : controlPoints) {

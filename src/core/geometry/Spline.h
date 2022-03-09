@@ -42,7 +42,7 @@ public:
     SplineSequence (const std::vector<glm::vec3>& points, const float k);
     void populateLenghts ();
 
-    Ray apply (float t, bool compensateDistance);
+    Ray apply (float t, bool compensateDistance) const;
 
     float advance (float oldT, float deltaT);
     float length ();
@@ -51,7 +51,7 @@ public:
 
     friend std::ostream& operator<< (std::ostream& os, SplineSequence sequence);
 
-    glm::vec3 getPoint (float t, bool compensateDistance);
+    glm::vec3 getPoint (float t, bool compensateDistance) const;
 
-    glm::vec3 getPoint (float t);
+    glm::vec3 getPoint (float t) const;
 };
