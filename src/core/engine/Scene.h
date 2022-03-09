@@ -14,7 +14,7 @@
 #include "SingleSceneObject.h"
 #include "../common/LightSource.h"
 #include "TextureManager.h"
-#include "../geometry/CubicBezier.h"
+#include "../geometry/Spline.h"
 
 class Scene {
 //private:
@@ -32,11 +32,11 @@ public:
     void operator= (const Scene& other) = delete;
 
     std::vector<std::vector<Intensity>> trace () const;
-    void executeCameraMove (CubicBezierSequence sequence, float deltaT, auto onFrameRendered) {
+    void executeCameraMove (SplineSequence sequence, float deltaT, auto onFrameRendered) {
         for (float t = 0; t < 1; t = sequence.advance(t, deltaT)) {
             if (t >= 1) break;
 
-            Ray currentPose = sequence.applyDistance(t);
+            Ray currentPose = sequence.apply(t, true);
 
             if (currentPose.getDirection().x > 0)
                 std::cout << "moi" << std::endl;

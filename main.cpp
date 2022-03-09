@@ -18,10 +18,11 @@
 #include "src/core/geometry/Objects.h"
 #include "src/core/geometry/BVH.h"
 #include "src/core/engine/Scenes.h"
-#include "src/core/geometry/CubicBezier.h"
+#include "src/core/geometry/Spline.h"
 #include <thread>
 #include <ctime>
 #include <sstream>
+#include <fstream>
 
 #include "src/core/common/mytypes.h"
 
@@ -35,7 +36,7 @@ int main () {
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
 //    std::exit(0);
 //    Camera camera = {{-10, -10, 3}, {0, 5, 3}, 1, {1, 1,}, {windowX, windowX}};
-//    CubicBezier b{{-10, -10, 3}, {-2.65, -12.27, 3}, {23.57,1.87, 3}, {-7.05,3.36, 3}, 0.79};
+//    Spline b{{-10, -10, 3}, {-2.65, -12.27, 3}, {23.57,1.87, 3}, {-7.05,3.36, 3}, 0.79};
 
 
     MyOpenGLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, scene.camera};
@@ -48,18 +49,18 @@ int main () {
 
     double fps = 60;
 
+//    SplineSequence sequence{{{0, 0, 0},
+//                             {1, 0, 0},
+//                             {2, 1, 0},
+//                             {3, 1, 0}},
+//                            1.f};
+//
 
-//    system("rm /home/kaappo/git/raytracer/out/*.png");
-//    CubicBezierSequence sequence{{{-10, 0, 1}, {0, 0, 1}, {10, 0, 1}}, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}}, 0.9f}
-    CubicBezierSequence sequence{{{0, 0, 1}, {10, 0, 1}, {20, 10,1}, {25, 0, 1}, {20, -10, 1}}, {{1, 0, 0}, {5, 0, 0}, {5, 0, 0}, {0, -5, 0}, {-5, 0, 0}}, 0.9f};
-//    std::cout << (sequence.applyDistance(0.5f)) << std::endl;
-//    std::exit(0);
 
+//    SplineSequence sequence{{{0, 0, 2}, {10, 0, 1}, {20, 10, 1}, {25, 0, 1}, {20, -10, 1}}, {{1, 0, 0}, {10, 0, 0}, {5, 0, 0}, {0, -2.5, 0}, {-5, 0, 0}}, 1.f};
+    SplineSequence sequence = SplineSequence::getRandomSequence(5, {0, 0, 0});
+//    SplineSequence sequence{{{0, 0, 1}, {5, 0, 1}, {0, 5, 1}, {-2, 10, 1}, {9, -1, 1}}, 1.f};
 
-    for (float t = 0 ; t < 1 ; t = sequence.advance(t, 0.01f)) {
-        std::cout << t << std::endl;
-        std::cout << sequence.applyDistance(t) << std::endl;
-    }
 
 //    std::exit(0);
 
@@ -67,14 +68,24 @@ int main () {
 
     auto start = std::chrono::system_clock::now();
 
+
+    std::ofstream positionCSV;
+    positionCSV.open("../positions.csv");
+    positionCSV << sequence << std::endl;
+//    positionCSV << sequence << std::endl;
+//    std::exit(0);
+
     scene.executeCameraMove(sequence, 0.0025f, [&] (const auto& pixels) {
         Image rendered = Image{pixels};
 //        std::cout << scene.camera.origin << ", " << scene.camera.direction << std::endl;
         uint64_t timeSinceEpochMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         std::stringstream path;
         path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
-        rendered.save(path.str());
+//        rendered.save(path.str());
         window.paint(pixels);
+        positionCSV << scene.camera.origin.x << "," << scene.camera.origin.y
+                                        << "," << scene.camera.origin.z
+                    << '\n';
 
 
         auto end = std::chrono::system_clock::now();
@@ -88,6 +99,10 @@ int main () {
         start = std::chrono::system_clock::now();
 //        window.delay(50);
     });
+
+    positionCSV.close();
+
+    system("cd .. && ./plot.sh ./plot.p");
     window.delay(50);
 
 //    while (true) {

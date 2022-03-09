@@ -84,7 +84,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     Intersection intersection;
     bool intersects = getClosestIntersection(ray, 0, intersection);
 //    std::cout << intersection.value() << std::endl;
-    if (DEBUG) {
+    if constexpr(DEBUG) {
         if (y % 100 == 0 && x == 0) {
             std::cout << "Row " << y << std::endl;
         }
@@ -298,7 +298,7 @@ std::ostream& operator<< (std::ostream& os, const Scene& scene) {
     return os;
 }
 
-//void Scene::executeCameraMove (CubicBezierSequence sequence, float deltaT, auto onFrameRendered) {
+//void Scene::executeCameraMove (SplineSequence sequence, float deltaT, auto onFrameRendered) {
 //    for (float t = 0; t < 1; t += deltaT) {
 //        camera.origin = sequence.apply(t).getOrigin();
 //        camera.direction = sequence.apply(t).getDirection();
