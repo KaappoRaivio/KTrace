@@ -8,6 +8,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "MyVector3.h"
+#include "mytypes.h"
 
 
 
@@ -229,9 +230,9 @@ glm::vec3 VectorOperations::rotateInsideCone (const glm::vec3& vector, float rad
     const glm::vec3& tangent = glm::normalize(glm::cross(vector, {0, 0, 1}));
     const glm::vec3& bitangent = glm::normalize(glm::cross(vector, tangent));
 
-    float scatterRadius = std::pow(angleDistribution(generator), 1 / 2.0) * radius;
+    float scatterRadius = std::pow(angleDistribution(MyRandom::generator), 1 / 2.0) * radius;
 
-    float angle = angleDistribution(generator);
+    float angle = angleDistribution(MyRandom::generator);
     float x = std::cos(angle) * scatterRadius;
     float y = std::sin(angle) * scatterRadius;
 

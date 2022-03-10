@@ -31,7 +31,7 @@ int main () {
     constexpr int windowX = 144;
     constexpr int windowY = 81;
 
-    SplineSequence sequence = SplineSequence::getRandomSequence(5, {0, 0, 0});
+    SplineSequence sequence = SplineSequence::getRandomSequence(10, {0, 0, 1});
 
 
     Scene scene = Scenes::getBezierScene(windowX, windowY, sequence);

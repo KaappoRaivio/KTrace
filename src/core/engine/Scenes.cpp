@@ -292,24 +292,33 @@ Scene Scenes::getRaytracinginaweekendtestscene (int windowX, int windowY) {
 
 Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& sequence) {
     TextureManager manager;
-    Material ground{manager.getSolidTexture({1, 0.8, 0.0}), 0, 1.0};
+
 
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine generator{seed};
 
     std::uniform_real_distribution<float> d(10, 20);
     std::uniform_real_distribution<float> radiusDistribution(1, 2);
-
+    std::uniform_real_distribution<float> colorDistribution(0.5, 1);
+    std::uniform_real_distribution<float> glossinessDistribution(0.5, 0.8);
+    std::uniform_real_distribution<float> alphaDistribution(0, 0.5);
 
 
     std::vector<std::unique_ptr<Surface>> spheres;
 
-    for (float t = 0; t < 1; t += 0.1f) {
+    for (float t = 0 ; t < 1 ; t += 0.025f) {
         const Ray& ray = sequence.apply(t, true);
         auto forward = ray.getDirection();
         auto side = glm::normalize(glm::cross(forward, {0.f, 0.f, 1.f}));
 
-        spheres.push_back(std::make_unique<Sphere>(ray.getOrigin() + 3.f * side, radiusDistribution(generator), ground));
+        Material material{manager.getSolidTexture({
+                                                        colorDistribution(MyRandom::generator),
+                                                        colorDistribution(MyRandom::generator),
+                                                        colorDistribution(MyRandom::generator)
+                                                }
+        ), glossinessDistribution(MyRandom::generator), alphaDistribution(MyRandom::generator)};
+        material.opticalDensity = 1.2;
+
+        spheres.push_back(std::make_unique<Sphere>(ray.getOrigin() + 3.f * side, radiusDistribution(MyRandom::generator), material));
     }
 
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(spheres));
@@ -318,9 +327,13 @@ Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& se
     objects.push_back(std::move(bvh));
 
     std::vector<LightSource> lights = {
-            {{100, -40, 40}, Intensity{1, 1, 1} * 10000, 0},
+            {{100, -40, 40}, Intensity{1, 1, 1} * 5000, 0},
     };
 
+    auto planeTexture = manager.getImageTexture("../res/texture3.png");
+    Material planeMaterial{planeTexture};
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
+    objects.push_back(std::move(plane));
 
     Camera camera{sequence.apply(0, false).getOrigin(), sequence.apply(0, false).getDirection(), 1, {1.f, (float) windowY / windowX}, {windowX, windowY}};
     return {std::move(objects), lights, camera, 2, 1, 1, std::move(manager)};

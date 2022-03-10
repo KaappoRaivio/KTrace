@@ -7,3 +7,9 @@
 std::ostream& operator << (std::ostream& cout, glm::vec3 vec) {
     return cout << "[" << vec.x << ", " << vec.y << ", " << vec.z << "]";
 }
+
+
+
+//namespace MyRandom {
+std::default_random_engine MyRandom::generator{MyRandom::SEED};
+//}
