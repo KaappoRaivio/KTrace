@@ -57,10 +57,11 @@ int Image::getHeight () const {
 }
 
 Image::Image (const std::vector<std::vector<Intensity>>& pixels) : width{static_cast<int>(pixels[0].size())}, height{static_cast<int>(pixels.size())} {
-    data = (uint8_t*) malloc(pixels.size() * pixels[0].size() * 4);
-    for (int y = 0 ; y < pixels.size() ; ++y) {
-        for (int x = 0 ; x < pixels[y].size() ; ++x) {
-            int index = (y * pixels.size() + x) * 4;
+    std::cout << width << ", " << height << std::endl;
+    data = (uint8_t*) malloc(width * height * 4);
+    for (int y = 0 ; y < height ; ++y) {
+        for (int x = 0 ; x < width ; ++x) {
+            int index = (y * width + x) * 4;
 
             auto rgb = pixels[y][x].asRGB(2.0);
 

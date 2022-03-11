@@ -301,6 +301,7 @@ Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& se
     std::uniform_real_distribution<float> colorDistribution(0.5, 1);
     std::uniform_real_distribution<float> glossinessDistribution(0.5, 0.8);
     std::uniform_real_distribution<float> alphaDistribution(0, 0.5);
+    std::uniform_real_distribution<float> sideDistribution(-1, 1);
 
 
     std::vector<std::unique_ptr<Surface>> spheres;
@@ -310,15 +311,20 @@ Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& se
         auto forward = ray.getDirection();
         auto side = glm::normalize(glm::cross(forward, {0.f, 0.f, 1.f}));
 
-        Material material{manager.getSolidTexture({
-                                                        colorDistribution(MyRandom::generator),
-                                                        colorDistribution(MyRandom::generator),
-                                                        colorDistribution(MyRandom::generator)
-                                                }
-        ), glossinessDistribution(MyRandom::generator), alphaDistribution(MyRandom::generator)};
+        auto& gen = MyRandom::generator;
+        float alpha = alphaDistribution(gen);
+
+        Intensity color{
+                colorDistribution(gen),
+                colorDistribution(gen),
+                colorDistribution(gen)
+        };
+        Material material{manager.getSolidTexture(color), 0.01, 0.1f};
         material.opticalDensity = 1.2;
 
-        spheres.push_back(std::make_unique<Sphere>(ray.getOrigin() + 3.f * side, radiusDistribution(MyRandom::generator), material));
+
+
+        spheres.push_back(std::make_unique<Sphere>(ray.getOrigin() + 3.f * (sideDistribution(gen) > 0 ? 1 : -1) * side, radiusDistribution(gen), material));
     }
 
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(spheres));

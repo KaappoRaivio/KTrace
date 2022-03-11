@@ -31,7 +31,8 @@ MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, 
 //    SDL_Window* window = SDL_CreateWindow("title", x, y, w, h, FLAGS...);
 
 
-    window = SDL_CreateWindow("Raytracer", x, y, width, height, SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP);
+//    window = SDL_CreateWindow("Raytracer", x, y, width, height, SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP);
+    window = SDL_CreateWindow("Raytracer", x, y, width, height, 0);
     renderer = SDL_CreateRenderer(window, 0, 0);
     SDL_SetWindowTitle(window, "Raytracer");
 

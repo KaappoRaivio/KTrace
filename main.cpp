@@ -28,8 +28,9 @@
 
 int main () {
     constexpr int windowWidth = 1440;
-    constexpr int windowX = 144;
-    constexpr int windowY = 81;
+    constexpr int windowX = 1440;
+    constexpr int windowY = 810;
+//    constexpr int windowY = 288;
 
     SplineSequence sequence = SplineSequence::getRandomSequence(10, {0, 0, 1});
 
@@ -79,13 +80,14 @@ int main () {
 //    positionCSV << sequence << std::endl;
 //    std::exit(0);
 
-    scene.executeCameraMove(sequence, 0.0025f, [&] (const auto& pixels) {
+//    scene.executeCameraMove(sequence, 0.0005f, [&] (const auto& pixels) {
+    scene.executeCameraMove(sequence, 0.01f, [&] (const auto& pixels) {
         Image rendered = Image{pixels};
 //        std::cout << scene.camera.origin << ", " << scene.camera.direction << std::endl;
         uint64_t timeSinceEpochMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         std::stringstream path;
         path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
-//        rendered.save(path.str());
+        rendered.save(path.str());
         window.paint(pixels);
         positionCSV << scene.camera.origin.x << "," << scene.camera.origin.y
                                         << "," << scene.camera.origin.z
@@ -101,7 +103,7 @@ int main () {
         std::this_thread::sleep_for(std::chrono::milliseconds(int((1 / fps - seconds) * 1000)));
 
         start = std::chrono::system_clock::now();
-//        window.delay(50);
+        window.delay(50);
     });
 
     positionCSV.close();

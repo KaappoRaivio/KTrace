@@ -127,7 +127,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
                 Intersection _;
                 bool anyHits = getClosestIntersection({intersection.position, V}, vector_to_light.length(), _);
 
-                if (!anyHits) {
+                if (not anyHits) {
                     float distance_coefficient = 1.0 / glm::length2(vector_to_light);
 
                     float diffuse_direction_coefficient = lambertianDiffuseReflection(N, V, d);
@@ -153,7 +153,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
 //            std::cout << reflectance << std::endl;
 
             if (material->glossiness > 0 and reflectance > 0) {
-                specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities) * reflectance * 2;
+//                specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities) * reflectance * 2;
             }
             if (material->alpha < 1 and refractance > 0) {
                 glm::vec3 refracted = glm::normalize(surface->refract(intersection.position, d, opticalDensities));
