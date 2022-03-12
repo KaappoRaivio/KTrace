@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Ray.h"
-#include "../engine/Material.h"
+#include "../engine/materials/Material.h"
 #include "../common/Intersection.h"
 
 class Surface;

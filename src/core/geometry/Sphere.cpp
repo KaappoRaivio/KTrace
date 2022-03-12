@@ -11,7 +11,7 @@
 
 //
 // Created by kaappo on 14.9.2021.
-Sphere::Sphere (glm::vec3 center, float radius, Material material) : center{std::move(center)}, radius{radius}, material(material) {}
+Sphere::Sphere (glm::vec3 center, float radius, Material* material) : center{std::move(center)}, radius{radius}, material(material) {}
 
 bool Sphere::getIntersectionDistance (const Ray& ray, Intersection& out) const {
 //    if (includes(ray.getOrigin())) {
@@ -79,33 +79,34 @@ glm::vec3 refractAlt (const glm::vec3& uv, const glm::vec3& n, float etai_over_e
 
 
 glm::vec3 Sphere::refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const {
-    glm::vec3 normal = getNormalAt(position);
-
-    float n = opticalDensities.top() / getMaterial()->opticalDensity;
-//    float n = ;
-    opticalDensities.push(getMaterial()->opticalDensity);
-
-    float cosI = -glm::dot(normal, glm::normalize(direction));
-    if (cosI < 0) {
+    return direction;
+//    glm::vec3 normal = getNormalAt(position);
+//
+//    float n = opticalDensities.top() / getMaterial()->opticalDensity;
+////    float n = ;
+//    opticalDensities.push(getMaterial()->opticalDensity);
+//
+//    float cosI = -glm::dot(normal, glm::normalize(direction));
+//    if (cosI < 0) {
+////        n = 1 / n;
+////        cosI *= -1;
+//        normal = -normal;
+////        opticalDensities.pop();
 //        n = 1 / n;
-//        cosI *= -1;
-        normal = -normal;
-//        opticalDensities.pop();
-        n = 1 / n;
-//        opticalDensities.pop();
-    } else {
-    }
-
-    float sinT2 = (1.0 - glm::pow(cosI, 2));
-//    if (sinT2 * glm::pow(n, 2) > 1.0 or reflectance(cosI, n) > glm::linearRand(0, 1)) {
-    if (sinT2 * glm::pow(n, 2) > 1.0) {
-//        std::cout << "Reflecting " << glm::to_string(direction) << glm::to_string(normal) << std::endl;
-        return glm::reflect(direction, normal);
-    } else {
-        const glm::vec3& vec = glm::refract(direction, normal, n);
-        return vec;
-//        return refractAlt(direction, normal, n);
-    }
+////        opticalDensities.pop();
+//    } else {
+//    }
+//
+//    float sinT2 = (1.0 - glm::pow(cosI, 2));
+////    if (sinT2 * glm::pow(n, 2) > 1.0 or reflectance(cosI, n) > glm::linearRand(0, 1)) {
+//    if (sinT2 * glm::pow(n, 2) > 1.0) {
+////        std::cout << "Reflecting " << glm::to_string(direction) << glm::to_string(normal) << std::endl;
+//        return glm::reflect(direction, normal);
+//    } else {
+//        const glm::vec3& vec = glm::refract(direction, normal, n);
+//        return vec;
+////        return refractAlt(direction, normal, n);
+//    }
 //        return glm::refract(direction, normal, n);
 //    float cosT = sqrt(1.0 - sinT2);
 //    return direction * n + normal * (n * cosI - cosT);
@@ -133,5 +134,5 @@ AABB Sphere::getBoundingBox () const {
 }
 
 const Material* Sphere::getMaterial () const {
-    return &material;
+    return material;
 }

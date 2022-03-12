@@ -8,7 +8,7 @@
 #include <vector>
 
 
-#include "../light/Intensity.h"
+#include "../../light/Intensity.h"
 
 
 class Image {

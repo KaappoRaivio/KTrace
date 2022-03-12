@@ -8,7 +8,7 @@
 #include <ostream>
 
 #include "../geometry/Surface.h"
-#include "Material.h"
+#include "materials/Material.h"
 #include "../common/Intersection.h"
 //#include "SceneObject.h"
 //

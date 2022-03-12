@@ -9,18 +9,18 @@
 #include <glm/glm.hpp>
 #include "Ray.h"
 #include "Surface.h"
-#include "../engine/Material.h"
+#include "../engine/materials/Material.h"
 
 class Plane : public Surface {
 private:
     glm::vec3 normal;
     double intersect;
 
-    Material material;
+    Material* material;
 public:
-    Plane (glm::vec3 normal, double intersect, Material material);
+    Plane (glm::vec3 normal, double intersect, Material* material);
 
-    static Plane from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material);
+    static Plane from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material* material);
 
     bool includes (const glm::vec3& vector) const;
 

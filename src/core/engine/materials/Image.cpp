@@ -10,13 +10,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_FAILURE_STRINGS
 
-#include "../../../lib/stb/stb_image.h"
+#include "../../../../lib/stb/stb_image.h"
 
 #define STBI_MSC_SECURE_CRT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
-#include "../../../lib/stb/stb_image_write.h"
-#include "../common/mytypes.h"
+#include "../../../../lib/stb/stb_image_write.h"
+#include "../../common/mytypes.h"
 
 Image::Image (const std::string& path) : width{0}, height{0} {
     int amountOfChannels = path.ends_with("jpg") ? 3 : 4;

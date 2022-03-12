@@ -8,10 +8,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <ostream>
-#include "../engine/Material.h"
+//#include "../engine/materials/Material.h"
 #include "../geometry/Ray.h"
 
 class Surface;
+class Material;
 struct Intersection {
     Intersection () : distance{0}, position{0, 0, 0}, hitSurface{nullptr}, material{nullptr}, ray{{0, 0, 0}, {0, 0, 1}} {}
 //    Intersection (double distance, glm::vec3 position, const SingleSceneObject& surface, Ray ray) : distance(distance), position(std::move(position)), sceneObject{surface}, ray(std::move(ray)) {}

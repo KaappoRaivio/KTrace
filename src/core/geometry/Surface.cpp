@@ -50,7 +50,8 @@ std::ostream& operator<< (std::ostream& os, const Surface& surface) {
 
 glm::vec3 Surface::getBumpedNormalAt (const glm::vec3& position) const {
 //    std::cout << "hei <" << std::endl;
-    return getMaterial()->getBumpAt(getUVAt(position), getNormalAt(position));
+//    return getMaterial()->getBumpAt(getUVAt(position), getNormalAt(position));
+    return getMaterial()->getNormalAt(getUVAt(position), getNormalAt(position));
 }
 
 std::ostream& Surface::print (std::ostream& os) const {

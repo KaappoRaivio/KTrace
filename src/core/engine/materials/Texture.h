@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include "../light/Intensity.h"
+#include "../../light/Intensity.h"
 #include <glm/glm.hpp>
 
 class Texture {

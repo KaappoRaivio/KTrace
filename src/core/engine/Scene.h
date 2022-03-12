@@ -13,7 +13,7 @@
 #include "../geometry/Triangle.h"
 #include "SingleSceneObject.h"
 #include "../common/LightSource.h"
-#include "TextureManager.h"
+#include "materials/TextureManager.h"
 #include "../geometry/Spline.h"
 
 class Scene {
@@ -55,7 +55,7 @@ public:
 
     bool getClosestIntersection (const Ray& ray, float max_distance, Intersection& out) const;
 
-    static float calculate_beckmann_distribution (const glm::vec3& R, const glm::vec3& V, float glossiness);
+    static float calculateBeckmannDistribution (const glm::vec3& R, const glm::vec3& V, float glossiness);
     static float lambertianDiffuseReflection (const glm::vec3& N, const glm::vec3& L, const glm::vec3& d);
     static float orenNayarDiffuseReflection (const glm::vec3& face_normal, const glm::vec3& vector_to_light, const glm::vec3& vector_from_camera, float roughness);
     static float getReflectance (float cosine, float refractionRatio);

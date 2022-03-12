@@ -7,10 +7,10 @@
 #include "../common/LightSource.h"
 #include "../light/IntensityBlend.h"
 #include "../common/mytypes.h"
-#include "ImageTexture.h"
+#include "materials/ImageTexture.h"
 #include "../geometry/Sphere.h"
 //#include "../interface/MyOBJLoader.h"
-#include "TextureManager.h"
+#include "materials/TextureManager.h"
 #include "../common/MyVector3.h"
 #include <glm/gtx/norm.hpp>
 
@@ -111,13 +111,11 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
         const glm::vec3& face_normal = surface->getBumpedNormalAt(intersection.position);
         const glm::vec3& N = face_normal;
 
-//        if (N * ray.getDirection() >= 0) {
-//            return calculateColor({closest.position, ray.getDirection()}, x, y, bounces_left, opticalDensities);
-//        }
-
 
         const glm::vec3& d = intersection.ray.getDirection();
         const glm::vec3& R = glm::normalize(glm::reflect(d, face_normal));
+
+        std::vector<LightSource> visibleLightSources;
 
         for (int i = 0 ; i < raysPerPixel ; ++i) {
             for (const auto& lightSource : lightSources) {
@@ -128,48 +126,28 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
                 bool anyHits = getClosestIntersection({intersection.position, V}, vector_to_light.length(), _);
 
                 if (not anyHits) {
-                    float distance_coefficient = 1.0 / glm::length2(vector_to_light);
-
-                    float diffuse_direction_coefficient = lambertianDiffuseReflection(N, V, d);
-//                    float diffuse_direction_coefficient = orenNayarDiffuseReflection(N, V, R, 1 - material.glossiness);
-//                    float diffuse_direction_coefficient = 0;
-
-                    float specular_direction_coefficient = calculate_beckmann_distribution(R, V, material->glossiness);
-                    diffuse_light += lightSource.intensity / raysPerPixel * distance_coefficient * diffuse_direction_coefficient;
-                    specular_light += lightSource.intensity / raysPerPixel * distance_coefficient * specular_direction_coefficient;
+                    visibleLightSources.push_back(lightSource);
                 }
             }
         }
 
-        Intensity underlying{0, 0, 0};
+        Intensity simpleShaded = material->shade(intersection.position, N, intersection, visibleLightSources);
+
+        IntensityBlend scatterShaded;
         if (bounces_left > 0) {
-//            std::cout << opticalDensities.top() / material->opticalDensity << std::endl;
-//            float reflectance = 0.5;
-            float reflectance = getReflectance(glm::abs(glm::dot(N, d)), opticalDensities.top() / material->opticalDensity);
-//            std::cout << glm::abs(glm::dot(N, d)) << ", " << reflectance << std::endl;
-//            std::cout << glm::abs(glm::dot(N, d)) << std::endl;
-            float refractance = 1 - reflectance;
-
-//            std::cout << reflectance << std::endl;
-
-            if (material->glossiness > 0 and reflectance > 0) {
-//                specular_light += calculateColor({intersection.position, R}, x, y, bounces_left - 1, opticalDensities) * reflectance * 2;
-            }
-            if (material->alpha < 1 and refractance > 0) {
-                glm::vec3 refracted = glm::normalize(surface->refract(intersection.position, d, opticalDensities));
-//                std::cout << refracted << std::endl;
-//                std::cout << calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities) * refractance * (1 - material->alpha) << std::endl;
-                underlying = calculateColor({intersection.position + refracted * 0.01f, refracted}, x, y, bounces_left - 1, opticalDensities) * refractance * albedo * 2;
-                //            std::cout << underlying << std::endl;
+            std::vector<Interface> scatteredRays = material->scatter(intersection.position, N, intersection, opticalDensities);
+            for (const auto& interface : scatteredRays) {
+                scatterShaded += interface.intensity * calculateColor(interface.ray, x, y, bounces_left - 1, opticalDensities);
             }
         }
 
+        return simpleShaded + scatterShaded.commitBlend();
 
-        const Intensity& specular_intensity = specular_light.commitSum();
-        const Intensity& diffuse_intensity = diffuse_light.commitSum();
-
-        return albedo * material->alpha * (specular_intensity * material->glossiness + diffuse_intensity * (1 - material->glossiness))
-               + underlying * (1 - material->alpha);
+//        const Intensity& specular_intensity = specular_light.commitSum();
+//        const Intensity& diffuse_intensity = diffuse_light.commitSum();
+//
+//        return albedo * material->alpha * (specular_intensity * material->glossiness + diffuse_intensity * (1 - material->glossiness))
+//               + underlying * (1 - material->alpha);
     }
 
 }
@@ -193,30 +171,7 @@ float Scene::orenNayarDiffuseReflection (const glm::vec3& face_normal, const glm
 }
 
 
-float Scene::lambertianDiffuseReflection (const glm::vec3& N, const glm::vec3& L, const glm::vec3& d) {
-    float dot1 = -glm::dot(d, N);
-    float dot2 = glm::dot(L, N);
 
-    if (dot2 > 0 and dot1 > 0) {
-        return dot2;
-    } else {
-        return 0;
-    }
-
-
-
-
-
-
-//    return std::max(0.0, N * L);
-
-    if ((dot2 < 0) == (dot1 < 0)) {
-        return std::abs(glm::dot(N, L));
-    } else {
-        return 0;
-    }
-
-}
 
 bool Scene::getClosestIntersection (const Ray& ray, float max_distance, Intersection& out) const {
     std::vector<Intersection> intersections;
@@ -260,26 +215,9 @@ bool Scene::getClosestIntersection (const Ray& ray, float max_distance, Intersec
 //    }
 }
 
-float Scene::calculate_beckmann_distribution (const glm::vec3& R, const glm::vec3& V, float glossiness) {
-    float roughness = 1 - glossiness;
-    if (roughness == 0) {
-        return 0;
-    }
-
-    float cosine = glm::dot(R, V);
 
 
-    return std::exp(-(1 - std::pow(cosine, 2)) / (std::pow(cosine * roughness, 2))) / (PI * std::pow(roughness, 2) * std::pow(cosine, 4));
-//    / (std::numbers::pi_v<float> * std::pow(roughness, 2) * std::pow(cosine, 4));
 
-
-}
-
-float Scene::getReflectance (float cosine, float refractionRatio) {
-    // Use Schlick's approximation for reflectance.
-    float r0 = glm::pow((1 - refractionRatio) / (1 + refractionRatio), 2);
-    return r0 + (1 - r0) * glm::pow((1 - cosine), 5);
-}
 
 std::ostream& operator<< (std::ostream& os, const Scene& scene) {
     os << "objects: {";

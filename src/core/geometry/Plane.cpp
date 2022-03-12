@@ -9,7 +9,7 @@
 #include "../common/mytypes.h"
 #include "../common/MyVector3.h"
 
-Plane::Plane (glm::vec3 normal, double intersect, Material material) : normal{std::move(glm::normalize(normal))}, intersect{intersect}, material(material) {}
+Plane::Plane (glm::vec3 normal, double intersect, Material* material) : normal{std::move(glm::normalize(normal))}, intersect{intersect}, material(material) {}
 
 bool Plane::getIntersectionDistance (const Ray& ray, Intersection& out) const {
 //    hitMaterial = getMaterial();
@@ -21,7 +21,7 @@ bool Plane::getIntersectionDistance (const Ray& ray, Intersection& out) const {
 
     if (distance < PRECISION_LIMIT) return false;
 
-    out.material = &material;
+    out.material = material;
     out.hitSurface = this;
     out.distance = distance;
 //        hitMaterial = getMaterial();
@@ -31,7 +31,7 @@ bool Plane::getIntersectionDistance (const Ray& ray, Intersection& out) const {
 
 }
 
-Plane Plane::from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material material) {
+Plane Plane::from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material* material) {
     glm::vec3 normal = glm::normalize(glm::cross((t1 - t2), (t1 - t3)));
     float intersect = -glm::dot(normal, t1);
 
@@ -81,7 +81,7 @@ AABB Plane::getBoundingBox () const {
 }
 
 const Material* Plane::getMaterial () const {
-    return &material;
+    return material;
 }
 
 

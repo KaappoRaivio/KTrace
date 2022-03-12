@@ -12,12 +12,12 @@ class Sphere : public Surface {
 private:
     glm::vec3 center;
     float radius;
-    Material material;
+    Material* material;
 
     bool includes (const glm::vec3& point) const;
 
 public:
-    Sphere (glm::vec3 center, float radius, Material material);
+    Sphere (glm::vec3 center, float radius, Material* material);
 
     bool getIntersectionDistance (const Ray& ray, Intersection& out) const override;
 

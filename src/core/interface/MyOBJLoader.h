@@ -5,7 +5,7 @@
 #include "../../../lib/obj-loader/OBJ_Loader.h"
 #include "../engine/Scene.h"
 #include <glm/glm.hpp>
-#include "../engine/SolidTexture.h"
+#include "../engine/materials/SolidTexture.h"
 #include "../geometry/BVH.h"
 #include "../geometry/Objects.h"
 #include "../common/MyVector3.h"
@@ -50,7 +50,7 @@ namespace MyOBJLoader {
                         VectorOperations::rotate(tovec3(vertex1.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
                         VectorOperations::rotate(tovec3(vertex2.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
                         VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
-                        *material,
+                        material,
                         tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate),
                         VectorOperations::rotate(tovec3(vertex1.Normal), rotationOffset.first, rotationOffset.second),
                         VectorOperations::rotate(tovec3(vertex2.Normal), rotationOffset.first, rotationOffset.second),

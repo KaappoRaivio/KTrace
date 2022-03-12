@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "Surface.h"
-#include "../engine/Material.h"
+#include "../engine/materials/Material.h"
 
 class Objects : public Surface {
 private:
