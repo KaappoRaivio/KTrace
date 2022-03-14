@@ -13,7 +13,7 @@
 #include "../geometry/Triangle.h"
 #include "SingleSceneObject.h"
 #include "../common/LightSource.h"
-#include "materials/TextureManager.h"
+#include "materials/Manager.h"
 #include "../geometry/Spline.h"
 
 class Scene {
@@ -25,9 +25,10 @@ public:
     int raysPerPixel;
     int maxBounces;
     int antialiasingScaler;
-    TextureManager textureManager;
+    Manager<Texture> textureManager;
+    Manager<Material> materialManager;
 
-    Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, TextureManager textureManager);
+    Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, Manager<Texture> textureManager, Manager<Material> materialManager);
     Scene (const Scene& other) = delete;
     void operator= (const Scene& other) = delete;
 

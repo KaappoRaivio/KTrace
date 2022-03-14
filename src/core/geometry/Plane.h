@@ -16,11 +16,11 @@ private:
     glm::vec3 normal;
     double intersect;
 
-    Material* material;
+    const Material* material;
 public:
-    Plane (glm::vec3 normal, double intersect, Material* material);
+    Plane (glm::vec3 normal, double intersect, const Material* material);
 
-    static Plane from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material* material);
+    static Plane from_three_points (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material);
 
     bool includes (const glm::vec3& vector) const;
 

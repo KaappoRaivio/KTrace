@@ -13,11 +13,14 @@ private:
 
 
 public:
+    Metal (const Texture* bump, const Texture* albedo, double roughness);
+    Metal (const Texture* albedo, double roughness);
     Metal (double roughness);
 
     std::vector<Interface> scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, std::stack<float>& opticalDensities) const override;
     Intensity shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources) const override;
 
+    std::ostream& print (std::ostream& s) const override;
 };
 
 

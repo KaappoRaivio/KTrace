@@ -10,7 +10,7 @@
 
 //glm::vec3 getUVWithoutMapping (const glm::vec3& P) const;
 
-Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, Material* material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3, const glm::vec3& normal1, const glm::vec3& normal2, const glm::vec3& normal3) : t1{t1}, t2{t2}, t3{t3}, tu{texture1}, tv{texture2}, tw{texture3}, n1{normal1}, n2{normal2}, n3{normal3}, plane{Plane::from_three_points(t1, t2, t3, material)}, v0{t2 - t1}, v1{t3 - t1} {
+Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3, const glm::vec3& normal1, const glm::vec3& normal2, const glm::vec3& normal3) : t1{t1}, t2{t2}, t3{t3}, tu{texture1}, tv{texture2}, tw{texture3}, n1{normal1}, n2{normal2}, n3{normal3}, plane{Plane::from_three_points(t1, t2, t3, material)}, v0{t2 - t1}, v1{t3 - t1} {
     d00 = glm::dot(v0, v0);
     d01 = glm::dot(v0 , v1);
     d11 = glm::dot(v1, v1);
@@ -28,7 +28,7 @@ Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t
 
 }
 
-Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3,Material* material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
+Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material, const glm::vec3& texture1, const glm::vec3& texture2, const glm::vec3& texture3)
         : Triangle(t1, t2, t3, material, texture1, texture2, texture3, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}) {
 
 //    v0 = p2 - p1;
@@ -44,7 +44,7 @@ std::ostream& Triangle::print (std::ostream& os) const {
 }
 
 
-Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3,Material* material) : Triangle{t1, t2, t3, material, {0, 0, 0}, {1, 0, 0}, {0, 1, 0}} {
+Triangle::Triangle (const glm::vec3& t1, const glm::vec3& t2, const glm::vec3& t3, const Material* material) : Triangle{t1, t2, t3, material, {0, 0, 0}, {1, 0, 0}, {0, 1, 0}} {
 
 }
 

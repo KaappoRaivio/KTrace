@@ -10,10 +10,12 @@
 #include "Shading.h"
 
 
-Metal::Metal (double roughness) : roughness{roughness} {}
+Metal::Metal (const Texture* bump, const Texture* albedo, double roughness) : Material(albedo, bump), roughness{roughness} {}
+Metal::Metal (const Texture* albedo, double roughness) : Material(albedo), roughness{roughness} {}
+Metal::Metal (double roughness) : Material(), roughness{roughness} {}
 
 std::vector<Interface> Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, std::stack<float>& opticalDensities) const {
-    std::vector<Interface> interfaces{1};
+    std::vector<Interface> interfaces;
     const auto& reflected = glm::reflect(intersection.ray.getDirection(), normal);
     const Intensity& attenuation = albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
     interfaces.push_back({Ray{intersection.ray.getOrigin(), reflected}, attenuation});
@@ -38,6 +40,10 @@ Intensity Metal::shade (const glm::vec3& position, const glm::vec3& normal, cons
     }
 
     return diffuseShaded.commitBlend() * roughness * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
+}
+
+std::ostream& Metal::print (std::ostream& s) const {
+    return s << "Metal{" << roughness << "}";
 }
 
 

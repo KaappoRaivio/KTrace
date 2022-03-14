@@ -10,7 +10,7 @@
 #include "materials/ImageTexture.h"
 #include "../geometry/Sphere.h"
 //#include "../interface/MyOBJLoader.h"
-#include "materials/TextureManager.h"
+#include "materials/Manager.h"
 #include "../common/MyVector3.h"
 #include <glm/gtx/norm.hpp>
 
@@ -21,8 +21,8 @@
 //#include <numbers>
 constexpr float PI = 3.1415926;
 
-Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, TextureManager textureManager)
-        : objects{std::move(objects)}, lightSources(std::move(lightSources)), camera(camera), raysPerPixel{raysPerPixel}, maxBounces(maxBounces), antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)} {}
+Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, Manager<Texture> textureManager, Manager<Material> materialManager)
+        : objects{std::move(objects)}, lightSources(std::move(lightSources)), camera(camera), raysPerPixel{raysPerPixel}, maxBounces(maxBounces), antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)}, materialManager{std::move(materialManager)} {}
 
 #pragma clang diagnostic push
 //#pragma omp declare target
