@@ -84,6 +84,11 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     Intersection intersection;
     bool intersects = getClosestIntersection(ray, 0, intersection);
 //    std::cout << intersection.value() << std::endl;
+
+    if (x == 500 && y == 500) {
+        std::cout << "debug" << std::endl;
+    }
+
     if constexpr(DEBUG) {
         if (y % 100 == 0 && x == 0) {
             std::cout << "Row " << y << std::endl;
@@ -94,6 +99,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     if (not intersects) {
         return Intensity{0, 0, 0};
     } else {
+//        return Intensity{0, 1, 0};
 
     if constexpr(DEBUG) {
         std::cout << "hit!" << std::endl;
@@ -117,6 +123,8 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
 
         std::vector<LightSource> visibleLightSources;
 
+        IntensityBlend simpleShaded;
+
         for (int i = 0 ; i < raysPerPixel ; ++i) {
             for (const auto& lightSource : lightSources) {
                 const glm::vec3& vector_to_light = VectorOperations::rotateInsideCone(lightSource.position - intersection.position, lightSource.radius);
@@ -129,25 +137,21 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
                     visibleLightSources.push_back(lightSource);
                 }
             }
+            simpleShaded += material->shade(intersection.position, N, intersection, visibleLightSources);
         }
-
-        Intensity simpleShaded = material->shade(intersection.position, N, intersection, visibleLightSources);
-
         IntensityBlend scatterShaded;
+
         if (bounces_left > 0) {
-            std::vector<Interface> scatteredRays = material->scatter(intersection.position, N, intersection, opticalDensities);
-            for (const auto& interface : scatteredRays) {
+            std::array<Interface, 10> scatteredRays{};
+
+            int numberOfRays = material->scatter(intersection.position, N, intersection, opticalDensities, scatteredRays);
+            for (int i = 0; i < numberOfRays; ++i) {
+                const auto& interface = scatteredRays[i];
                 scatterShaded += interface.intensity * calculateColor(interface.ray, x, y, bounces_left - 1, opticalDensities);
             }
         }
 
-        return simpleShaded + scatterShaded.commitBlend();
-
-//        const Intensity& specular_intensity = specular_light.commitSum();
-//        const Intensity& diffuse_intensity = diffuse_light.commitSum();
-//
-//        return albedo * material->alpha * (specular_intensity * material->glossiness + diffuse_intensity * (1 - material->glossiness))
-//               + underlying * (1 - material->alpha);
+        return simpleShaded.commitBlend() + scatterShaded.commitSum();
     }
 
 }

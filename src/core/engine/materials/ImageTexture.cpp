@@ -15,3 +15,7 @@ Intensity ImageTexture::getPixelAt (const glm::vec3& uv) const {
     return image.get_pixel_at(u, v);
 //    return image.getPixelAt(image.getWidth() - 1 - std::floor(uv.x * image.getWidth() - 1e-9), image.getHeight() - 1 - std::floor(uv.y * image.getHeight() - 1e-9));
 }
+
+std::ostream& ImageTexture::print (std::ostream& cout) const {
+    return cout << "ImageTexture";
+}

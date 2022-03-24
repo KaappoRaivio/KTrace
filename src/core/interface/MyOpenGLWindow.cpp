@@ -44,6 +44,8 @@ MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
     SDL_RenderClear(renderer);
     SDL_RaiseWindow(window);
+
+    std::cout << "created window" << std::endl;
 }
 
 void MyOpenGLWindow::set_pixel (int x, int y, const Intensity& color) const {

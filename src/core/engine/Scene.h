@@ -50,6 +50,11 @@ public:
         }
     }
 
+    void render (auto onRendered) {
+        const auto& pixels = trace();
+        onRendered(pixels);
+    }
+
     Intensity calculateColor (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const;
 
 //    std::vector<Intersection> getIntersections(const Ray &ray);

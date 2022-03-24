@@ -51,7 +51,10 @@ int main () {
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
-    std::this_thread::sleep_for(std::chrono::milliseconds(4000));
+
+
+//    std::this_thread::sleep_for(std::chrono::milliseconds(4000));
+
 
     double fps = 60;
 
@@ -72,17 +75,21 @@ int main () {
 
 //    std::cout << sequence.apply(0) << std::endl;
 
-    auto start = std::chrono::system_clock::now();
 
 
-    std::ofstream positionCSV;
-    positionCSV.open("../positions.csv");
-    positionCSV << sequence << std::endl;
+//    std::ofstream positionCSV;
+//    positionCSV.open("../positions.csv");
+//    positionCSV << sequence << std::endl;
 //    positionCSV << sequence << std::endl;
 //    std::exit(0);
 
 //    scene.executeCameraMove(sequence, 0.0005f, [&] (const auto& pixels) {
-    scene.executeCameraMove(sequence, 0.01f, [&] (const auto& pixels) {
+
+
+    auto start = std::chrono::system_clock::now();
+    std::cout << "starting" << std::endl;
+//    scene.executeCameraMove(sequence, 0.01f, [&] (const auto& pixels) {
+    scene.render([&] (const auto& pixels) {
         Image rendered = Image{pixels};
 //        std::cout << scene.camera.origin << ", " << scene.camera.direction << std::endl;
         uint64_t timeSinceEpochMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -90,9 +97,9 @@ int main () {
         path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
         rendered.save(path.str());
         window.paint(pixels);
-        positionCSV << scene.camera.origin.x << "," << scene.camera.origin.y
-                                        << "," << scene.camera.origin.z
-                    << '\n';
+//        positionCSV << scene.camera.origin.x << "," << scene.camera.origin.y
+//                                        << "," << scene.camera.origin.z
+//                    << '\n';
 
 
         auto end = std::chrono::system_clock::now();
@@ -107,7 +114,7 @@ int main () {
         window.delay(50);
     });
 
-    positionCSV.close();
+//    positionCSV.close();
 
     system("cd .. && ./plot.sh ./plot.p");
     window.delay(50);

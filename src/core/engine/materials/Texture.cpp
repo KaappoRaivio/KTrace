@@ -3,3 +3,7 @@
 //
 
 #include "Texture.h"
+
+std::ostream& operator<< (std::ostream& os, const Texture& texture) {
+    return texture.print(os);
+}

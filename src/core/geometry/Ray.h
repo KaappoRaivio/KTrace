@@ -11,6 +11,7 @@
 class Ray {
 public:
     Ray (const glm::vec3& origin, const glm::vec3& direction);
+    constexpr Ray () : origin{glm::vec3{0, 0, 0}}, direction{glm::vec3{0, 0, 0}}, inverse_direction{glm::vec3{0, 0, 0}} {}
 
 private:
     glm::vec3 origin;

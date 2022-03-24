@@ -15,6 +15,7 @@ protected:
 
 public:
     constexpr Intensity (double r, double g, double b) : m_r{r}, m_g{g}, m_b{b} {};
+    constexpr Intensity () : Intensity{0, 0, 0} {};
 
 //    Intensity (const Intensity& other) = default;
 //    Intensity (Intensity&& original) noexcept;

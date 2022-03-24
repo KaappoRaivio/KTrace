@@ -17,50 +17,42 @@ Scene Scenes::getDebug (int windowX, int windowY) {
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
 
-    auto planeTexture = textureManager.get<ImageTexture>("../res/texture3.png");
-//    Material planeMaterial{planeTexture};
-    auto planeMaterial = materialManager.get<Metal>(1.0);
-    auto polygonsMaterial = materialManager.get<Metal>(planeTexture, 1.0);
+//    Material planeMaterial{polygonTexture};
+    const Texture* planetexture = textureManager.get<SolidTexture>(Intensity{1, 0.5, 0.5});
+//    const Texture* planetexture = textureManager.get<ImageTexture>("../res/texture3.png");
+    auto planeMaterial = materialManager.get<Metal>(planetexture, 0.5);
+    std::cout << *planeMaterial << std::endl;
+//    auto polygonTexture = textureManager.get<SolidTexture>("../res/texture3.png");
+    auto polygonTexture = textureManager.get<SolidTexture>(Intensity{1, 1, 1});
+    auto polygonsMaterial = materialManager.get<Metal>(polygonTexture, 0.2);
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
 
-//    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
-    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, polygonsMaterial);
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, polygonsMaterial);
+//    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, polygonsMaterial);
     std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {2, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, polygonsMaterial);
-//    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, &Materials::BLUE_GLOSSY);
 
     for (auto& p : polygons2) {
-//        std::cout << *p << std::endl;
         polygons.push_back(std::move(p));
     }
 
     std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
 
-//    std::cout << *bvh << std::endl;
-
-//    std::cout << (std::abs(bvh->getIntersection({{0, -5, 7}, glm::vec3{0.3657, 0.816, -0.5}}, <#initializer#>)->distance) >= PRECISION_LIMIT) << std::endl;
-
-
-//    std::unique_ptr<Surface> obje = std::make_unique<Objects>(std::move(polygons2));
-//    std::unique_ptr<Surface> object = std::make_unique<Objects>(std::move(polygones));
     std::vector<std::unique_ptr<Surface>> objects;
-
     objects.push_back(std::move(bvh));
     objects.push_back(std::move(plane));
-//    std::cout << bvh.get() << std::endl;
-//    objects.push_back(std::move(obje));
-//    objects.push_back(std::move(plane));
+
 
     double radius = 0;
     std::vector<LightSource> lights = {
-            {{-2, 1, 100}, Intensity{1, 1, 1} * 2100, radius},
+            {{-2, 1, 100}, Intensity{1, 1, 1} * 2000, radius},
 //            {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
     };
 
 //    std::exit(0);
 
 
-    return {std::move(objects), lights, camera, 5, 1, 2, std::move(textureManager), std::move(materialManager)};
+    return {std::move(objects), lights, camera, 5, 1, 1, std::move(textureManager), std::move(materialManager)};
 }
 
 //Scene Scenes::getSceneOne (int windowX, int windowY) {

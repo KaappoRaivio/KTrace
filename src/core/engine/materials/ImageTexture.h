@@ -15,6 +15,8 @@ public:
     explicit ImageTexture (const std::string& path);
 
     Intensity getPixelAt (const glm::vec3& uv) const override;
+
+    std::ostream& print (std::ostream& cout) const override;
 };
 
 

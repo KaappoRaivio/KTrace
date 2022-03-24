@@ -9,6 +9,7 @@
 #include "../geometry/Ray.h"
 
 struct Interface {
+    constexpr Interface () : ray{}, intensity{} {}
     constexpr Interface (const Ray& ray, const Intensity& intensity) : ray{ray}, intensity{intensity} {}
 
     Ray ray;

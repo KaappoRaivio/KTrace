@@ -10,7 +10,7 @@ void IntensityBlend::operator+= (const Intensity& color) {
 
 Intensity IntensityBlend::commitSum () const {
     Intensity result{0, 0, 0};
-    for (const auto& item: blend) {
+    for (const auto& item : blend) {
         result += item;
     }
 
@@ -19,15 +19,15 @@ Intensity IntensityBlend::commitSum () const {
 
 Intensity IntensityBlend::commitBlend () const {
     Intensity result{0, 0, 0};
-    for (const auto& item: blend) {
+    for (const auto& item : blend) {
         result += item;
     }
 
-    return result / blend.size();
+    return result / std::max((unsigned long) 1, blend.size());
 }
 
 void IntensityBlend::operator+= (const IntensityBlend& color) {
-    for (const auto& item: color.blend) {
+    for (const auto& item : color.blend) {
         *this += item;
     }
 }

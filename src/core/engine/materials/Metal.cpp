@@ -3,6 +3,7 @@
 //
 
 #include <glm/gtx/norm.hpp>
+#include <iostream>
 #include "Metal.h"
 #include "../../common/Intersection.h"
 #include "../../geometry/Surface.h"
@@ -11,16 +12,19 @@
 
 
 Metal::Metal (const Texture* bump, const Texture* albedo, double roughness) : Material(albedo, bump), roughness{roughness} {}
+
 Metal::Metal (const Texture* albedo, double roughness) : Material(albedo), roughness{roughness} {}
+
 Metal::Metal (double roughness) : Material(), roughness{roughness} {}
 
-std::vector<Interface> Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, std::stack<float>& opticalDensities) const {
-    std::vector<Interface> interfaces;
+int Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, std::stack<float>& opticalDensities, std::array<Interface, 10>& out_scatteredRays) const {
+    if (roughness == 1) return 0;
+
+
     const auto& reflected = glm::reflect(intersection.ray.getDirection(), normal);
-    const Intensity& attenuation = albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
-    interfaces.push_back({Ray{intersection.ray.getOrigin(), reflected}, attenuation});
-    return interfaces;
-//    return std::vector<Interface>();
+    Intensity intensity = Intensity{(1 - roughness), (1 -roughness), (1 - roughness)};
+    out_scatteredRays[0] = {{intersection.ray.getOrigin(), reflected}, intensity * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position))};
+    return 1;
 }
 
 Intensity Metal::shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources) const {
@@ -28,22 +32,26 @@ Intensity Metal::shade (const glm::vec3& position, const glm::vec3& normal, cons
     const glm::vec3& R = glm::normalize(glm::reflect(d, normal));
 
     IntensityBlend diffuseShaded;
+    IntensityBlend specularShaded;
     for (const auto& lightSource : visibleLightSources) {
         glm::vec3 vectorToLight = lightSource.position - intersection.position;
         const glm::vec3& V = glm::normalize(vectorToLight);
 
         float distanceCoefficient = 1.0 / glm::length2(vectorToLight);
         float diffuseDirectionCoefficient = Shading::lambertianDiffuseReflection(normal, V, d);
-//        float specularDirectionCoefficient = Shading::calculateBeckmannDistribution(R, V, roughness);
+        float specularDirectionCoefficient = Shading::calculateBeckmannDistribution(R, V, roughness);
 
-        diffuseShaded += lightSource.intensity / distanceCoefficient * diffuseDirectionCoefficient;
+        diffuseShaded += lightSource.intensity * distanceCoefficient * diffuseDirectionCoefficient;
+        specularShaded += lightSource.intensity * distanceCoefficient * specularDirectionCoefficient;
+//        std::cout << "visible" << std::endl;
     }
 
-    return diffuseShaded.commitBlend() * roughness * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
+    return (diffuseShaded.commitSum() * roughness + specularShaded.commitSum() * (1 - roughness))
+           * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
 }
 
 std::ostream& Metal::print (std::ostream& s) const {
-    return s << "Metal{" << roughness << "}";
+    return s << "Metal{" << roughness << ", " << *albedo << "}";
 }
 
 
