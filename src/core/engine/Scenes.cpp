@@ -14,27 +14,27 @@
 #include "materials/Dielectric.h"
 
 Scene Scenes::getDebug (int windowX, int windowY) {
-    Camera camera = {{0, -5.f, 3.f}, {3, 4, 2}, 1.0f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+    Camera camera = {{3, -5.f, 3.f}, {3, 4, 2}, 1.0f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
 
 //    Material planeMaterial{polygonTexture};
-//    const Texture* planetexture = textureManager.get<SolidTexture>(Intensity{1, 0.5, 0.5});
-    const Texture* planetexture = textureManager.get<ImageTexture>("../res/texture3.png");
+    const Texture* planetexture = textureManager.get<SolidTexture>(Intensity{0.5, 0.5, 0.5});
+//    const Texture* planetexture = textureManager.get<ImageTexture>("../res/texture3.png");
     auto planeMaterial = materialManager.get<Metal>(planetexture, 0.5);
     std::cout << *planeMaterial << std::endl;
 //    auto polygonTexture = textureManager.get<SolidTexture>("../res/texture3.png");
     auto polygonTexture = textureManager.get<SolidTexture>(Intensity{1, 1, 1});
     auto cubeTexture = textureManager.get<SolidTexture>(Intensity{72.2, 45.1, 20} / 100);
-    auto teapotMaterial = materialManager.get<Dielectric>(0, 0.0, 2.0, polygonTexture);
-    auto cubeMaterial = materialManager.get<Metal>(cubeTexture, 0.2);
+    auto teapotMaterial = materialManager.get<Dielectric>(1.0, 0.5, 2.0, polygonTexture);
+    auto cubeMaterial = materialManager.get<Dielectric>(0, 0.0, 0.2, cubeTexture);
     auto sphereMaterial = materialManager.get<Dielectric>(0, 0.0, 1.3, cubeTexture);
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
 
     std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, teapotMaterial);
 //    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, teapotMaterial);
-    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {0, 4, 2}, 0.4, {M_PI / 3.8, -M_PI / 1.4}, cubeMaterial);
+    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {0, 4, 2}, 0.4, {M_PI / 2, 0}, cubeMaterial);
 //    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {0, 4, 2}, 0.4, {M_PI / 3.8, -M_PI / 1.4}, cubeMaterial);
     std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{0, 4, 3}, 1.f , sphereMaterial);
 //    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>({0, 4, 3}, 1.f , sphereMaterial);
@@ -62,6 +62,7 @@ Scene Scenes::getDebug (int windowX, int windowY) {
     double radius = 0;
     std::vector<LightSource> lights = {
             {{-2, 1, 100}, Intensity{1, 1, 1} * 2000, radius},
+            {{4, 5, 1}, Intensity{1, 1, 0.2} * 200, radius},
 //            {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
     };
 
