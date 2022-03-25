@@ -12,7 +12,7 @@ private:
     double roughness;
 
 public:
-    Metal (const Texture* bump, const Texture* albedo, double roughness);
+    Metal (const Texture* albedo, const Texture* bump, double roughness);
     Metal (const Texture* albedo, double roughness);
     Metal (double roughness);
 

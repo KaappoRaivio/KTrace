@@ -11,7 +11,7 @@
 #include "Shading.h"
 
 
-Metal::Metal (const Texture* bump, const Texture* albedo, double roughness) : Material(albedo, bump), roughness{roughness} {}
+Metal::Metal (const Texture* albedo, const Texture* bump, double roughness) : Material(albedo, bump), roughness{roughness} {}
 
 Metal::Metal (const Texture* albedo, double roughness) : Material(albedo), roughness{roughness} {}
 
@@ -23,7 +23,7 @@ int Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const In
 
     const auto& reflected = glm::reflect(intersection.ray.getDirection(), normal);
     Intensity intensity = Intensity{(1 - roughness), (1 -roughness), (1 - roughness)};
-    out_scatteredRays[0] = {{intersection.ray.getOrigin(), reflected}, intensity * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position))};
+    out_scatteredRays[0] = {{intersection.position, reflected}, intensity * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position))};
     return 1;
 }
 

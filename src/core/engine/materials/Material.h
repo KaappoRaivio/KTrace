@@ -32,7 +32,7 @@ protected:
 
 public:
     virtual Intensity getAlbedoAt (vec uv) const;
-    virtual glm::vec3 getNormalAt (const glm::vec3& uv, const glm::vec3& normal) const;
+    virtual glm::vec3 getNormalAt (vec uv, vec normal) const;
 //    virtual Intensity getBumpedNormalAt (vec uv) const {
 //        return getNormalAt(uv, <#initializer#>);
 //    }

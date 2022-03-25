@@ -85,7 +85,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     bool intersects = getClosestIntersection(ray, 0, intersection);
 //    std::cout << intersection.value() << std::endl;
 
-    if (x == 500 && y == 500) {
+    if (x == 573 && y == 513) {
         std::cout << "debug" << std::endl;
     }
 
