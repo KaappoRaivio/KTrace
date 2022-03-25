@@ -21,7 +21,7 @@
 //#include <numbers>
 constexpr float PI = 3.1415926;
 
-Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, Manager<Texture> textureManager, Manager<Material> materialManager)
+Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, std::vector<LightSource> lightSources, Camera camera, int maxBounces, int raysPerPixel, int antialiasingScaler, Manager<Texture> textureManager, Manager<Material> materialManager)
         : objects{std::move(objects)}, lightSources(std::move(lightSources)), camera(camera), raysPerPixel{raysPerPixel}, maxBounces(maxBounces), antialiasingScaler{antialiasingScaler}, textureManager{std::move(textureManager)}, materialManager{std::move(materialManager)} {}
 
 #pragma clang diagnostic push
@@ -85,9 +85,9 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     bool intersects = getClosestIntersection(ray, 0, intersection);
 //    std::cout << intersection.value() << std::endl;
 
-    if (x == 573 && y == 513) {
-        std::cout << "debug" << std::endl;
-    }
+//    if (x == 573 && y == 513) {
+//        std::cout << "debug" << std::endl;
+//    }
 
     if constexpr(DEBUG) {
         if (y % 100 == 0 && x == 0) {
@@ -137,7 +137,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
                     visibleLightSources.push_back(lightSource);
                 }
             }
-            simpleShaded += material->shade(intersection.position, N, intersection, visibleLightSources);
+            simpleShaded += material->shade(intersection.position, N, intersection, visibleLightSources, opticalDensities.top());
         }
         IntensityBlend scatterShaded;
 

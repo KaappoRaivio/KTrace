@@ -27,7 +27,7 @@ int Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const In
     return 1;
 }
 
-Intensity Metal::shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources) const {
+Intensity Metal::shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources, float currentOpticalDensity) const {
     const glm::vec3& d = intersection.ray.getDirection();
     const glm::vec3& R = glm::normalize(glm::reflect(d, normal));
 

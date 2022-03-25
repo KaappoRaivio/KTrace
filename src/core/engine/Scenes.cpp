@@ -14,62 +14,44 @@
 #include "materials/Dielectric.h"
 
 Scene Scenes::getDebug (int windowX, int windowY) {
-    Camera camera = {{3, -5.f, 3.f}, {3, 4, 2}, 1.0f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+    Camera camera = {{0, 0, 1}, {0, 1, 1}, 0.5f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
 
-//    Material planeMaterial{polygonTexture};
-    const Texture* planetexture = textureManager.get<SolidTexture>(Intensity{0.5, 0.5, 0.5});
-//    const Texture* planetexture = textureManager.get<ImageTexture>("../res/texture3.png");
-    auto planeMaterial = materialManager.get<Metal>(planetexture, 0.5);
-    std::cout << *planeMaterial << std::endl;
-//    auto polygonTexture = textureManager.get<SolidTexture>("../res/texture3.png");
-    auto polygonTexture = textureManager.get<SolidTexture>(Intensity{1, 1, 1});
-    auto cubeTexture = textureManager.get<SolidTexture>(Intensity{72.2, 45.1, 20} / 100);
-    auto teapotMaterial = materialManager.get<Dielectric>(1.0, 0.5, 2.0, polygonTexture);
-    auto cubeMaterial = materialManager.get<Dielectric>(0, 0.0, 0.2, cubeTexture);
-    auto sphereMaterial = materialManager.get<Dielectric>(0, 0.0, 1.3, cubeTexture);
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
-
-    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, teapotMaterial);
-//    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, teapotMaterial);
-    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {0, 4, 2}, 0.4, {M_PI / 2, 0}, cubeMaterial);
-//    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {0, 4, 2}, 0.4, {M_PI / 3.8, -M_PI / 1.4}, cubeMaterial);
-    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{0, 4, 3}, 1.f , sphereMaterial);
-//    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>({0, 4, 3}, 1.f , sphereMaterial);
-    polygons.push_back(std::move(sphere));
-    for (auto& p : polygons2) {
-        polygons.push_back(std::move(p));
-    }
-
-    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(polygons));
-
-//    Ray ray{{0, -5, 7}, {0.149, 0.872, -0.4652}};
-//
-//    Intersection i;
-//    bvh->getIntersection(ray, i);
-//    std::cout << i << std::endl;
+    auto schlickTest = materialManager.get<Dielectric>(1.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}));
+    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, textureManager.get<ImageTexture>("../res/texture3.png"));
+    std::cout << *schlickTest << std::endl;
 //    std::exit(0);
 
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
+    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{0, 4, 1}, 1, schlickTest);
+    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
 
-
-    std::vector<std::unique_ptr<Surface>> objects;
-    objects.push_back(std::move(bvh));
-    objects.push_back(std::move(plane));
-
-
-    double radius = 0;
-    std::vector<LightSource> lights = {
-            {{-2, 1, 100}, Intensity{1, 1, 1} * 2000, radius},
-            {{4, 5, 1}, Intensity{1, 1, 0.2} * 200, radius},
-//            {{10, -40, 40},  Intensity{1, 1, 1} * 300, radius * 50},
+    std::vector<LightSource> lightSources = {
+            {{-5, 4, 1}, Intensity{1, 1, 1} * 20, 0.2},
+            {{3, 3, 1}, Intensity{0.1, 0.1, 1} * 2, 0.0}
     };
 
-//    std::exit(0);
+    std::vector<std::unique_ptr<Surface>> surfaces{};
+    surfaces.push_back(std::move(sphere));
+//    surfaces.push_back(std::move(sphere));
+    for (auto& paska : cube) {
+        surfaces.push_back(std::move(paska));
+    }
 
 
-    return {std::move(objects), lights, camera, 5, 1, 1, std::move(textureManager), std::move(materialManager)};
+    auto bvh = std::make_unique<BVH>(std::move(surfaces));
+
+    std::vector<std::unique_ptr<Surface>> objects;
+    objects.push_back(std::move(plane));
+    objects.push_back(std::move(bvh));
+
+
+
+
+    return Scene{std::move(objects), std::move(lightSources), camera, 5, 1, 1, std::move(textureManager), std::move(materialManager)};
 }
 
 //Scene Scenes::getSceneOne (int windowX, int windowY) {
@@ -305,57 +287,61 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 //
 //}
 //
-//Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& sequence) {
-//    Manager manager;
-//
-//
-//    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-//
-//    std::uniform_real_distribution<float> d(10, 20);
-//    std::uniform_real_distribution<float> radiusDistribution(1, 2);
-//    std::uniform_real_distribution<float> colorDistribution(0.5, 1);
-//    std::uniform_real_distribution<float> glossinessDistribution(0.5, 0.8);
-//    std::uniform_real_distribution<float> alphaDistribution(0, 0.5);
-//    std::uniform_real_distribution<float> sideDistribution(-1, 1);
-//
-//
-//    std::vector<std::unique_ptr<Surface>> spheres;
-//
-//    for (float t = 0 ; t < 1 ; t += 0.025f) {
-//        const Ray& ray = sequence.apply(t, true);
-//        auto forward = ray.getDirection();
-//        auto side = glm::normalize(glm::cross(forward, {0.f, 0.f, 1.f}));
-//
-//        auto& gen = MyRandom::generator;
-//        float alpha = alphaDistribution(gen);
-//
-//        Intensity color{
-//                colorDistribution(gen),
-//                colorDistribution(gen),
-//                colorDistribution(gen)
-//        };
-//        Material material{manager.getSolidTexture(color), 0.01, 0.1f};
+Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& sequence) {
+    Manager<Texture> textureManager;
+    Manager<Material> materialManager;
+
+
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+    std::uniform_real_distribution<float> d(10, 20);
+    std::uniform_real_distribution<float> radiusDistribution(1, 2);
+    std::uniform_real_distribution<float> colorDistribution(0.5, 1);
+    std::uniform_real_distribution<float> glossinessDistribution(0.5, 0.8);
+    std::uniform_real_distribution<float> alphaDistribution(0, 0);
+    std::uniform_real_distribution<float> sideDistribution(-1, 1);
+
+
+    std::vector<std::unique_ptr<Surface>> spheres;
+
+    for (float t = 0 ; t < 1 ; t += 0.025f) {
+        const Ray& ray = sequence.apply(t, true);
+        auto forward = ray.getDirection();
+        auto side = glm::normalize(glm::cross(forward, {0.f, 0.f, 1.f}));
+
+        auto& gen = MyRandom::generator;
+        float alpha = alphaDistribution(gen);
+
+        Intensity color{
+                colorDistribution(gen),
+                colorDistribution(gen),
+                colorDistribution(gen)
+        };
+//        Material material{textureManager.get<SolidTexture>(color), 0.01, 0.1f};
+
+        auto material = materialManager.get<Dielectric>(0.f, alpha, 1.2f, textureManager.get<SolidTexture>(color));
+
 //        material.opticalDensity = 1.2;
-//
-//
-//
-//        spheres.push_back(std::make_unique<Sphere>(ray.getOrigin() + 3.f * (sideDistribution(gen) > 0 ? 1 : -1) * side, radiusDistribution(gen), material));
-//    }
-//
-//    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(spheres));
-//
-//    std::vector<std::unique_ptr<Surface>> objects;
-//    objects.push_back(std::move(bvh));
-//
-//    std::vector<LightSource> lights = {
-//            {{100, -40, 40}, Intensity{1, 1, 1} * 5000, 0},
-//    };
-//
-//    auto planeTexture = manager.getImageTexture("../res/texture3.png");
-//    Material planeMaterial{planeTexture};
-//    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
-//    objects.push_back(std::move(plane));
-//
-//    Camera camera{sequence.apply(0, false).getOrigin(), sequence.apply(0, false).getDirection(), 1, {1.f, (float) windowY / windowX}, {windowX, windowY}};
-//    return {std::move(objects), lights, camera, 2, 1, 1, std::move(manager)};
-//}
+
+
+
+        spheres.push_back(std::make_unique<Sphere>(ray.getOrigin() + 3.f * (sideDistribution(gen) > 0 ? 1 : -1) * side, radiusDistribution(gen), material));
+    }
+
+    std::unique_ptr<Surface> bvh = std::make_unique<BVH>(std::move(spheres));
+
+    std::vector<std::unique_ptr<Surface>> objects;
+    objects.push_back(std::move(bvh));
+
+    std::vector<LightSource> lights = {
+            {{100, -40, 40}, Intensity{1, 1, 1} * 5000, 0},
+    };
+
+    auto planeTexture = textureManager.get<ImageTexture>("../res/texture3.png");
+    auto planeMaterial = materialManager.get<Dielectric>(1.0f, 1.0f, 1.0f, planeTexture);
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
+    objects.push_back(std::move(plane));
+
+    Camera camera{sequence.apply(0, false).getOrigin(), sequence.apply(0, false).getDirection(), 1, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+    return {std::move(objects), lights, camera, 2, 1, 1, std::move(textureManager), std::move(materialManager)};
+}

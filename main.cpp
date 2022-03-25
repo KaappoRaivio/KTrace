@@ -111,7 +111,7 @@ int main () {
         std::this_thread::sleep_for(std::chrono::milliseconds(int((1 / fps - seconds) * 1000)));
 
         start = std::chrono::system_clock::now();
-        window.delay(50);
+//        window.delay(50);
     });
 
 //    positionCSV.close();

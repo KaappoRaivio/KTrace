@@ -18,12 +18,7 @@ Intensity IntensityBlend::commitSum () const {
 }
 
 Intensity IntensityBlend::commitBlend () const {
-    Intensity result{0, 0, 0};
-    for (const auto& item : blend) {
-        result += item;
-    }
-
-    return result / std::max((unsigned long) 1, blend.size());
+    return commitSum() / std::max((unsigned long) 1, blend.size());
 }
 
 void IntensityBlend::operator+= (const IntensityBlend& color) {

@@ -28,14 +28,14 @@ public:
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
 
-    Scene (std::vector<std::unique_ptr<Surface>> objects, const std::vector<LightSource>& lightSources, const Camera& camera, int maxBounces, int raysPerPixel, int antialiasingScaler, Manager<Texture> textureManager, Manager<Material> materialManager);
+    Scene (std::vector<std::unique_ptr<Surface>> objects, std::vector<LightSource> lightSources, Camera camera, int maxBounces, int raysPerPixel, int antialiasingScaler, Manager<Texture> textureManager, Manager<Material> materialManager);
     Scene (const Scene& other) = delete;
     void operator= (const Scene& other) = delete;
 
     std::vector<std::vector<Intensity>> trace () const;
     void executeCameraMove (SplineSequence sequence, float deltaT, auto onFrameRendered) {
 //        for (float t = 0.1; t < 1; t = sequence.advance(t, deltaT)) {
-        for (float t = 0.11; t < 1; t = sequence.advance(t, 0)) {
+        for (float t = 0; t < 1; t = sequence.advance(t, deltaT)) {
             if (t >= 1) break;
 
             Ray currentPose = sequence.apply(t, true);

@@ -12,20 +12,20 @@
 
 class Dielectric : public Material {
 private:
-    double alpha;
-    double opticalDensity;
-    double roughness;
+    float alpha;
+    float opticalDensity;
+    float roughness;
 
 public:
     template <class... Types>
-    Dielectric (double roughness, double alpha, double indexOfRefraction, Types... args) : Material(args...), alpha{alpha}, opticalDensity{indexOfRefraction}, roughness{roughness} {}
+    Dielectric (float roughness, float alpha, float indexOfRefraction, Types... args) : Material(args...), alpha{alpha}, opticalDensity{indexOfRefraction}, roughness{roughness} {}
     template <class... Types>
-    Dielectric (double roughness, double alpha, Types... args) : Dielectric(roughness, alpha, 1.0, args...) {}
+    Dielectric (float roughness, float alpha, Types... args) : Dielectric(roughness, alpha, 1.0, args...) {}
     template <class... Types>
-    Dielectric (double roughness, Types... args) : Dielectric{roughness, 1.0, args...} {}
+    Dielectric (float roughness, Types... args) : Dielectric{roughness, 1.0f, args...} {}
 
     int scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, 10>& scatteredRays) const override;
-    Intensity shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources) const override;
+    Intensity shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources, float currentOpticalDensity) const override;
     std::ostream& print (std::ostream& s) const override;
 };
 
