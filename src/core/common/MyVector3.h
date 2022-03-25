@@ -9,6 +9,7 @@
 #include <iostream>
 #include "../../../lib/Eigen/Dense"
 #include <glm/glm.hpp>
+#include <stack>
 
 namespace VectorOperations {
     glm::vec3 changeComponents (const glm::vec3& B, const glm::vec3& newX, const glm::vec3& newY, const glm::vec3& newZ);
@@ -16,6 +17,8 @@ namespace VectorOperations {
     glm::vec3 rotateInsideCone (const glm::vec3& vector, float radius);
 
     glm::vec3 rotate (const glm::vec3 vector, float yaw, float pitch);
+
+    glm::vec3 refract (const glm::vec3& direction, glm::vec3 normal, float eta);
 }
 
 //class glm::vec3 {

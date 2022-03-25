@@ -10,10 +10,12 @@
 
 struct Interface {
     constexpr Interface () : ray{}, intensity{} {}
-    constexpr Interface (const Ray& ray, const Intensity& intensity) : ray{ray}, intensity{intensity} {}
+    constexpr Interface (const Ray& ray, const Intensity& intensity) : Interface(ray, intensity, -1) {}
+    constexpr Interface (const Ray& ray, const Intensity& intensity, float newOpticalDensity) : ray{ray}, intensity{intensity}, newOpticalDensity{newOpticalDensity} {}
 
     Ray ray;
     Intensity intensity;
+    float newOpticalDensity;
 };
 
 

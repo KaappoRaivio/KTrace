@@ -144,10 +144,12 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
         if (bounces_left > 0) {
             std::array<Interface, 10> scatteredRays{};
 
-            int numberOfRays = material->scatter(intersection.position, N, intersection, opticalDensities, scatteredRays);
+            int numberOfRays = material->scatter(intersection.position, N, intersection, opticalDensities.top(), scatteredRays);
             for (int i = 0; i < numberOfRays; ++i) {
                 const auto& interface = scatteredRays[i];
+                opticalDensities.push(interface.newOpticalDensity != -1 ? interface.newOpticalDensity : opticalDensities.top());
                 scatterShaded += interface.intensity * calculateColor(interface.ray, x, y, bounces_left - 1, opticalDensities);
+                opticalDensities.pop();
             }
         }
 

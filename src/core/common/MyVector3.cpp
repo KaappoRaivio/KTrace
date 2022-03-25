@@ -243,3 +243,37 @@ glm::vec3 VectorOperations::rotateInsideCone (const glm::vec3& vector, float rad
 glm::vec3 VectorOperations::rotate (const glm::vec3 vector, float yaw, float pitch) {
     return {vector.x * cos(yaw) + (vector.z * sin(pitch) + vector.y * cos(pitch)) * sin(yaw), -vector.x * sin(yaw) + (vector.z * sin(pitch) + vector.y * cos(pitch)) * cos(yaw), vector.z * cos(pitch) - vector.y * sin(pitch)};
 }
+
+glm::vec3 VectorOperations::refract (const glm::vec3& direction, glm::vec3 normal, float eta) {
+
+//    float n = opticalDensities.top() / getMaterial()->opticalDensity;
+    float n = eta;
+
+
+//    opticalDensities.push(getMaterial()->opticalDensity);
+
+    float cosI = -glm::dot(normal, glm::normalize(direction));
+    if (cosI < 0) {
+//        n = 1 / n;
+//        cosI *= -1;
+        normal = -normal;
+//        opticalDensities.pop();
+        n = 1 / n;
+//        opticalDensities.pop();
+    } else {
+    }
+
+    float sinT2 = (1.0 - glm::pow(cosI, 2));
+//    if (sinT2 * glm::pow(n, 2) > 1.0 or reflectance(cosI, n) > glm::linearRand(0, 1)) {
+    if (sinT2 * glm::pow(n, 2) > 1.0) {
+//        std::cout << "Reflecting " << glm::to_string(direction) << glm::to_string(normal) << std::endl;
+        return glm::reflect(direction, normal);
+    } else {
+        const glm::vec3& vec = glm::refract(direction, normal, n);
+        return vec;
+//        return refractAlt(direction, normal, n);
+    }
+//        return glm::refract(direction, normal, n);
+//    float cosT = sqrt(1.0 - sinT2);
+//    return direction * n + normal * (n * cosI - cosT);
+}

@@ -11,7 +11,7 @@
 
 //
 // Created by kaappo on 14.9.2021.
-Sphere::Sphere (glm::vec3 center, float radius, Material* material) : center{std::move(center)}, radius{radius}, material(material) {}
+Sphere::Sphere (glm::vec3 center, float radius, const Material* material) : center{std::move(center)}, radius{radius}, material(material) {}
 
 bool Sphere::getIntersectionDistance (const Ray& ray, Intersection& out) const {
 //    if (includes(ray.getOrigin())) {

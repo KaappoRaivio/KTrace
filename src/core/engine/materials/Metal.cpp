@@ -17,13 +17,13 @@ Metal::Metal (const Texture* albedo, double roughness) : Material(albedo), rough
 
 Metal::Metal (double roughness) : Material(), roughness{roughness} {}
 
-int Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, std::stack<float>& opticalDensities, std::array<Interface, 10>& out_scatteredRays) const {
+int Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, 10>& scatteredRays) const {
     if (roughness == 1) return 0;
 
 
     const auto& reflected = glm::reflect(intersection.ray.getDirection(), normal);
     Intensity intensity = Intensity{(1 - roughness), (1 -roughness), (1 - roughness)};
-    out_scatteredRays[0] = {{intersection.position, reflected}, intensity * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position))};
+    scatteredRays[0] = {{intersection.position, reflected}, intensity * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position))};
     return 1;
 }
 

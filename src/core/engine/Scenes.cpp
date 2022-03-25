@@ -11,9 +11,10 @@
 #include "../common/mytypes.h"
 #include "materials/ImageTexture.h"
 #include "materials/Metal.h"
+#include "materials/Dielectric.h"
 
 Scene Scenes::getDebug (int windowX, int windowY) {
-    Camera camera = {{0, -5.f, 7.f}, {3, 4, 2}, 1.0f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+    Camera camera = {{0, -5.f, 3.f}, {3, 4, 2}, 1.0f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
 
@@ -25,15 +26,19 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 //    auto polygonTexture = textureManager.get<SolidTexture>("../res/texture3.png");
     auto polygonTexture = textureManager.get<SolidTexture>(Intensity{1, 1, 1});
     auto cubeTexture = textureManager.get<SolidTexture>(Intensity{72.2, 45.1, 20} / 100);
-    auto polygonsMaterial = materialManager.get<Metal>(polygonTexture, 0.1);
+    auto teapotMaterial = materialManager.get<Dielectric>(0, 0.0, 2.0, polygonTexture);
     auto cubeMaterial = materialManager.get<Metal>(cubeTexture, 0.2);
+    auto sphereMaterial = materialManager.get<Dielectric>(0, 0.0, 1.3, cubeTexture);
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
 
-    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, polygonsMaterial);
-//    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, polygonsMaterial);
+    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/teapot2.obj", {4, 4, 2}, 0.25, {M_PI / 4, -M_PI / 2}, teapotMaterial);
+//    std::vector<std::unique_ptr<Surface>> polygons = MyOBJLoader::readOBJ("../res/texture.obj", {4, 4, 2}, 0.4, {M_PI / 4, -M_PI / 2}, teapotMaterial);
     std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {0, 4, 2}, 0.4, {M_PI / 3.8, -M_PI / 1.4}, cubeMaterial);
-
+//    std::vector<std::unique_ptr<Surface>> polygons2 = MyOBJLoader::readOBJ("../res/texture.obj", {0, 4, 2}, 0.4, {M_PI / 3.8, -M_PI / 1.4}, cubeMaterial);
+    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{0, 4, 3}, 1.f , sphereMaterial);
+//    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>({0, 4, 3}, 1.f , sphereMaterial);
+    polygons.push_back(std::move(sphere));
     for (auto& p : polygons2) {
         polygons.push_back(std::move(p));
     }
