@@ -26,8 +26,9 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 //    std::exit(0);
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
-    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{0, 4, 1}, 1, schlickTest);
-    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
+    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
+//    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
+    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/bmw27_cpu.obj", {0, 4, 0}, 0.5, {-M_PI / 4, -M_PI / 2}, target);
 
     std::vector<LightSource> lightSources = {
             {{-5, 4, 1}, Intensity{1, 1, 1} * 20, 0.2},
@@ -51,7 +52,7 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 
 
 
-    return Scene{std::move(objects), std::move(lightSources), camera, 5, 1, 1, std::move(textureManager), std::move(materialManager)};
+    return Scene{std::move(objects), std::move(lightSources), camera, 5, 4, 1, std::move(textureManager), std::move(materialManager)};
 }
 
 //Scene Scenes::getSceneOne (int windowX, int windowY) {

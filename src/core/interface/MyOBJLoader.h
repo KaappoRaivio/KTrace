@@ -24,12 +24,13 @@ namespace MyOBJLoader {
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
 
+        std::vector<std::unique_ptr<Surface>> objects;
+
         for (size_t meshIndex = 0 ; meshIndex < loader.LoadedMeshes.size() ; meshIndex++) {
             objl::Mesh& curMesh = loader.LoadedMeshes[meshIndex];
             std::cout << "Mesh " << meshIndex << ": " << curMesh.MeshName << "\n";
-            std::vector<std::unique_ptr<Surface>> objects;
 
-            for (size_t vertexIndex = 0 ; vertexIndex < curMesh.Indices.size() ; vertexIndex += 3) {
+            for (size_t vertexIndex = 0 ; vertexIndex < curMesh.Indices.size() - 2; vertexIndex += 3) {
 //                auto minimum = tovec3()
 
                 int index1 = curMesh.Indices[vertexIndex + 0];
@@ -59,8 +60,8 @@ namespace MyOBJLoader {
 
                 objects.push_back(std::make_unique<Triangle>(t));
             }
-            return objects;
         }
+        return objects;
         throw std::runtime_error("Lol nope");
     }
 }

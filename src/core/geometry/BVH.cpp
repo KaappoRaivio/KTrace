@@ -112,7 +112,9 @@ BVH::BVH (std::vector<std::unique_ptr<Surface>> objects) : objects{std::move(obj
         rawPointers.push_back(object.get());
     }
 
+    std::cout << "Creating BVH with " << rawPointers.size() << " polygons " << std::endl;
     root = std::make_unique<BVHNode>(rawPointers);
+    std::cout << "Created BVH" << std::endl;
 }
 
 std::ostream& BVH::print (std::ostream& os) const {
