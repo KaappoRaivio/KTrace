@@ -164,8 +164,10 @@ BVHNode::BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, si
         payload = src_surfaces[start];
         box = payload->getBoundingBox();
     } else {
+
         std::sort(src_surfaces.begin() + start, src_surfaces.begin() + end, comparator);
         size_t mid = start + objectSpan / 2;
+//        std::nth_element(src_surfaces.begin() + start, src_surfaces.begin() + mid, src_surfaces.begin() + end, comparator);
 
         left = make_unique<BVHNode>(src_surfaces, axis + 1, start, mid);
         right = make_unique<BVHNode>(src_surfaces, axis + 1, mid, end);

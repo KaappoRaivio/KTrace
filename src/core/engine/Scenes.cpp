@@ -14,7 +14,7 @@
 #include "materials/Dielectric.h"
 
 Scene Scenes::getDebug (int windowX, int windowY) {
-    Camera camera = {{0, 0, 1}, {0, 1, 1}, 0.5f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+    Camera camera = {{0, 0, 1}, {0, 1, 1}, 1.f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
 
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
@@ -28,11 +28,12 @@ Scene Scenes::getDebug (int windowX, int windowY) {
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
     std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
 //    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
-    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/bmw27_cpu.obj", {0, 4, 0}, 0.5, {-M_PI / 4, -M_PI / 2}, target);
+    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/bmw27_cpu.obj", {0, 4, 0}, 0.5, {-M_PI / 4, -M_PI / 2}, target, textureManager, materialManager);
+//    std::exit(0);
 
     std::vector<LightSource> lightSources = {
-            {{-5, 4, 1}, Intensity{1, 1, 1} * 20, 0.2},
-            {{3, 3, 1}, Intensity{0.1, 0.1, 1} * 2, 0.0}
+            {{-5, 4, 4}, Intensity{1, 1, 1} * 20, 0.0},
+            {{1.42, 3.91, 1}, Intensity{1, 1, 0.9} * 2, 0.0}
     };
 
     std::vector<std::unique_ptr<Surface>> surfaces{};
@@ -52,7 +53,7 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 
 
 
-    return Scene{std::move(objects), std::move(lightSources), camera, 5, 4, 1, std::move(textureManager), std::move(materialManager)};
+    return Scene{std::move(objects), std::move(lightSources), camera, 3, 1, 1, std::move(textureManager), std::move(materialManager)};
 }
 
 //Scene Scenes::getSceneOne (int windowX, int windowY) {

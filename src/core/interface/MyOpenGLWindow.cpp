@@ -7,7 +7,7 @@
 #include "../geometry/Ray.h"
 #include "SDL2/SDL.h"
 
-MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, const Camera& camera) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale}, camera(camera) { // NOLINT(cppcoreguidelines-pro-type-member-init)
+MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, const Camera& camera, const Scene& scene) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale}, camera(camera), scene(scene) { // NOLINT(cppcoreguidelines-pro-type-member-init)
     std::cout << "creating window" << std::endl;
     if (!MyOpenGLWindow::initialized) {
         SDL_Init(SDL_INIT_VIDEO);
@@ -102,8 +102,12 @@ void MyOpenGLWindow::delay (int millis) {
                 y = event.motion.y;
 //                SDL_Delay();
                 break;
-            case SDL_MOUSEBUTTONUP:
-                std::cout << "(" << x / scale << ", " << y / scale << "), corresponds to" << Ray{camera.getOrigin(), camera.getViewplane(1)[y / scale][x / scale]} << std::endl;
+            case SDL_MOUSEBUTTONUP: {
+                const Ray& ray = Ray{camera.getOrigin(), camera.getViewplane(1)[y / scale][x / scale]};
+                Intersection i;
+                scene.getClosestIntersection(ray, 1e9, i);
+                std::cout << "(" << x / scale << ", " << y / scale << "), corresponds to" << ray << ", intersection: " << i << std::endl;
+            }
 
                 break;
         }

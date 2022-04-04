@@ -9,6 +9,7 @@
 #include "../geometry/BVH.h"
 #include "../geometry/Objects.h"
 #include "../common/MyVector3.h"
+#include "../engine/materials/Dielectric.h"
 
 namespace MyOBJLoader {
     glm::vec3 tovec3 (const objl::Vector3& shittyvector) {
@@ -19,7 +20,11 @@ namespace MyOBJLoader {
         return {shittyvector.X, shittyvector.Y, 0};
     }
 
-    std::vector<std::unique_ptr<Surface>> readOBJ (const std::string& path, glm::vec3 positionOffset, float scale, std::pair<float, float> rotationOffset, const Material* material) {
+    Intensity toIntensity (const objl::Vector3 shittyvector) {
+        return {shittyvector.X, shittyvector.Y, shittyvector.Z};
+    }
+
+    std::vector<std::unique_ptr<Surface>> readOBJ (const std::string& path, glm::vec3 positionOffset, float scale, std::pair<float, float> rotationOffset, const Material* material, Manager<Texture>& textureManager, Manager<Material>& materialManager) {
         objl::Loader loader;
         bool success = loader.LoadFile(path);
         if (!success) throw std::runtime_error("Couldn't read obj file!");
@@ -28,7 +33,11 @@ namespace MyOBJLoader {
 
         for (size_t meshIndex = 0 ; meshIndex < loader.LoadedMeshes.size() ; meshIndex++) {
             objl::Mesh& curMesh = loader.LoadedMeshes[meshIndex];
-            std::cout << "Mesh " << meshIndex << ": " << curMesh.MeshName << "\n";
+//            std::cout << "Mesh " << meshIndex << ": " << curMesh.MeshName << ", " <<  << "\n";
+            const auto& m = curMesh.MeshMaterial;
+
+            auto fileMaterial = materialManager.get<Dielectric>(1.0f, m.d, m.Ni, textureManager.get<SolidTexture>(toIntensity(m.Kd)));
+
 
             for (size_t vertexIndex = 0 ; vertexIndex < curMesh.Indices.size() - 2; vertexIndex += 3) {
 //                auto minimum = tovec3()
@@ -51,7 +60,7 @@ namespace MyOBJLoader {
                         VectorOperations::rotate(tovec3(vertex1.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
                         VectorOperations::rotate(tovec3(vertex2.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
                         VectorOperations::rotate(tovec3(vertex3.Position), rotationOffset.first, rotationOffset.second) * scale + positionOffset,
-                        material,
+                        fileMaterial,
                         tovec3(vertex1.TextureCoordinate), tovec3(vertex2.TextureCoordinate), tovec3(vertex3.TextureCoordinate),
                         VectorOperations::rotate(tovec3(vertex1.Normal), rotationOffset.first, rotationOffset.second),
                         VectorOperations::rotate(tovec3(vertex2.Normal), rotationOffset.first, rotationOffset.second),

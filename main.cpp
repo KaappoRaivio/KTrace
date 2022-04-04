@@ -45,7 +45,7 @@ int main () {
 //    Spline b{{-10, -10, 3}, {-2.65, -12.27, 3}, {23.57,1.87, 3}, {-7.05,3.36, 3}, 0.79};
 
 
-    MyOpenGLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, scene.camera};
+    MyOpenGLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, scene.camera, scene};
 
     float t = 0;
 
@@ -84,7 +84,7 @@ int main () {
 //    std::exit(0);
 
 //    scene.executeCameraMove(sequence, 0.0005f, [&] (const auto& pixels) {
-
+//    std::exit(0);
 
     auto start = std::chrono::system_clock::now();
     std::cout << "starting" << std::endl;

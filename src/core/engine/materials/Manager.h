@@ -15,10 +15,10 @@ private:
     std::vector<std::unique_ptr<T>> objects;
 
 public:
-    template<typename Subclass, class... Types>
-    const T* get (Types... args) {
-        std::unique_ptr<T> texture = std::make_unique<Subclass>(args...);
-        objects.push_back(std::move(texture));
+    template<typename Subclass, typename... Types>
+    const T* get (Types&&... args) {
+        std::unique_ptr<T> instance = std::make_unique<Subclass>(std::forward<Types>(args)...);
+        objects.push_back(std::move(instance));
         return objects[objects.size() - 1].get();
     }
 //    const Texture* getImageTexture (std::string path);
