@@ -49,3 +49,7 @@ float Shading::getReflectance (float cosine, float refractionRatio) {
     float r0 = glm::pow((1 - refractionRatio) / (1 + refractionRatio), 2);
     return r0 + (1 - r0) * glm::pow((1 - cosine), 5);
 }
+
+float Shading::calculatePhongReflection (const glm::vec3& N, const glm::vec3& L, const glm::vec3& V, float alpha) {
+    return glm::pow(glm::dot(glm::normalize(glm::reflect(L, N)), glm::normalize(V)), alpha);
+}

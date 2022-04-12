@@ -149,7 +149,7 @@ bool boxCompareZ (const Surface* a, const Surface* b) {
 BVHNode::BVHNode (std::vector<Surface*> surfaces) : BVHNode{surfaces, 0, 0, surfaces.size()} {
 }
 
-BVHNode::BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, size_t end) : box{true}, left{}, right{}, depth{axis} {
+BVHNode::BVHNode (std::vector<Surface*>& src_surfaces, int axis, size_t start, size_t end) : box{true}, left{}, right{}, depth{axis} {
     auto comparator = (axis % 3 == 0) ? boxCompareX
                                       : ((axis % 3 == 1) ? boxCompareY
                                                          : boxCompareZ);

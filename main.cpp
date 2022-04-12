@@ -27,16 +27,17 @@
 #include "src/core/common/mytypes.h"
 
 int main () {
-    constexpr int windowWidth = 1440;
-    constexpr int windowX = 1440;
-    constexpr int windowY = 810;
+    constexpr int windowWidth = 3840;
+    constexpr int windowX = 3840;
+    constexpr int windowY = 2160;
 //    constexpr int windowY = 288;
 
     SplineSequence sequence = SplineSequence::getRandomSequence(10, {0, 0, 1});
 
 
 //    Scene scene = Scenes::getBezierScene(windowX, windowY, sequence);
-    Scene scene = Scenes::getDebug(windowX, windowY);
+//    Scene scene = Scenes::getDebug(windowX, windowY);
+    Scene scene = Scenes::getBMWScene(windowX, windowY);
 //    Scene scene = Scenes::getScene<0>(windowX, windowY);
 //    std::stack<float> a;
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);

@@ -10,6 +10,7 @@
 #include "../geometry/Objects.h"
 #include "../common/MyVector3.h"
 #include "../engine/materials/Dielectric.h"
+#include "../engine/materials/Phong.h"
 
 namespace MyOBJLoader {
     glm::vec3 tovec3 (const objl::Vector3& shittyvector) {
@@ -36,10 +37,11 @@ namespace MyOBJLoader {
 //            std::cout << "Mesh " << meshIndex << ": " << curMesh.MeshName << ", " <<  << "\n";
             const auto& m = curMesh.MeshMaterial;
 
-            auto fileMaterial = materialManager.get<Dielectric>(1.0f, m.d, m.Ni, textureManager.get<SolidTexture>(toIntensity(m.Kd)));
+//            auto fileMaterial = materialManager.get<Dielectric>(1.0f, m.d, m.Ni, textureManager.get<SolidTexture>(toIntensity(m.Kd)));
+            auto fileMaterial = materialManager.get<Phong>(textureManager.get<SolidTexture>(toIntensity(m.Ka)), textureManager.get<SolidTexture>(toIntensity(m.Kd)), textureManager.get<SolidTexture>(toIntensity(m.Ks)), m.Ns);
 
 
-            for (size_t vertexIndex = 0 ; vertexIndex < curMesh.Indices.size() - 2; vertexIndex += 3) {
+            for (size_t vertexIndex = 0 ; vertexIndex < curMesh.Indices.size() - 2 ; vertexIndex += 3) {
 //                auto minimum = tovec3()
 
                 int index1 = curMesh.Indices[vertexIndex + 0];
@@ -49,6 +51,11 @@ namespace MyOBJLoader {
                 objl::Vertex& vertex1 = curMesh.Vertices[index1];
                 objl::Vertex& vertex2 = curMesh.Vertices[index2];
                 objl::Vertex& vertex3 = curMesh.Vertices[index3];
+
+
+//                std::cout << VectorOperations::rotate(tovec3(vertex1.Normal), rotationOffset.first, rotationOffset.second) <<
+//                          VectorOperations::rotate(tovec3(vertex2.Normal), rotationOffset.first, rotationOffset.second) <<
+//                          VectorOperations::rotate(tovec3(vertex3.Normal), rotationOffset.first, rotationOffset.second) << std::endl;
 
 
 //                std::cout << "vertex" << vertexIndex << ": " << std::endl;

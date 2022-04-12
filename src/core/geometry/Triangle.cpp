@@ -5,6 +5,7 @@
 #include "Triangle.h"
 #include <glm/ext.hpp>
 #include "glm/gtx/string_cast.hpp"
+#include "../../Config.h"
 #include <iostream>
 
 
@@ -52,9 +53,13 @@ bool Triangle::getIntersectionDistance (const Ray& ray, Intersection& out) const
 //    std::cout << "Raydestroyed: " << glm::to_string(ra)y << std::endl;
     Intersection temp;
     bool intersects = plane.getIntersectionDistance(ray, temp);
-    if (not intersects or -glm::dot(ray.getDirection(), plane.getNormal()) < 0) {
-//        std::cout << "Early return" << std::endl;
-        return false;
+    if constexpr (Config::BACKFACE_CULLING) {
+        if (not intersects or -glm::dot(ray.getDirection(), plane.getNormal()) < 0) {
+    //        std::cout << "Early return" << std::endl;
+            return false;
+        }
+    } else {
+        if (not intersects) return false;
     }
 
     auto position = ray.apply(temp.distance);

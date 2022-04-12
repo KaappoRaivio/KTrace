@@ -39,6 +39,7 @@ namespace Scenes {
     }
 
 
+    Scene getBMWScene (int windowX, int windowY);
 }
 
 

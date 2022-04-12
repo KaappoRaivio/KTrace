@@ -16,7 +16,7 @@ public:
     BVHNode ();
 
     BVHNode (std::vector<Surface*> surfaces);
-    BVHNode (std::vector<Surface*> src_surfaces, int axis, size_t start, size_t end);
+    BVHNode (std::vector<Surface*>& src_surfaces, int axis, size_t start, size_t end);
 
     bool getIntersectionDistance (const Ray& ray, Intersection& out) const override;
     AABB getBoundingBox () const override;
