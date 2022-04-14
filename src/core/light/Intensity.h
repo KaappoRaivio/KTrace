@@ -44,3 +44,8 @@ public:
 };
 
 std::ostream& operator<< (const Intensity& color, std::ostream& ostream);
+
+namespace Intensities {
+    constexpr Intensity INCANDESCENT {244 / 256.0,175 / 256.0,90 / 256.0};
+    constexpr Intensity INCANDESCENT_2 {244 / 256.0,175 / 256.0,120 / 256.0};
+}

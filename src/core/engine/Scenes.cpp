@@ -406,7 +406,8 @@ Scene Scenes::getBMWScene (int windowX, int windowY) {
 }
 
 Scene Scenes::getClassroomScene (int windowX, int windowY) {
-    Camera camera = {{0, 2, 1}, {0, 4, 0.5}, 0.5f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+//    Camera camera = {{1, 1, 1}, {1.5, 4, 3}, 0.2f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+    Camera camera = {{1, 1, 1}, {0.5, 4, 1}, 0.5f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
 
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
@@ -421,7 +422,7 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
     std::unique_ptr<Surface> backdrop = std::make_unique<Plane>(glm::vec3{0, -1, 0}, 10, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} * 0.5));
     std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
 //    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
-    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/classroom/classroom/classroom.obj", {0, 4, 0}, 1, {0, -M_PI / 2}, target, textureManager, materialManager);
+    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/classroom/classroom/classroom.obj", {0, 4, 0}, 1, {M_PI / 4 - M_PI / 8, -M_PI / 2}, target, textureManager, materialManager);
 //    std::exit(0);
 
 
@@ -438,10 +439,14 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
     auto lightSourcePosition = newRay.apply(10);
 
     std::vector<LightSource> lightSources = {
-//            {{-5, 4, 4}, Intensity{1, 1, 1} * 20, 0},
-//            {lightSourcePosition, Intensity(1 , 1, 1) * 200,   0},
-//            {{1.42, 6, 10},       Intensity{1, 1, 0.9} * 200, 0},
-            {{-2, 0, 5},       Intensity{1, 1, 0.9} * 200, 0}
+//            {{0.091429, 3.077911 + 1, 0.796777 + 1}, Intensity{1, 1, 1} * 10, 0},
+            {{2.394355, 4.556603, 2.205824-0.1}, Intensities::INCANDESCENT_2 * 10, 0.1},
+            {{0, 5.51, 2.859690-0.1}, Intensities::INCANDESCENT_2 * 10, 0},
+            {{-0.808237, 3.625171, 2.205287-0.1}, Intensities::INCANDESCENT_2 * 10, 0.1},
+            {{1.604023, 2.675619, 2.218865-0.1}, Intensities::INCANDESCENT_2 * 10, 0.1},
+//            {{-1.5, 1.76, 2.218865-0.1}, Intensity{1, 1, 1} * 10, 0},
+//            {{ 0.81, 0.84, 2.218865-0.1}, Intensity{1, 1, 1} * 10, 0}
+
     };
 
     std::vector<std::unique_ptr<Surface>> surfaces{};
@@ -460,5 +465,5 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
     objects.push_back(std::move(backdrop));
 
 
-    return Scene{std::move(objects), std::move(lightSources), camera, 2, 1, 1, std::move(textureManager), std::move(materialManager)};
+    return Scene{std::move(objects), std::move(lightSources), camera, 2, 2, 4, std::move(textureManager), std::move(materialManager)};
 }
