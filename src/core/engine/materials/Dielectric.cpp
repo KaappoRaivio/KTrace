@@ -61,5 +61,5 @@ Intensity Dielectric::shade (const glm::vec3& position, const glm::vec3& normal,
 }
 
 std::ostream& Dielectric::print (std::ostream& s) const {
-    return s << "Dielectric{alpha: " << alpha << ", opticalDensity: " << opticalDensity << "}";
+    return s << "Dielectric{alpha: " << alpha << ", opticalDensity: " << opticalDensity << ", emittance: " << emittance << "}";
 }

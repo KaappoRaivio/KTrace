@@ -21,3 +21,6 @@ public:
 
 
 
+namespace ImageTextures {
+    extern const ImageTexture DEBUG_TEXTURE;
+}

@@ -19,3 +19,7 @@ Intensity ImageTexture::getPixelAt (const glm::vec3& uv) const {
 std::ostream& ImageTexture::print (std::ostream& cout) const {
     return cout << "ImageTexture";
 }
+
+namespace ImageTextures {
+    const ImageTexture DEBUG_TEXTURE {"../res/texture3.png"};
+}

@@ -10,12 +10,13 @@
 class Phong : public Material {
 private:
 public:
-    Phong (const Texture* albedoAmbient, const Texture* albedoDiffuse, const Texture* albedoSpecular, float specularPower);
+    Phong (const Texture* albedoAmbient, const Texture* albedoDiffuse, const Texture* albedoSpecular, const Texture* albedoFresnel, float specularPower);
 
 private:
     const Texture* albedoAmbient;
     const Texture* albedoDiffuse;
     const Texture* albedoSpecular;
+    const Texture* albedoFresnel;
     float specularPower;
 
 

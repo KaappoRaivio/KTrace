@@ -38,7 +38,7 @@ namespace MyOBJLoader {
             const auto& m = curMesh.MeshMaterial;
 
 //            auto fileMaterial = materialManager.get<Dielectric>(1.0f, m.d, m.Ni, textureManager.get<SolidTexture>(toIntensity(m.Kd)));
-            auto fileMaterial = materialManager.get<Phong>(textureManager.get<SolidTexture>(toIntensity(m.Ka)), textureManager.get<SolidTexture>(toIntensity(m.Kd)), textureManager.get<SolidTexture>(toIntensity(m.Ks)), m.Ns);
+            auto fileMaterial = materialManager.get<Phong>(textureManager.get<SolidTexture>(toIntensity(m.Ka)), textureManager.get<SolidTexture>(toIntensity(m.Kd)), textureManager.get<SolidTexture>(toIntensity(m.Ks)), textureManager.get<SolidTexture>(Intensity{1, 1, 1}), m.Ns);
 
 
             for (size_t vertexIndex = 0 ; vertexIndex < curMesh.Indices.size() - 2 ; vertexIndex += 3) {

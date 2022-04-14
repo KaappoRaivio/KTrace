@@ -17,6 +17,7 @@
 #include <utility>
 #include <cmath>
 #include <iostream>
+#include "materials/Shading.h"
 
 //#include <numbers>
 constexpr float PI = 3.1415926;
@@ -80,6 +81,7 @@ std::vector<std::vector<Intensity>> Scene::trace () const {
 }
 
 #pragma clang diagnostic pop
+
 Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left, std::stack<float>& opticalDensities) const {
     Intersection intersection;
     bool intersects = getClosestIntersection(ray, 0, intersection);
@@ -101,9 +103,9 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     } else {
 //        return Intensity{0, 1, 0};
 
-    if constexpr(DEBUG) {
-        std::cout << "hit!" << std::endl;
-    }
+        if constexpr(DEBUG) {
+            std::cout << "hit!" << std::endl;
+        }
 
         //        std::cout << closest.position << std::endl;
         const Material* material = intersection.material;
@@ -137,7 +139,12 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
                     visibleLightSources.push_back(lightSource);
                 }
             }
-            simpleShaded += material->shade(intersection.position, N, intersection, visibleLightSources, opticalDensities.top());
+//            if (material->emit().r() > 0) std::cout << "asdajswoidja oi" << std::endl;
+
+            simpleShaded += material->shade(intersection.position, N, intersection, visibleLightSources, opticalDensities.top()) + material->emit();
+//            std::cout << material->emit() * Shading::lambertianDiffuseReflection(N, N, ray.getDirection()) << std::endl;
+//            simpleShaded += material->emit() * Shading::lambertianDiffuseReflection(N, N, ray.getDirection());
+//            simpleShaded += ;
         }
         IntensityBlend scatterShaded;
 
@@ -145,7 +152,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
             std::array<Interface, 10> scatteredRays{};
 
             int numberOfRays = material->scatter(intersection.position, N, intersection, opticalDensities.top(), scatteredRays);
-            for (int i = 0; i < numberOfRays; ++i) {
+            for (int i = 0 ; i < numberOfRays ; ++i) {
                 const auto& interface = scatteredRays[i];
                 opticalDensities.push(interface.newOpticalDensity != -1 ? interface.newOpticalDensity : opticalDensities.top());
                 scatterShaded += interface.intensity * calculateColor(interface.ray, x, y, bounces_left - 1, opticalDensities);
@@ -175,8 +182,6 @@ float Scene::orenNayarDiffuseReflection (const glm::vec3& face_normal, const glm
 //    std::cout << d1 << std::endl;
     return std::clamp(d1, 0.0f, 1.0f);
 }
-
-
 
 
 bool Scene::getClosestIntersection (const Ray& ray, float max_distance, Intersection& out) const {
@@ -220,9 +225,6 @@ bool Scene::getClosestIntersection (const Ray& ray, float max_distance, Intersec
 //        return {*closest};
 //    }
 }
-
-
-
 
 
 std::ostream& operator<< (std::ostream& os, const Scene& scene) {

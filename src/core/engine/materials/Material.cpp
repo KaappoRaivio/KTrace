@@ -2,6 +2,7 @@
 // Created by kaappo on 21.9.2021.
 //
 
+#include <iostream>
 #include "Material.h"
 
 Intensity Material::getAlbedoAt (const glm::vec3& uv) const {
@@ -23,7 +24,10 @@ glm::vec3 Material::getNormalAt (const glm::vec3& uv, const glm::vec3& normal) c
     return newSide * (originBump.x * 1.0f) + newOut * (originBump.y * 1.0f) + newUp * originBump.z;
 }
 
-Material::Material (const Texture* albedo, const Texture* bump, const Intensity& emittance) : albedo(albedo), bump(bump), emittance(emittance) {}
+Material::Material (const Texture* albedo, const Texture* bump, const Intensity& emittance) : albedo(albedo), bump(bump), emittance(emittance) {
+//    std::cout << "Emittance " << emittance << ", " << this->emittance << ", " << this->emit() << std::endl;
+//    std::cout << "Emittance " << emittance << std::endl;
+}
 Material::Material (const Texture* albedo, const Texture* bump) : Material{albedo, bump, {0, 0, 0}} {}
 Material::Material (const Texture* albedo) : Material{albedo, &SolidTextures::BUMP_UP} {}
 Material::Material () : Material{&SolidTextures::WHITE} {}

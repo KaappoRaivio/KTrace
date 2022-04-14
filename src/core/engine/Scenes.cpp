@@ -32,7 +32,7 @@ Scene Scenes::getDebug (int windowX, int windowY) {
 //    std::exit(0);
 
     std::vector<LightSource> lightSources = {
-            {{-5, 4, 4}, Intensity{1, 1, 1} * 20, 0.0},
+            {{-5,   4,    4}, Intensity{1, 1, 1} * 20,  0.0},
             {{1.42, 3.91, 1}, Intensity{1, 1, 0.9} * 2, 0.0}
     };
 
@@ -50,8 +50,6 @@ Scene Scenes::getDebug (int windowX, int windowY) {
     std::vector<std::unique_ptr<Surface>> objects;
     objects.push_back(std::move(plane));
     objects.push_back(std::move(bvh));
-
-
 
 
     return Scene{std::move(objects), std::move(lightSources), camera, 3, 1, 1, std::move(textureManager), std::move(materialManager)};
@@ -350,26 +348,42 @@ Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& se
 }
 
 Scene Scenes::getBMWScene (int windowX, int windowY) {
-    Camera camera = {{0, 0, 1}, {0, 4, 0.5}, 1.f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+    Camera camera = {{0, 0, 0.5}, {0, 4, 0.5}, 1.f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
 
     Manager<Texture> textureManager;
     Manager<Material> materialManager;
 
 
     auto schlickTest = materialManager.get<Dielectric>(1.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}));
-    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, textureManager.get<ImageTexture>("../res/texture3.png"));
+    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} * 2000);
     std::cout << *schlickTest << std::endl;
 //    std::exit(0);
 
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
+    std::unique_ptr<Surface> backdrop = std::make_unique<Plane>(glm::vec3{0, -1, 0}, 10, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} * 0.5));
     std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
 //    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
     std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/bmw27_cpu.obj", {0, 4, 0}, 0.5, {-M_PI / 4 - M_PI / 8, -M_PI / 2}, target, textureManager, materialManager);
 //    std::exit(0);
 
+
+
+    auto v1 = glm::vec3(-0.1784, 3.1024, 0.5804);
+    auto v2 = glm::vec3(-0.1770, 3.1571, 0.5938);
+    auto v3 = glm::vec3(-0.1952, 3.1079, 0.5813);
+
+    auto normal = glm::normalize(glm::cross(v3 - v1, v2 - v1));
+
+    Ray newRay{v1, glm::reflect({-0.0561, 0.9981, 0.02703}, normal)};
+
+
+    auto lightSourcePosition = newRay.apply(10);
+
     std::vector<LightSource> lightSources = {
-            {{-5, 4, 4}, Intensity{1, 1, 1} * 20, 1},
-            {{1.42, 2, 5}, Intensity{1, 1, 0.9} * 20, 1}
+//            {{-5, 4, 4}, Intensity{1, 1, 1} * 20, 0},
+            {lightSourcePosition, Intensity(1 , 1, 1) * 200,   0},
+            {{1.42, 6, 10},       Intensity{1, 1, 0.9} * 200, 0},
+            {{-2, 0, 5},       Intensity{1, 1, 0.9} * 200, 0}
     };
 
     std::vector<std::unique_ptr<Surface>> surfaces{};
@@ -385,9 +399,66 @@ Scene Scenes::getBMWScene (int windowX, int windowY) {
     std::vector<std::unique_ptr<Surface>> objects;
     objects.push_back(std::move(plane));
     objects.push_back(std::move(bvh));
+    objects.push_back(std::move(backdrop));
+
+
+    return Scene{std::move(objects), std::move(lightSources), camera, 2, 1, 2, std::move(textureManager), std::move(materialManager)};
+}
+
+Scene Scenes::getClassroomScene (int windowX, int windowY) {
+    Camera camera = {{0, 2, 1}, {0, 4, 0.5}, 0.5f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+
+    Manager<Texture> textureManager;
+    Manager<Material> materialManager;
+
+
+    auto schlickTest = materialManager.get<Dielectric>(1.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}));
+    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} );
+    std::cout << *schlickTest << std::endl;
+//    std::exit(0);
+
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
+    std::unique_ptr<Surface> backdrop = std::make_unique<Plane>(glm::vec3{0, -1, 0}, 10, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} * 0.5));
+    std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
+//    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
+    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/classroom/classroom/classroom.obj", {0, 4, 0}, 1, {0, -M_PI / 2}, target, textureManager, materialManager);
+//    std::exit(0);
 
 
 
+    auto v1 = glm::vec3(-0.1784, 3.1024, 0.5804);
+    auto v2 = glm::vec3(-0.1770, 3.1571, 0.5938);
+    auto v3 = glm::vec3(-0.1952, 3.1079, 0.5813);
 
-    return Scene{std::move(objects), std::move(lightSources), camera, 2, 8, 2, std::move(textureManager), std::move(materialManager)};
+    auto normal = glm::normalize(glm::cross(v3 - v1, v2 - v1));
+
+    Ray newRay{v1, glm::reflect({-0.0561, 0.9981, 0.02703}, normal)};
+
+
+    auto lightSourcePosition = newRay.apply(10);
+
+    std::vector<LightSource> lightSources = {
+//            {{-5, 4, 4}, Intensity{1, 1, 1} * 20, 0},
+//            {lightSourcePosition, Intensity(1 , 1, 1) * 200,   0},
+//            {{1.42, 6, 10},       Intensity{1, 1, 0.9} * 200, 0},
+            {{-2, 0, 5},       Intensity{1, 1, 0.9} * 200, 0}
+    };
+
+    std::vector<std::unique_ptr<Surface>> surfaces{};
+    surfaces.push_back(std::move(sphere));
+//    surfaces.push_back(std::move(sphere));
+    for (auto& paska : cube) {
+        surfaces.push_back(std::move(paska));
+    }
+
+
+    auto bvh = std::make_unique<BVH>(std::move(surfaces));
+
+    std::vector<std::unique_ptr<Surface>> objects;
+    objects.push_back(std::move(plane));
+    objects.push_back(std::move(bvh));
+    objects.push_back(std::move(backdrop));
+
+
+    return Scene{std::move(objects), std::move(lightSources), camera, 2, 1, 1, std::move(textureManager), std::move(materialManager)};
 }

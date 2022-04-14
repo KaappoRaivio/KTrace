@@ -4,13 +4,14 @@
 
 #include <glm/geometric.hpp>
 #include "Shading.h"
+#include <algorithm>
 
 float Shading::lambertianDiffuseReflection (const glm::vec3& N, const glm::vec3& L, const glm::vec3& d) {
     float dot1 = -glm::dot(d, N);
     float dot2 = glm::dot(L, N);
 
     if (dot2 > 0 and dot1 > 0) {
-        return dot2;
+        return dot2 * dot1;
     } else {
         return 0;
     }
@@ -45,6 +46,8 @@ float Shading::calculateBeckmannDistribution (const glm::vec3& R, const glm::vec
 }
 
 float Shading::getReflectance (float cosine, float refractionRatio) {
+    cosine = std::clamp(cosine, 0.f, 1.f);
+
     // Use Schlick's approximation for reflectance.
     float r0 = glm::pow((1 - refractionRatio) / (1 + refractionRatio), 2);
     return r0 + (1 - r0) * glm::pow((1 - cosine), 5);
