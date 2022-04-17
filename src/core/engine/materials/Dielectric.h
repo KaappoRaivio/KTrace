@@ -9,6 +9,7 @@
 #include "Material.h"
 #include "../../light/IntensityBlend.h"
 #include "Shading.h"
+#include "../../../Config.h"
 
 class Dielectric : public Material {
 private:
@@ -24,7 +25,7 @@ public:
     template <class... Types>
     Dielectric (float roughness, Types... args) : Dielectric{roughness, 1.0f, args...} {}
 
-    int scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, 10>& scatteredRays) const override;
+    int scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, Config::MAX_SCATTER>& scatteredRays) const override;
     Intensity shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources, float currentOpticalDensity) const override;
     std::ostream& print (std::ostream& s) const override;
 };

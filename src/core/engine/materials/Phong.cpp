@@ -10,7 +10,7 @@
 
 #include "../../geometry/Surface.h"
 
-int Phong::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, 10>& scatteredRays) const {
+int Phong::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, Config::MAX_SCATTER>& scatteredRays) const {
 //    const auto reflectance = Shading::getReflectance(glm::dot(normal, L), 1.5);
     const glm::vec3 V = glm::normalize(intersection.position - intersection.ray.getOrigin());
     const auto reflectance = Shading::getReflectance(-glm::dot(normal, V), 1);

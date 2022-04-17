@@ -438,15 +438,13 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
 
     auto lightSourcePosition = newRay.apply(10);
 
-    std::vector<LightSource> lightSources = {
-//            {{0.091429, 3.077911 + 1, 0.796777 + 1}, Intensity{1, 1, 1} * 10, 0},
-            {{2.394355, 4.556603, 2.205824-0.1}, Intensities::INCANDESCENT_2 * 10, 0.1},
-            {{0, 5.51, 2.859690-0.1}, Intensities::INCANDESCENT_2 * 10, 0},
-            {{-0.808237, 3.625171, 2.205287-0.1}, Intensities::INCANDESCENT_2 * 10, 0.1},
-            {{1.604023, 2.675619, 2.218865-0.1}, Intensities::INCANDESCENT_2 * 10, 0.1},
-//            {{-1.5, 1.76, 2.218865-0.1}, Intensity{1, 1, 1} * 10, 0},
-//            {{ 0.81, 0.84, 2.218865-0.1}, Intensity{1, 1, 1} * 10, 0}
 
+    float radius = 0.f;
+    std::vector<LightSource> lightSources = {
+            {{2.394355, 4.556603, 2.205824-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
+//            {{0, 5.51, 2.859690-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
+//            {{-0.808237, 3.625171, 2.205287-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
+//            {{1.604023, 2.675619, 2.218865-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
     };
 
     std::vector<std::unique_ptr<Surface>> surfaces{};
@@ -465,5 +463,5 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
     objects.push_back(std::move(backdrop));
 
 
-    return Scene{std::move(objects), std::move(lightSources), camera, 2, 2, 4, std::move(textureManager), std::move(materialManager)};
+    return Scene{std::move(objects), std::move(lightSources), camera, 2, 1, 1, std::move(textureManager), std::move(materialManager)};
 }

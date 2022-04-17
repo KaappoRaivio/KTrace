@@ -27,9 +27,9 @@
 #include "src/core/common/mytypes.h"
 
 int main () {
-    constexpr int windowWidth = 3840;
-    constexpr int windowX = 3840;
-    constexpr int windowY = 2160;
+    constexpr int windowWidth = 1920;
+    constexpr int windowX = 1920;
+    constexpr int windowY = 1080;
 //    constexpr int windowY = 288;
 
     SplineSequence sequence = SplineSequence::getRandomSequence(10, {0, 0, 1});

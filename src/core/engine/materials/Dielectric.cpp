@@ -7,18 +7,23 @@
 #include "../../common/MyVector3.h"
 #include "../../common/mytypes.h"
 
-int Dielectric::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, 10>& scatteredRays) const {
+int Dielectric::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, Config::MAX_SCATTER>& scatteredRays) const {
 
     float reflectance = Shading::getReflectance(std::abs(glm::dot(normal, intersection.ray.getDirection())), currentOpticalDensity / this->opticalDensity);
 //    std::cout << glm::dot(normal, intersection.ray.getDirection()) << std::endl;
 //    std::cout << reflectance << std::endl;
 
     int n = 0;
+    int times = 4;
+
     if (reflectance > 0) {
-        const auto& reflected = glm::reflect(intersection.ray.getDirection(), normal);
-//        Intensity intensity = Intensity{(1 - roughness), (1 - roughness), (1 - roughness)} * alpha * reflectance;
-        Intensity intensity = Intensity{1, 1, 1} * reflectance;
-        scatteredRays[n++] = {{intersection.position, reflected}, intensity * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position))};
+        const Intensity& intensity = Intensity{1, 1, 1} * reflectance / times * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
+        for (int i = 0; i < times; ++i) {
+            const auto& reflected = glm::reflect(intersection.ray.getDirection(), VectorOperations::rotateInsideCone(normal, 0.0125f));
+    //        Intensity intensity = Intensity{(1 - roughness), (1 - roughness), (1 - roughness)} * alpha * reflectance;
+            scatteredRays[n++] = {{intersection.position, reflected}, intensity};
+        }
+
     }
 
     if (alpha < 1) {

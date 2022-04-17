@@ -17,7 +17,7 @@ Metal::Metal (const Texture* albedo, double roughness) : Material(albedo), rough
 
 Metal::Metal (double roughness) : Material(), roughness{roughness} {}
 
-int Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, 10>& scatteredRays) const {
+int Metal::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, Config::MAX_SCATTER>& scatteredRays) const {
     if (roughness == 1) return 0;
 
 

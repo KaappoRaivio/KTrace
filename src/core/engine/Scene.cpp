@@ -149,7 +149,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
         IntensityBlend scatterShaded;
 
         if (bounces_left > 0) {
-            std::array<Interface, 10> scatteredRays{};
+            std::array<Interface, Config::MAX_SCATTER> scatteredRays{};
 
             int numberOfRays = material->scatter(intersection.position, N, intersection, opticalDensities.top(), scatteredRays);
             for (int i = 0 ; i < numberOfRays ; ++i) {

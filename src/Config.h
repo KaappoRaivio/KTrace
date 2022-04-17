@@ -6,4 +6,5 @@
 
 namespace Config {
     constexpr bool BACKFACE_CULLING = true;
+    constexpr int MAX_SCATTER = 64;
 }
