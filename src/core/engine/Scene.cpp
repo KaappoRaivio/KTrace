@@ -87,9 +87,9 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
     bool intersects = getClosestIntersection(ray, 0, intersection);
 //    std::cout << intersection.value() << std::endl;
 
-//    if (x == 573 && y == 513) {
-//        std::cout << "debug" << std::endl;
-//    }
+    if (x == 968 && y == 429) {
+        std::cout << "debug" << std::endl;
+    }
 
     if constexpr(DEBUG) {
         if (y % 100 == 0 && x == 0) {
@@ -153,8 +153,9 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
 
             int numberOfRays = material->scatter(intersection.position, N, intersection, opticalDensities.top(), scatteredRays);
             for (int i = 0 ; i < numberOfRays ; ++i) {
-                const auto& interface = scatteredRays[i];
+                auto interface = scatteredRays[i];
                 opticalDensities.push(interface.newOpticalDensity != -1 ? interface.newOpticalDensity : opticalDensities.top());
+//                std::cout << interface.intensity << std::endl;
                 scatterShaded += interface.intensity * calculateColor(interface.ray, x, y, bounces_left - 1, opticalDensities);
                 opticalDensities.pop();
             }

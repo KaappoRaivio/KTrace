@@ -1,6 +1,3 @@
-//
-// Created by kaappo on 10.9.2021.
-//
 #pragma once
 
 #include <SDL2/SDL.h>
@@ -9,7 +6,7 @@
 #include "../engine/Camera.h"
 #include "../engine/Scene.h"
 
-class MyOpenGLWindow {
+class MySDLWindow {
 private:
     inline static bool initialized;
 
@@ -23,8 +20,8 @@ private:
     SDL_Window* window;
     SDL_Renderer* renderer;
 public:
-    MyOpenGLWindow (int width, int height, double gamma, int scale, const Camera& camera, const Scene& scene);
-    ~MyOpenGLWindow ();
+    MySDLWindow (int width, int height, double gamma, int scale, const Camera& camera, const Scene& scene);
+    ~MySDLWindow ();
 
     void set_pixel (int x, int y, const Intensity& color) const;
 

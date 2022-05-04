@@ -64,6 +64,10 @@ bool Sphere::getIntersectionDistance (const Ray& ray, Intersection& out) const {
     }
 }
 
+std::ostream& Sphere::print (std::ostream& os) const {
+    return os << "Sphere{radius: " << radius << ", center: " << center << "}";
+}
+
 glm::vec3 Sphere::getNormalAt (const glm::vec3& position) const {
     return glm::normalize(position - center);
 }

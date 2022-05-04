@@ -52,12 +52,12 @@ public:
 //    const Texture* albedo;
 //    const Texture* bump;
 //    double glossiness;
-//    double alpha = 1;
+//    double absorbance = 1;
 //    double opticalDensity = 1;
 //
 //    constexpr Material (const Texture* const albedo, double glossiness, const Texture* bump) : albedo{albedo}, bump{bump}, glossiness{glossiness} {}
-//    constexpr Material (const Texture* const albedo, double glossiness, double alpha) : albedo{albedo}, bump{&SolidTextures::BUMP_UP}, glossiness{glossiness}, alpha{alpha} {}
-//    explicit Material (const Texture* const albedo) : albedo{albedo}, bump{&SolidTextures::BUMP_UP}, glossiness{0}, alpha{1} {}
+//    constexpr Material (const Texture* const albedo, double glossiness, double absorbance) : albedo{albedo}, bump{&SolidTextures::BUMP_UP}, glossiness{glossiness}, absorbance{absorbance} {}
+//    explicit Material (const Texture* const albedo) : albedo{albedo}, bump{&SolidTextures::BUMP_UP}, glossiness{0}, absorbance{1} {}
 //
 //public:
 //    Intensity getAlbedoAt (const glm::vec3& uv) const;

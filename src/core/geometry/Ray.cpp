@@ -6,7 +6,7 @@
 #include "Ray.h"
 #include "../common/mytypes.h"
 
-Ray::Ray (const glm::vec3& origin, const glm::vec3& direction) : origin(origin), direction(glm::normalize(direction)), inverse_direction{1.0 / glm::normalize(direction).x, 1.0 / glm::normalize(direction).y, 1.0 / glm::normalize(direction).z} {}
+Ray::Ray (glm::vec3 origin, glm::vec3 direction) : origin{std::move(origin)}, direction{glm::normalize(std::move(direction))}, inverse_direction{1.0 / glm::normalize(direction).x, 1.0 / glm::normalize(direction).y, 1.0 / glm::normalize(direction).z} {}
 
 const glm::vec3& Ray::getOrigin () const {
     return origin;

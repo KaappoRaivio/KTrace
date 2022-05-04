@@ -2,7 +2,7 @@
 #include <memory>
 #include <chrono>
 
-#include "src/core/interface/MyOpenGLWindow.h"
+#include "src/core/interface/MySDLWindow.h"
 #include "src/core/light/Intensity.h"
 //#include "src/core/common/glm::vec3.h"
 #include "src/core/geometry/Plane.h"
@@ -27,9 +27,9 @@
 #include "src/core/common/mytypes.h"
 
 int main () {
-    constexpr int windowWidth = 1920;
-    constexpr int windowX = 1920;
-    constexpr int windowY = 1080;
+    constexpr int windowWidth = 1440;
+    constexpr int windowX = 1440;
+    constexpr int windowY = 810;
 //    constexpr int windowY = 288;
 
     SplineSequence sequence = SplineSequence::getRandomSequence(10, {0, 0, 1});
@@ -46,7 +46,7 @@ int main () {
 //    Spline b{{-10, -10, 3}, {-2.65, -12.27, 3}, {23.57,1.87, 3}, {-7.05,3.36, 3}, 0.79};
 
 
-    MyOpenGLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, scene.camera, scene};
+    MySDLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, <#initializer#>, <#initializer#>};
 
     float t = 0;
 

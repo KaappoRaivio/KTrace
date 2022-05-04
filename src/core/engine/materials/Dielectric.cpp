@@ -8,28 +8,35 @@
 #include "../../common/mytypes.h"
 
 int Dielectric::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, Config::MAX_SCATTER>& scatteredRays) const {
+//    return 0;
+    float reflectance = 1;
+//    float reflectance = Shading::getReflectance(-glm::dot(normal, intersection.ray.getDirection()), currentOpticalDensity / this->opticalDensity);
 
-    float reflectance = Shading::getReflectance(std::abs(glm::dot(normal, intersection.ray.getDirection())), currentOpticalDensity / this->opticalDensity);
+//    std::cout << reflectance << std::endl;
 //    std::cout << glm::dot(normal, intersection.ray.getDirection()) << std::endl;
 //    std::cout << reflectance << std::endl;
 
     int n = 0;
-    int times = 4;
+    int times = 1;
 
     if (reflectance > 0) {
-        const Intensity& intensity = Intensity{1, 1, 1} * reflectance / times * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
+//        const Intensity& intensity = Intensity{1, 1, 1} * reflectance / times;// * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
+        const Intensity& intensity = Intensity{0, 0, 0};
         for (int i = 0; i < times; ++i) {
-            const auto& reflected = glm::reflect(intersection.ray.getDirection(), VectorOperations::rotateInsideCone(normal, 0.0125f));
-    //        Intensity intensity = Intensity{(1 - roughness), (1 - roughness), (1 - roughness)} * alpha * reflectance;
+            const auto& reflected = glm::reflect(intersection.ray.getDirection(), VectorOperations::rotateInsideCone(normal, roughness * 0.0125f));
+    //        Intensity intensity = Intensity{(1 - roughness), (1 - roughness), (1 - roughness)} * absorbance * reflectance;
             scatteredRays[n++] = {{intersection.position, reflected}, intensity};
         }
 
     }
 
-    if (alpha < 1) {
+    if (absorbance < 1) {
+//    std::cout << absorbance << std::endl;
+//        std::cout << "moi" << std::endl;
+
         const auto& refracted = VectorOperations::refract(intersection.ray.getDirection(), normal, currentOpticalDensity / this->opticalDensity);
 //        std::cout << refracted << std::endl;
-        Intensity intensity = Intensity{1, 1, 1} * (1 - reflectance) * (1 - alpha);
+        Intensity intensity = Intensity{1, 1, 1} * (1 - reflectance) * (1 - absorbance);
 //        std::cout << intensity << std::endl;
 //        Intensity intensity = Intensity{1, 1, 1}  * 10;
 
@@ -60,11 +67,13 @@ Intensity Dielectric::shade (const glm::vec3& position, const glm::vec3& normal,
 //        std::cout << "visible" << std::endl;
     }
 
-    return (diffuseShaded.commitSum() * (1 - reflectance) + specularShaded.commitSum() * reflectance)
-           * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position)) * alpha;
+    return (diffuseShaded.commitSum() * (1 - reflectance))
+           * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position)) * absorbance;
 
 }
 
 std::ostream& Dielectric::print (std::ostream& s) const {
-    return s << "Dielectric{alpha: " << alpha << ", opticalDensity: " << opticalDensity << ", emittance: " << emittance << "}";
+    return s << "Dielectric{absorbance: " << absorbance << ", opticalDensity: " << opticalDensity << ", emittance: " << emittance << "}";
 }
+
+Dielectric::Dielectric (float roughness, float absorbance, float indexOfRefraction, const Texture* albedo, const Texture* bump, const Intensity& emittance) : Material{albedo, bump, emittance}, absorbance{absorbance}, opticalDensity{indexOfRefraction}, roughness{roughness} {}

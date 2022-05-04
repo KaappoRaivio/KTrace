@@ -3,15 +3,15 @@
 //
 
 #include <iostream>
-#include "MyOpenGLWindow.h"
+#include "MySDLWindow.h"
 #include "../geometry/Ray.h"
 #include "SDL2/SDL.h"
 
-MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, const Camera& camera, const Scene& scene) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale}, camera(camera), scene(scene) { // NOLINT(cppcoreguidelines-pro-type-member-init)
+MySDLWindow::MySDLWindow (int width, int height, double gamma, int scale, const Camera& camera, const Scene& scene) : m_width{width}, m_height{height}, m_gamma{gamma}, scale{scale}, camera(camera), scene(scene) { // NOLINT(cppcoreguidelines-pro-type-member-init)
     std::cout << "creating window" << std::endl;
-    if (!MyOpenGLWindow::initialized) {
+    if (!MySDLWindow::initialized) {
         SDL_Init(SDL_INIT_VIDEO);
-        MyOpenGLWindow::initialized = true;
+        MySDLWindow::initialized = true;
     }
 
     int displays = SDL_GetNumVideoDisplays();
@@ -48,7 +48,7 @@ MyOpenGLWindow::MyOpenGLWindow (int width, int height, double gamma, int scale, 
     std::cout << "created window" << std::endl;
 }
 
-void MyOpenGLWindow::set_pixel (int x, int y, const Intensity& color) const {
+void MySDLWindow::set_pixel (int x, int y, const Intensity& color) const {
     constexpr auto epsilon = 1e-5;
 
 
@@ -65,11 +65,11 @@ void MyOpenGLWindow::set_pixel (int x, int y, const Intensity& color) const {
 //    SDL_RenderDrawPoint(renderer, x, y);
 }
 
-void MyOpenGLWindow::update () const {
+void MySDLWindow::update () const {
     SDL_RenderPresent(renderer);
 }
 
-void MyOpenGLWindow::delay (int millis) {
+void MySDLWindow::delay (int millis) {
 //    struct Container
 //    {
 //        static Uint32 TimerCallback( Uint32 interval, void* param )
@@ -100,7 +100,6 @@ void MyOpenGLWindow::delay (int millis) {
             case SDL_MOUSEMOTION:
                 x = event.motion.x;
                 y = event.motion.y;
-//                SDL_Delay();
                 break;
             case SDL_MOUSEBUTTONUP: {
                 const Ray& ray = Ray{camera.getOrigin(), camera.getViewplane(1)[y / scale][x / scale]};
@@ -114,13 +113,13 @@ void MyOpenGLWindow::delay (int millis) {
     }
 }
 
-MyOpenGLWindow::~MyOpenGLWindow () {
+MySDLWindow::~MySDLWindow () {
     std::cout << "closing!" << std::endl;
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }
 
-void MyOpenGLWindow::paint (std::vector<std::vector<Intensity>> pixels) const {
+void MySDLWindow::paint (std::vector<std::vector<Intensity>> pixels) const {
     SDL_RenderClear(renderer);
     SDL_PumpEvents();
     for (size_t y = 0 ; y < pixels.size() ; ++y) {

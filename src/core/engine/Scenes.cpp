@@ -20,12 +20,12 @@ Scene Scenes::getDebug (int windowX, int windowY) {
     Manager<Material> materialManager;
 
 
-    auto schlickTest = materialManager.get<Dielectric>(1.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}));
-    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, textureManager.get<ImageTexture>("../res/texture3.png"));
+    auto schlickTest = materialManager.get<Dielectric>(1.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}), &SolidTextures::BUMP_UP, Intensity{0, 0, 0});
+    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, textureManager.get<ImageTexture>("../res/texture3.png"), &SolidTextures::BUMP_UP, Intensity{0, 0, 0});
     std::cout << *schlickTest << std::endl;
 //    std::exit(0);
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}), &SolidTextures::BUMP_UP, Intensity{0, 0, 0}));
     std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
 //    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
     std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/bmwdebug.obj", {0, 4, 0}, 0.4, {-M_PI / 4, -M_PI / 2}, target, textureManager, materialManager);
@@ -320,7 +320,7 @@ Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& se
         };
 //        Material material{textureManager.get<SolidTexture>(color), 0.01, 0.1f};
 
-        auto material = materialManager.get<Dielectric>(0.f, alpha, 1.2f, textureManager.get<SolidTexture>(color));
+        auto material = materialManager.get<Dielectric>(0.f, alpha, 1.2f, textureManager.get<SolidTexture>(color), &SolidTextures::BUMP_UP, Intensity{0, 0, 0});
 
 //        material.opticalDensity = 1.2;
 
@@ -339,7 +339,7 @@ Scene Scenes::getBezierScene (int windowX, int windowY, const SplineSequence& se
     };
 
     auto planeTexture = textureManager.get<ImageTexture>("../res/texture3.png");
-    auto planeMaterial = materialManager.get<Dielectric>(1.0f, 1.0f, 1.0f, planeTexture);
+    auto planeMaterial = materialManager.get<Dielectric>(1.0f, 1.0f, 1.0f, planeTexture, &SolidTextures::BUMP_UP, Intensity{0, 0, 0});
     std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, planeMaterial);
     objects.push_back(std::move(plane));
 
@@ -354,12 +354,12 @@ Scene Scenes::getBMWScene (int windowX, int windowY) {
     Manager<Material> materialManager;
 
 
-    auto schlickTest = materialManager.get<Dielectric>(1.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}));
+    auto schlickTest = materialManager.get<Dielectric>(0.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}), &SolidTextures::BUMP_UP, Intensity{0, 0, 0});
     auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} * 2000);
     std::cout << *schlickTest << std::endl;
 //    std::exit(0);
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}), &SolidTextures::BUMP_UP, Intensity{0, 0, 0}));
     std::unique_ptr<Surface> backdrop = std::make_unique<Plane>(glm::vec3{0, -1, 0}, 10, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} * 0.5));
     std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
 //    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
@@ -413,12 +413,14 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
     Manager<Material> materialManager;
 
 
-    auto schlickTest = materialManager.get<Dielectric>(1.f, 0.f, 2.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}));
+    auto schlickTest = materialManager.get<Dielectric>(0.f, 1.f, 1.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}), &SolidTextures::BUMP_UP, Intensity{0, 0, 0});
+    std::cout << dynamic_cast<const Dielectric*>(schlickTest)->absorbance;
+//    std::exit(0);
     auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} );
     std::cout << *schlickTest << std::endl;
 //    std::exit(0);
 
-    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1})));
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, 0, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}), &SolidTextures::BUMP_UP, Intensity{0, 0, 0}));
     std::unique_ptr<Surface> backdrop = std::make_unique<Plane>(glm::vec3{0, -1, 0}, 10, materialManager.get<Dielectric>(1.f, 1.0f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} * 0.5));
     std::unique_ptr<Surface> sphere = std::make_unique<Sphere>(glm::vec3{2, 6, 1}, 1, schlickTest);
 //    std::vector<std::unique_ptr<Surface>> cube = MyOBJLoader::readOBJ("../res/teapot2.obj", {2, 6, 1}, 0.125, {M_PI / 4, -M_PI / 2}, target);
@@ -441,9 +443,9 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
 
     float radius = 0.f;
     std::vector<LightSource> lightSources = {
-            {{2.394355, 4.556603, 2.205824-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
+//            {{2.394355, 4.556603, 2.205824-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
 //            {{0, 5.51, 2.859690-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
-//            {{-0.808237, 3.625171, 2.205287-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
+            {{-0.808237, 3.625171, 2.205287-0.1}, Intensities::INCANDESCENT_2 * 40, radius},
 //            {{1.604023, 2.675619, 2.218865-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
     };
 

@@ -29,6 +29,8 @@ public:
     const Material* getMaterial () const override;
 
     glm::vec3 refract (const glm::vec3& position, const glm::vec3& direction, std::stack<float>& opticalDensities) const override;
+
+    std::ostream& print (std::ostream& os) const override;
 };
 
 
