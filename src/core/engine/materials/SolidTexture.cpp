@@ -12,3 +12,7 @@ Intensity SolidTexture::getPixelAt (const glm::vec3& uv) const {
 std::ostream& SolidTexture::print (std::ostream& cout) const {
     return cout << "SolidTexture{" << intensity << "}";
 }
+
+SolidTexture operator* (double t, const SolidTexture& texture) {
+    return SolidTexture{texture.intensity * t};
+}

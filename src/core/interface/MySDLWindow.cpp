@@ -23,9 +23,11 @@ MySDLWindow::MySDLWindow (int width, int height, double gamma, int scale, const 
         SDL_GetDisplayBounds(i, &displayBounds.back());
     }
 
-// window of dimensions 500 * 500 offset 100 pixels on secondary monitor
-    int x = displayBounds.back().x;
-    int y = displayBounds.back().y;
+//    int x = displayBounds.back().x;
+//    int y = displayBounds.back().y;
+
+    int x = 300;
+    int y = 300;
 
 //// so now x and y are on secondary display
 //    SDL_Window* window = SDL_CreateWindow("title", x, y, w, h, FLAGS...);

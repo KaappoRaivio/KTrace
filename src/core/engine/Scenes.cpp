@@ -12,6 +12,8 @@
 #include "materials/ImageTexture.h"
 #include "materials/Metal.h"
 #include "materials/Dielectric.h"
+#include "materials/PhongLegacy.h"
+#include "materials/DebugMaterial.h"
 
 Scene Scenes::getDebug (int windowX, int windowY) {
     Camera camera = {{-2, 1, 1}, {-0.24, 4.53, 0.27}, 2.f, {1.f, (float) windowY / windowX}, {windowX, windowY}};
@@ -381,9 +383,9 @@ Scene Scenes::getBMWScene (int windowX, int windowY) {
 
     std::vector<LightSource> lightSources = {
 //            {{-5, 4, 4}, Intensity{1, 1, 1} * 20, 0},
-            {lightSourcePosition, Intensity(1 , 1, 1) * 200,   0},
+            {lightSourcePosition, Intensity(1, 1, 1) * 200,   0},
             {{1.42, 6, 10},       Intensity{1, 1, 0.9} * 200, 0},
-            {{-2, 0, 5},       Intensity{1, 1, 0.9} * 200, 0}
+            {{-2,   0, 5},        Intensity{1, 1, 0.9} * 200, 0}
     };
 
     std::vector<std::unique_ptr<Surface>> surfaces{};
@@ -416,7 +418,7 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
     auto schlickTest = materialManager.get<Dielectric>(0.f, 1.f, 1.f, textureManager.get<SolidTexture>(Intensity{1, 1, 1}), &SolidTextures::BUMP_UP, Intensity{0, 0, 0});
     std::cout << dynamic_cast<const Dielectric*>(schlickTest)->absorbance;
 //    std::exit(0);
-    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1} );
+    auto target = materialManager.get<Dielectric>(1.f, 1.f, 1.0f, &ImageTextures::DEBUG_TEXTURE, &SolidTextures::BUMP_UP, Intensity{1, 1, 1});
     std::cout << *schlickTest << std::endl;
 //    std::exit(0);
 
@@ -445,7 +447,7 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
     std::vector<LightSource> lightSources = {
 //            {{2.394355, 4.556603, 2.205824-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
 //            {{0, 5.51, 2.859690-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
-            {{-0.808237, 3.625171, 2.205287-0.1}, Intensities::INCANDESCENT_2 * 40, radius},
+            {{-0.808237, 3.625171, 2.205287 - 0.1}, Intensities::INCANDESCENT_2 * 40, radius},
 //            {{1.604023, 2.675619, 2.218865-0.1}, Intensities::INCANDESCENT_2 * 10, radius},
     };
 
@@ -466,4 +468,65 @@ Scene Scenes::getClassroomScene (int windowX, int windowY) {
 
 
     return Scene{std::move(objects), std::move(lightSources), camera, 2, 1, 1, std::move(textureManager), std::move(materialManager)};
+}
+
+Scene Scenes::getLegacyScene (int windowX, int windowY) {
+    Camera camera{{0, -5, 7}, {0, -4, 7 - 0.3}, 0.7, {1.f, (float) windowY / windowX}, {windowX, windowY}};
+
+    Manager<Texture> textureManager;
+    Manager<Material> materialManager;
+
+
+//    const Material* simpleLambert = materialManager.get<Phong>(&SolidTextures::WHITE, &SolidTextures::WHITE, &SolidTextures::BLACK, &SolidTextures::BLACK, 1.f);
+    const Texture* t1 = textureManager.get<SolidTexture>(Intensity{1, 1, 1} * 0.7);
+    const Texture* triangleTexture = textureManager.get<SolidTexture>(Intensity{1, 1, 1} * 0.5);
+
+//    const Material* triangleMaterial = materialManager.get<PhongLegacy>(triangleTexture, triangleTexture, t1, &SolidTextures::BLACK, 1.f);
+//    const Material* m2 = materialManager.get<PhongLegacy>(&SolidTextures::WHITE, &SolidTextures::WHITE, t1, &SolidTextures::BLACK, 1.f);
+//    const Material* m3 = materialManager.get<PhongLegacy>(&SolidTextures::WHITE, &SolidTextures::WHITE, &SolidTextures::BLACK, &SolidTextures::BLACK, 1.f);
+//    const Material* m4 = materialManager.get<PhongLegacy>(&SolidTextures::WHITE, &SolidTextures::WHITE, &SolidTextures::WHITE, &SolidTextures::BLACK, 1.f);
+
+
+    const Material* triangleMaterial = materialManager.get<DebugMaterial>();
+    const Material* m2 = materialManager.get<DebugMaterial>();
+    const Material* m3 = materialManager.get<DebugMaterial>();
+    const Material* m4 = materialManager.get<DebugMaterial>();
+
+    std::unique_ptr<Surface> triangle = std::make_unique<Triangle>(glm::vec3{-5, 6, 5}, glm::vec3{0, 0, 3}, glm::vec3{5, 6, 3}, triangleMaterial);
+    std::unique_ptr<Surface> sphere1 = std::make_unique<Sphere>(glm::vec3{-2.5, 4, 4.5}, 0.3, m2);
+    std::unique_ptr<Surface> sphere2 = std::make_unique<Sphere>(glm::vec3{-1, 4, 4.3}, 0.6, m2);
+    std::unique_ptr<Surface> sphere3 = std::make_unique<Sphere>(glm::vec3{1, 4, 4}, 1, m2);
+    std::unique_ptr<Surface> sphere4 = std::make_unique<Sphere>(glm::vec3{0.5, 2, 3}, 0.5, m2);
+    std::unique_ptr<Surface> sphere5 = std::make_unique<Sphere>(glm::vec3{-0.75, 2, 3.25}, 0.4, m2);
+    std::unique_ptr<Surface> sphere6 = std::make_unique<Sphere>(glm::vec3{0, 6, 6}, 1.5, m4);
+
+
+
+
+    std::unique_ptr<Surface> plane = std::make_unique<Plane>(glm::vec3{0, 0, 1}, -2, m3);
+    std::vector<std::unique_ptr<Surface>> surfaces;
+    surfaces.push_back(std::move(triangle));
+    surfaces.push_back(std::move(sphere1));
+    surfaces.push_back(std::move(sphere2));
+    surfaces.push_back(std::move(sphere3));
+    surfaces.push_back(std::move(sphere4));
+    surfaces.push_back(std::move(sphere5));
+    surfaces.push_back(std::move(sphere6));
+
+
+    auto bvh = std::make_unique<BVH>(std::move(surfaces));
+    std::vector<std::unique_ptr<Surface>> objects;
+    objects.push_back(std::move(bvh));
+//    objects.push_back(std::move(plane));
+
+
+    std::vector<LightSource> lightSources {
+//        {{0, 5, 5}, Intensity{1, 0, 0.25} * 5, 0},
+        {{0, 0, 7}, Intensity{0.5, 0.5, 1} * 25, 0},
+        {{-2, 3, 10}, Intensity{1, 0.1, 0} * 20, 0},
+//        {{-2, 3, 10, Intensity{1, 0, 0.25} * 5, 1},
+    };
+
+    return Scene{std::move(objects), lightSources, camera, 3, 1, 1, std::move(textureManager), std::move(materialManager)};
+
 }

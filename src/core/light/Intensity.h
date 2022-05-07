@@ -39,6 +39,8 @@ public:
 
     Intensity operator+= (const Intensity& other);
 
+    float getBrightness () const;
+
     Color applyGamma (double d) const;
     glm::vec3 asRGB (double gamma) const;
 };

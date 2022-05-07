@@ -37,7 +37,8 @@ int main () {
 
 //    Scene scene = Scenes::getBezierScene(windowX, windowY, sequence);
 //    Scene scene = Scenes::getDebug(windowX, windowY);
-    Scene scene = Scenes::getClassroomScene(windowX, windowY);
+//    Scene scene = Scenes::getClassroomScene(windowX, windowY);
+    Scene scene = Scenes::getLegacyScene(windowX, windowY);
 //    Scene scene = Scenes::getScene<0>(windowX, windowY);
 //    std::stack<float> a;
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
@@ -46,7 +47,7 @@ int main () {
 //    Spline b{{-10, -10, 3}, {-2.65, -12.27, 3}, {23.57,1.87, 3}, {-7.05,3.36, 3}, 0.79};
 
 
-    MySDLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, <#initializer#>, <#initializer#>};
+    MySDLWindow window = {windowWidth, static_cast<int>(static_cast<float>(windowWidth) / windowX * windowY), 2, windowWidth / windowX, scene.camera, scene};
 
     float t = 0;
 

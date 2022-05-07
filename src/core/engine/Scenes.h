@@ -40,8 +40,8 @@ namespace Scenes {
 
 
     Scene getBMWScene (int windowX, int windowY);
-
     Scene getClassroomScene (int windowX, int windowY);
+    Scene getLegacyScene (int windowX, int windowY);
 }
 
 

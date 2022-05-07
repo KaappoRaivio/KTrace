@@ -71,3 +71,7 @@ glm::vec3 Intensity::asRGB (double gamma) const {
     return {r, g, b};
 }
 
+float Intensity::getBrightness () const {
+    return 0.299 * m_r + 0.587 * m_g + 0.114 * m_b;
+}
+
