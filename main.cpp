@@ -27,18 +27,20 @@
 #include "src/core/common/mytypes.h"
 
 int main () {
-    constexpr int windowWidth = 1440;
-    constexpr int windowX = 1440;
-    constexpr int windowY = 810;
+    constexpr int windowWidth = 1920;
+    constexpr int windowX = 1920;
+    constexpr int windowY = 1080;
 //    constexpr int windowY = 288;
 
-    SplineSequence sequence = SplineSequence::getRandomSequence(10, {0, 0, 1});
+    SplineSequence sequence = SplineSequence::getRandomSequence2(10, {0, 0, 0.5}, 10);
+//    SplineSequence sequence = SplineSequence::getRandomSequence(20, {0, 0, 0.5}, 0);
 
 
 //    Scene scene = Scenes::getBezierScene(windowX, windowY, sequence);
 //    Scene scene = Scenes::getDebug(windowX, windowY);
 //    Scene scene = Scenes::getClassroomScene(windowX, windowY);
-    Scene scene = Scenes::getLegacyScene(windowX, windowY);
+    Scene scene = Scenes::getBMWScene(windowX, windowY);
+//    Scene scene = Scenes::getLegacyScene(windowX, windowY);
 //    Scene scene = Scenes::getScene<0>(windowX, windowY);
 //    std::stack<float> a;
 //    std::cout << scene.calculateColor({scene.camera.getOrigin(), glm::vec3{0, 0, -1}}, 10, 10, 1, a);
@@ -90,13 +92,18 @@ int main () {
 
     auto start = std::chrono::system_clock::now();
     std::cout << "starting" << std::endl;
-//    scene.executeCameraMove(sequence, 0.01f, [&] (const auto& pixels) {
+
+
+    int index = 0;
+
+//    scene.executeCameraMove(sequence, 0.001f, [&] (const auto& pixels) {
     scene.render([&] (const auto& pixels) {
         Image rendered = Image{pixels};
 //        std::cout << scene.camera.origin << ", " << scene.camera.direction << std::endl;
         uint64_t timeSinceEpochMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         std::stringstream path;
-        path << "/home/kaappo/git/raytracercpp/out/" << timeSinceEpochMilliseconds << ".png";
+//        path << "/home/kaappo/git/raytracercpp/out/sphere/img"
+        path << "/home/kaappo/git/raytracercpp/out/skybox" << timeSinceEpochMilliseconds << ".png";
         rendered.save(path.str());
         window.paint(pixels);
 //        positionCSV << scene.camera.origin.x << "," << scene.camera.origin.y

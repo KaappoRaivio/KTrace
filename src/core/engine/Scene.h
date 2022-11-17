@@ -35,7 +35,7 @@ public:
     std::vector<std::vector<Intensity>> trace () const;
     void executeCameraMove (SplineSequence sequence, float deltaT, auto onFrameRendered) {
 //        for (float t = 0.1; t < 1; t = sequence.advance(t, deltaT)) {
-        for (float t = 0; t < 1; t = sequence.advance(t, deltaT)) {
+        for (float t = deltaT; t < 1; t = sequence.advance(t, deltaT)) {
             if (t >= 1) break;
 
             Ray currentPose = sequence.apply(t, true);

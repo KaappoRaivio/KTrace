@@ -23,11 +23,11 @@ MySDLWindow::MySDLWindow (int width, int height, double gamma, int scale, const 
         SDL_GetDisplayBounds(i, &displayBounds.back());
     }
 
-//    int x = displayBounds.back().x;
-//    int y = displayBounds.back().y;
+    int x = displayBounds.back().x;
+    int y = displayBounds.back().y;
 
-    int x = 300;
-    int y = 300;
+//    int x = 300;
+//    int y = 300;
 
 //// so now x and y are on secondary display
 //    SDL_Window* window = SDL_CreateWindow("title", x, y, w, h, FLAGS...);

@@ -8,9 +8,7 @@
 #include "../../common/mytypes.h"
 
 int Dielectric::scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, Config::MAX_SCATTER>& scatteredRays) const {
-//    return 0;
-    float reflectance = 1;
-//    float reflectance = Shading::getReflectance(-glm::dot(normal, intersection.ray.getDirection()), currentOpticalDensity / this->opticalDensity);
+    float reflectance = Shading::getReflectance(-glm::dot(normal, intersection.ray.getDirection()), currentOpticalDensity / this->opticalDensity);
 
 //    std::cout << reflectance << std::endl;
 //    std::cout << glm::dot(normal, intersection.ray.getDirection()) << std::endl;
@@ -20,8 +18,8 @@ int Dielectric::scatter (const glm::vec3& position, const glm::vec3& normal, con
     int times = 1;
 
     if (reflectance > 0) {
-//        const Intensity& intensity = Intensity{1, 1, 1} * reflectance / times;// * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
-        const Intensity& intensity = Intensity{0, 0, 0};
+        const Intensity& intensity = Intensity{1, 1, 1} * reflectance / times;// * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position));
+//        const Intensity& intensity = Intensity{1, 0};
         for (int i = 0; i < times; ++i) {
             const auto& reflected = glm::reflect(intersection.ray.getDirection(), VectorOperations::rotateInsideCone(normal, roughness * 0.0125f));
     //        Intensity intensity = Intensity{(1 - roughness), (1 - roughness), (1 - roughness)} * absorbance * reflectance;
@@ -33,23 +31,40 @@ int Dielectric::scatter (const glm::vec3& position, const glm::vec3& normal, con
     if (absorbance < 1) {
 //    std::cout << absorbance << std::endl;
 //        std::cout << "moi" << std::endl;
+//        std::cout << currentOpticalDensity / this->opticalDensity << std::endl;
 
         const auto& refracted = VectorOperations::refract(intersection.ray.getDirection(), normal, currentOpticalDensity / this->opticalDensity);
+//        if (refracted.x == FP_NAN) {
+//            std::cout << "moi" << std::endl;
+//        }
+//        std::cout << refracted << std::endl;
 //        std::cout << refracted << std::endl;
         Intensity intensity = Intensity{1, 1, 1} * (1 - reflectance) * (1 - absorbance);
+//        Intensity intensity = Intensity{1, 1, 1};
 //        std::cout << intensity << std::endl;
 //        Intensity intensity = Intensity{1, 1, 1}  * 10;
 
-        scatteredRays[n++] = {{intersection.position, refracted}, intensity * albedo->getPixelAt(intersection.hitSurface->getUVAt(intersection.position))};
+        scatteredRays[n++] = {{intersection.position, refracted}, intensity};
     }
 
     return n;
 }
 
 Intensity Dielectric::shade (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, const std::vector<LightSource>& visibleLightSources, float currentOpticalDensity) const {
-    float reflectance = Shading::getReflectance(-glm::dot(normal, intersection.ray.getDirection()), currentOpticalDensity / this->opticalDensity);
+//    return {0, 1, 0};
+//    float reflectance = Shading::getReflectance(-glm::dot(normal, intersection.ray.getDirection()), currentOpticalDensity / this->opticalDensity);
+    float reflectance = 0.5f;
+//    std::cout << reflectance << std::endl;
 
     const glm::vec3& d = intersection.ray.getDirection();
+
+    static int a;
+    if (std::isnan(d.x)) {
+//        std::cout << "problem << std::endl" << std::endl;
+//        std::cout << a++ << std::endl;
+
+    }
+
     const glm::vec3& R = glm::normalize(glm::reflect(d, normal));
 
     IntensityBlend diffuseShaded;

@@ -14,13 +14,13 @@ public:
 
 private:
     const Texture* albedoAmbient;
-    float specularPower;
 
 
 protected:
     const Texture* albedoDiffuse;
     const Texture* albedoSpecular;
     const Texture* albedoFresnel;
+    float specularPower;
 public:
     int scatter (const glm::vec3& position, const glm::vec3& normal, const Intersection& intersection, float currentOpticalDensity, std::array<Interface, Config::MAX_SCATTER>& scatteredRays) const override;
 

@@ -31,6 +31,23 @@ public:
     bool save (const std::string& path);
 };
 
+class ImageHDR {
+private:
+    int width, height, bytes_per_pixel;
+
+    float* data;
+public:
+    explicit ImageHDR (const std::string& path);
+
+    Intensity get_pixel_at (int x, int y) const;
+
+    virtual ~ImageHDR ();
+
+    int getWidth () const;
+    int getHeight () const;
+};
+
+
 
 //int main () {
 ////    std::cout << "Hello, world!" << std::endl;

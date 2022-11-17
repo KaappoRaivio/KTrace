@@ -254,6 +254,7 @@ glm::vec3 VectorOperations::refract (const glm::vec3& direction, glm::vec3 norma
 
     float cosI = -glm::dot(normal, glm::normalize(direction));
     if (cosI < 0) {
+//        std::cout << "flipping" << std::endl;
 //        n = 1 / n;
 //        cosI *= -1;
         normal = -normal;

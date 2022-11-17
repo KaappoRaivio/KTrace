@@ -40,6 +40,9 @@ Intensity Intensity::operator* (double coeff) const {
 Intensity Intensity::operator* (const Intensity& other) const {
     return {r() * other.r(), g() * other.g(), b() * other.b()};
 }
+Intensity Intensity::operator/ (const Intensity& other) const {
+    return {r() / other.r(), g() / other.g(), b() / other.b()};
+}
 
 Intensity Intensity::operator+ (const Intensity& other) const {
     return {r() + other.r(), g() + other.g(), b() + other.b()};
@@ -60,9 +63,23 @@ Intensity Intensity::operator/ (double coeff) const {
     return *this * (1 / coeff);
 }
 
+
+Intensity aces_approx (Intensity v) {
+//    v =
+    v = v * 0.6f;
+    float a = 2.51f;
+    auto b = Intensity{1, 1, 1} * 0.03f;
+    float c = 2.43f;
+    auto d = Intensity{1, 1, 1} * 0.59f;
+    auto e = Intensity{1, 1, 1} * 0.14f;
+    return (v * (v * a + b)) / (v * (v * c + d) + e);
+}
+
 glm::vec3 Intensity::asRGB (double gamma) const {
     constexpr auto epsilon = 1e-5;
-    auto gamma_corrected = applyGamma(gamma);
+
+    const auto& a = aces_approx(*this);
+    auto gamma_corrected = a.applyGamma(gamma);
 
     auto r = uint8_t(std::clamp((gamma_corrected.getR() * 256.0 - epsilon), 0.0, 256.0 - epsilon));
     auto g = uint8_t(std::clamp((gamma_corrected.getG() * 256.0 - epsilon), 0.0, 256.0 - epsilon));

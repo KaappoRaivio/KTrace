@@ -28,6 +28,13 @@ Scene::Scene (std::vector<std::unique_ptr<Surface>> objects, std::vector<LightSo
 #pragma clang diagnostic push
 //#pragma omp declare target
 
+
+//auto skybox = std::make_unique<SolidTexture>(Intensity{1, 0, 0});
+//auto skybox = std::make_unique<ImageTextureHDR>("../res/CasualDay4K.hdr");
+//auto skybox = std::make_unique<ImageTextureHDR>("../res/CloudedSunGlow4k.hdr");
+auto skybox = std::make_unique<ImageTextureHDR>("../res/MegaSun4k.hdr");
+const Sphere sphere{glm::vec3{0, 0, 0}, 1, nullptr};
+
 std::vector<std::vector<Intensity>> Scene::trace () const {
     auto viewplane = camera.getViewplane(antialiasingScaler);
 
@@ -99,9 +106,12 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
 
 
     if (not intersects) {
-        return Intensity{0, 0, 0};
+
+        return skybox->getPixelAt(glm::vec3{0.75f, 0, 0} + sphere.getUVAt(glm::normalize(ray.getDirection())));
+//        return Intensity{0, 0, 0};
     } else {
 //        return Intensity{0, 1, 0};
+        intersection.ray = ray;
 
         if constexpr(DEBUG) {
             std::cout << "hit!" << std::endl;
@@ -155,7 +165,7 @@ Intensity Scene::calculateColor (const Ray& ray, int x, int y, int bounces_left,
             for (int i = 0 ; i < numberOfRays ; ++i) {
                 auto interface = scatteredRays[i];
                 opticalDensities.push(interface.newOpticalDensity != -1 ? interface.newOpticalDensity : opticalDensities.top());
-//                std::cout << interface.intensity << std::endl;
+//                std::cout << interface.ray.getDirection() << std::endl;
                 scatterShaded += interface.intensity * calculateColor(interface.ray, x, y, bounces_left - 1, opticalDensities);
                 opticalDensities.pop();
             }

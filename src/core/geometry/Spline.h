@@ -9,6 +9,7 @@
 #include <vector>
 #include <array>
 #include <ostream>
+#include <optional>
 #include "Ray.h"
 #include "../common/mytypes.h"
 
@@ -38,8 +39,10 @@ public:
 class SplineSequence {
     std::vector<Spline> curves;
     std::vector<float> lengths;
+    const float k;
+    std::optional<glm::vec3> lookAt;
 public:
-    SplineSequence (const std::vector<glm::vec3>& points, const float k);
+    SplineSequence (const std::vector<glm::vec3>& points, const float k, std::optional<glm::vec3> lookAt);
     void populateLenghts ();
 
     Ray apply (float t, bool compensateDistance) const;
@@ -47,11 +50,14 @@ public:
     float advance (float oldT, float deltaT);
     float length ();
 
-    static SplineSequence getRandomSequence (int length, glm::vec3 origin);
+    static SplineSequence getRandomSequence (int length, glm::vec3 origin, float strayRadius);
+    static SplineSequence getRandomSequence2 (int length, glm::vec3 origin, float strayRadius);
 
     friend std::ostream& operator<< (std::ostream& os, SplineSequence sequence);
 
     glm::vec3 getPoint (float t, bool compensateDistance) const;
 
     glm::vec3 getPoint (float t) const;
+
+
 };

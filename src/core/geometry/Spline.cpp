@@ -116,7 +116,7 @@ std::ostream& operator<< (std::ostream& os, Spline bezier) {
 }
 
 
-SplineSequence::SplineSequence (const std::vector<glm::vec3>& points, const float k) : curves{} {
+SplineSequence::SplineSequence (const std::vector<glm::vec3>& points, const float k, std::optional<glm::vec3> lookAt) : curves{}, k{k}, lookAt{lookAt} {
     for (int i = 1 ; i < points.size() - 2 ; ++i) {
         curves.push_back(Spline{points[i - 1], points[i], points[i + 1], points[i + 2], k});
 //        std::cout << curves.back() << std::endl;
@@ -163,7 +163,19 @@ Ray SplineSequence::apply (float t, bool compensateDistance) const {
     t = std::clamp(t, 0.f, 1.f - std::numeric_limits<float>::epsilon());
     float d = .1f;
 
-    return {getPoint(t, compensateDistance), (getPoint(t + d, compensateDistance) - getPoint(t, compensateDistance)) / d};
+
+    const glm::vec3& position = getPoint(t, compensateDistance);
+    auto derivative = (getPoint(t + d, compensateDistance) - position) / d;
+
+    auto derivativederivative = ((getPoint(t + d + d, compensateDistance) - getPoint(t + d, compensateDistance)) / d - (getPoint(t + d, compensateDistance) - position) / d) / d;
+
+    auto direction = k * derivative + (1 - k) * derivativederivative;
+    
+    if (lookAt.has_value()) {
+        direction = *lookAt - position;
+    }
+    
+    return {position, direction};
 //    auto step = 1.f / curves.size();
 //    return curves[static_cast<int>((t - std::numeric_limits<float>::epsilon()) * curves.size())].apply(std::fmod(t, step) / step);
 }
@@ -185,7 +197,7 @@ float SplineSequence::advance (float oldT, float deltaT) {
 //    return curves[static_cast<int>((oldT - std::numeric_limits<float>::epsilon()) * curves.size())].advance(std::fmod(oldT, step) / step, deltaT);
 }
 
-SplineSequence SplineSequence::getRandomSequence (int length, glm::vec3 origin = {0, 0, 0}) {
+SplineSequence SplineSequence::getRandomSequence (int length, glm::vec3 origin, float strayRadius) {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 //    std::default_random_engine generator{seed};
 
@@ -195,7 +207,6 @@ SplineSequence SplineSequence::getRandomSequence (int length, glm::vec3 origin =
 //    std::uniform_real_distribution<float> pitchDistribution(-M_PI / 8, M_PI / 8);
 
     std::vector<glm::vec3> originPoints;
-    std::vector<glm::vec3> controlPoints;
 
     originPoints.push_back(origin);
     originPoints.push_back(origin + glm::vec3{1, 0, 0});
@@ -205,21 +216,40 @@ SplineSequence SplineSequence::getRandomSequence (int length, glm::vec3 origin =
         const glm::vec3& straightDirection = originPoints[originPoints.size() - 1] - originPoints[originPoints.size() - 2];
         float newLength = d(MyRandom::generator);
 //        originPoints.push_back(originPoints.back() + (glm::normalize(VectorOperations::rotateInsideCone(straightDirection, 0.5f)) * newLength));
-        originPoints.push_back(originPoints.back() + (glm::normalize(VectorOperations::rotate(straightDirection, yawDistribution(MyRandom::generator), pitchDistribution(MyRandom::generator))) * newLength));
+        glm::vec3 point = originPoints.back() + (glm::normalize(VectorOperations::rotate(straightDirection, yawDistribution(MyRandom::generator), pitchDistribution(MyRandom::generator))) * newLength);
+
+        if (strayRadius && glm::length(origin - point) > strayRadius) {
+//            auto norm = glm::normalize()
+            point = strayRadius * glm::normalize(point - origin);
+        }
+
+        originPoints.push_back(point);
 //        controlPoints.push_back(glm::normalize(VectorOperations::rotateInsideCone((controlPoints[originPoints.size() - 2] - controlPoints[originPoints.size() - 1]), 10)));
     }
 
     for (auto& point : originPoints) {
-//        point.z = 1;
-    }
-
-    for (auto& point : controlPoints) {
-//        point.z = ;
+        point.z = 1;
     }
 
 //    return CubicBezierSequence;
-    return {originPoints, 1.f};
+    return {originPoints, 1.f, std::nullopt};
 }
+
+SplineSequence SplineSequence::getRandomSequence2 (int length, glm::vec3 origin, float strayRadius) {
+    std::vector<glm::vec3> originPoints {
+            {0, 4, 0},
+            {-1.78, 2.58, 0},
+            {1.43,5.15,1.5},
+            {2.71,3.67,0.8},
+            {3.03,1.31,0.77},
+            {0.91,1.38,0.1},
+            {0.69,2.68,0.31}
+    };
+
+
+    return {originPoints, 1.f, {{-0.5, 5, 0.75}}};
+}
+
 
 std::ostream& operator<< (std::ostream& os, SplineSequence sequence) {
     for (int i = 0 ; i < sequence.curves.size() ; ++i) {

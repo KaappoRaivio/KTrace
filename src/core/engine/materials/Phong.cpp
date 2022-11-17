@@ -49,7 +49,7 @@ Intensity Phong::shade (const glm::vec3& position, const glm::vec3& normal, cons
         const auto reflectance = Shading::getReflectance(-glm::dot(normal, V), 2);
 //        std::cout << glm::length(normal) << ", " << reflectance << std::endl;
 
-//        fresnelShaded += lightSource.intensity * distanceCoefficient * reflectance * specularDirectionCoefficient;
+        fresnelShaded += lightSource.intensity * distanceCoefficient * std::pow(reflectance, specularPower) * specularDirectionCoefficient;
 //        diffuseShaded += lightSource.intensity * distanceCoefficient * diffuseDirectionCoefficient * (1 - reflectance);
         diffuseShaded += lightSource.intensity * distanceCoefficient * diffuseDirectionCoefficient;
         specularShaded += lightSource.intensity * distanceCoefficient * specularDirectionCoefficient;

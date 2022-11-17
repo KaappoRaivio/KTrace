@@ -445,7 +445,7 @@ struct nullary_wrapper<Scalar,NullaryOp,false,false,false> {};
 //    Eigen::MatrixXf A = MatrixXf::Random(3,3);
 //    Ref<const MatrixXf> R = 2.f*A;
 // and that has_*ary_operator<scalar_constant_op<float>> have not been instantiated yet.
-// The "problem" is that evaluator<2.f*A> is instantiated by traits<Ref>::match<2.f*A>
+// The problem" is that evaluator<2.f*A> is instantiated by traits<Ref>::match<2.f*A>
 // and at that time has_*ary_operator<T> returns true regardless of T.
 // Then nullary_wrapper is badly instantiated as nullary_wrapper<.,.,true,true,true>.
 // The trick is thus to defer the proper instantiation of nullary_wrapper when coeff(),

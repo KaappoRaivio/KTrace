@@ -34,6 +34,7 @@ public:
     Intensity operator/ (double coeff) const;
 
     Intensity operator* (const Intensity& other) const;
+    Intensity operator/ (const Intensity& other) const;
 
     Intensity operator+ (const Intensity& other) const;
 

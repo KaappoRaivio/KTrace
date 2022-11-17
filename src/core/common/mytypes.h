@@ -16,7 +16,8 @@ constexpr bool DEBUG = false;
 constexpr double PRECISION_LIMIT = 0.001;
 
 namespace MyRandom {
-    constexpr unsigned SEED = 0xCAFEBABE;
+//    constexpr unsigned SEED = 0xCAFEBABE;
+    constexpr unsigned SEED = 0xFACEFEED;
     extern std::default_random_engine generator;
 }
 

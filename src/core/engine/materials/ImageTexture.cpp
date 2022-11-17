@@ -23,3 +23,18 @@ std::ostream& ImageTexture::print (std::ostream& cout) const {
 namespace ImageTextures {
     const ImageTexture DEBUG_TEXTURE {"../res/texture3.png"};
 }
+
+ImageTextureHDR::ImageTextureHDR (const std::string& path) : image{path} {
+
+}
+
+Intensity ImageTextureHDR::getPixelAt (const glm::vec3& uv) const {
+    double u = (uv.x - std::floor(uv.x)) * image.getWidth();
+    double v = (uv.y - std::floor(uv.y)) * image.getHeight();
+
+    return image.get_pixel_at(u, v);
+}
+
+std::ostream& ImageTextureHDR::print (std::ostream& cout) const {
+    return cout << "ImageTextureHDR";
+}
